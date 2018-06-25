@@ -25,7 +25,7 @@ public:
     bool sleep_for(std::chrono::milliseconds rel_time);
     bool sleep_for(std::chrono::seconds rel_time);
     bool sleep_for(std::chrono::minutes rel_time);
-    bool sleep_for(std::chrono::hours rel_time);
+    bool sleep_for(std::chrono::hourss rel_time);
 
 private:
     std::condition_variable cond;
