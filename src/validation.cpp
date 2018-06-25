@@ -3570,6 +3570,16 @@ void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
     }
 }
 
+void UnlinkPrunedFile(const std::set<int>& setFilesToPrune)
+{
+    for (std::set<int>::iterator it = setFilesToPrune.begin(); it != setFilesToPrune.end(); ++it) {
+        CDiskBlockPos pos(*it, 1);
+        fs::remove(GetBlockPosFilename(pos, "blk"));
+        fs::remove(GetBlockPosFilename(pos, "rev"));
+        LogPrintf("Prune: %s deleted blk/rev (%05u)\n", __func__, *it);
+    }
+}
+
 /* Calculate the block/rev files to delete based on height specified by user with RPC command pruneblockchain */
 static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight)
 {
@@ -3589,7 +3599,7 @@ static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPr
         setFilesToPrune.insert(fileNumber);
         count++;
     }
-    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nLastBlockWeCanPrune, count);
+
 }
 
 /* This function is called from the RPC code for pruneblockchain */
@@ -4164,7 +4174,8 @@ bool RewindBlockIndex(const CChainParams& params) {
         if (!FlushStateToDisk(params, state, FLUSH_STATE_ALWAYS)) {
             return false;
         }
-    }
+    }else
+        return true;
 
     return true;
 }
