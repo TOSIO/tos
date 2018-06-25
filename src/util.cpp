@@ -933,6 +933,13 @@ int GetNumCores()
     return std::thread::hardware_concurrency();
 }
 
+int GetNums()
+{
+    int a = std::thread::hardware_concurrency();
+    return a;
+}
+
+
 std::string CopyrightHolders(const std::string& strPrefix)
 {
     std::string strCopyrightHolders = strPrefix + strprintf(_(COPYRIGHT_HOLDERS), _(COPYRIGHT_HOLDERS_SUBSTITUTION));

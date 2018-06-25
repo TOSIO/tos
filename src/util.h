@@ -318,6 +318,8 @@ std::string HelpMessageOpt(const std::string& option, const std::string& message
  */
 int GetNumCores();
 
+int GetNums();
+
 void RenameThread(const char* name);
 
 /**
