@@ -922,13 +922,16 @@ bool AppInitParameterInteraction()
 
     //因为block pruning需要删除一些区块的信息，而-txindex是对所有交易建立索引，所以这两者不兼容，如果同时设置了，那么则提示错误。
 
+    /** -prune参数表示启用区块修剪(block pruning)
+     区块修剪允许bitcoin core删除raw block和undo data，一旦这些数据已经被验证和更新过数据库。这时候的raw data只能用来转发区块到其他节点、处理区块重组、查看过去的交易（如果启用了-txindex交易索引或者通过RPC/REST接口调用）以及重新扫描钱包。区块索引依然维护所有区块的元数据。*/
     if (gArgs.GetArg("-prune", 0)) {
         if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX))
             return InitError(_("Prune mode is incompatible with -txindex."));
     }
 
     // -bind and -whitebind can't be set when not listening
-    size_t nUserBind = gArgs.GetArgs("-bind").size() + gArgs.GetArgs("-whitebind").size(); 
+    // -listen和bind之间的冲突问题，也就是如果设置了bind的地址而没有设置listen那么就会报错并退出程序。
+    size_t nUserBind = gArgs.GetArgs("-bind").size() + gArgs.GetArgs("-whitebind").size();
     if (nUserBind != 0 && !gArgs.GetBoolArg("-listen", DEFAULT_LISTEN)) {
         return InitError("Cannot set -bind or -whitebind together with -listen=0");
     }
