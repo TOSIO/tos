@@ -82,3 +82,28 @@ std::string GetWarnings(const std::string& strFor)
     assert(!"GetWarnings(): invalid parameter");
     return "error";
 }
+
+void SetTosMiscWarning(const std::string& strWarning)
+{
+    LOCK(cs_warnings);
+    strMiscWarning = strWarning;
+}
+
+void SetTosfLargeWorkForkFound(bool flag)
+{
+    LOCK(cs_warnings);
+    fLargeWorkForkFound = flag;
+}
+
+bool GetTosfLargeWorkForkFound()
+{
+    LOCK(cs_warnings);
+    return fLargeWorkForkFound;
+}
+
+void SetTosfLargeWorkInvalidChainFound(bool flag)
+{
+    LOCK(cs_warnings);
+    fLargeWorkInvalidChainFound = flag;
+}
+
