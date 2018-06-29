@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2017-2018 The Toschain Core developers
+// Copyright (c) 2017-2018 The TOS Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,6 +37,11 @@ bool CThreadInterrupt::sleep_for(std::chrono::seconds rel_time)
 }
 
 bool CThreadInterrupt::sleep_for(std::chrono::minutes rel_time)
+{
+    return sleep_for(std::chrono::duration_cast<std::chrono::milliseconds>(rel_time));
+}
+
+bool CThreadInterrupt::sleep_for(std::chrono::hourss rel_time)
 {
     return sleep_for(std::chrono::duration_cast<std::chrono::milliseconds>(rel_time));
 }
