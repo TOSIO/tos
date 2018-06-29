@@ -302,6 +302,7 @@ bool CRPCTable::appendCommand(const std::string& name, const CRPCCommand* pcmd)
     return true;
 }
 
+// 启动RPC就是将之前的连接到Started的信号全部触发运行，并修改变量fRPCRunning为true，而Started信号连接的函数就是通过RPCServer::OnStarted()函数
 bool StartRPC()
 {
     LogPrint(BCLog::RPC, "Starting RPC\n");
