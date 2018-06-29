@@ -1224,6 +1224,9 @@ bool AppInitMain()
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
 #ifndef WIN32
+    //pid文件的作用就是防止进程启动多个副本，从而打乱原有的消息传输
+    //(1) pid文件的内容：pid文件为文本文件，内容只有一行, 记录了该进程的ID。 用cat命令可以看到。
+    //(2) pid文件的作用：防止进程启动多个副本。只有获得pid文件(固定路径固定文件名)写入权限(F_WRLCK)的进程才能正常启动并把自身的PID写入该文件中。其它同一个程序的多余进程则自动退出。
     CreatePidFile(GetPidFile(), getpid());
 #endif
     if (gArgs.GetBoolArg("-shrinkdebugfile", logCategories == BCLog::NONE)) {
@@ -1514,6 +1517,7 @@ bool AppInitMain()
                 }
 
                 // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+                // 处理上次未完成的写入区块事务（解决冲突状态）
                 if (!ReplayBlocks(chainparams, pcoinsdbview.get())) {
                     strLoadError = _("Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.");
                     break;
@@ -1524,6 +1528,7 @@ bool AppInitMain()
 
                 bool is_coinsview_empty = fReset || fReindexChainState || pcoinsTip->GetBestBlock().IsNull();
                 if (!is_coinsview_empty) {
+                    //UTXO池不为空、则加载tip
                     // LoadChainTip sets chainActive based on pcoinsTip's best block
                     if (!LoadChainTip(chainparams)) {
                         strLoadError = _("Error initializing block database");
