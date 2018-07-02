@@ -59,6 +59,9 @@ typedef std::vector<std::pair<void*, CLockLocation> > LockStack;
 typedef std::map<std::pair<void*, void*>, LockStack> LockOrders;
 typedef std::set<std::pair<void*, void*> > InvLockOrders;
 
+typedef std::map<std::pair<void*, void*>, LockStack> Locker1;
+typedef std::map<std::pair<void*, void*>, LockStack> Locker2;
+
 struct LockData {
     // Very ugly hack: as the global constructs and destructors run single
     // threaded, we use this boolean to know whether LockData still exists,
@@ -68,6 +71,9 @@ struct LockData {
     LockData() : available(true) {}
     ~LockData() { available = false; }
 
+    Locker1 locker1;
+    Locker1 locker2;
+    
     LockOrders lockorders;
     InvLockOrders invlockorders;
     std::mutex dd_mutex;
@@ -126,7 +132,7 @@ static void push_lock(void* c, const CLockLocation& locklocation)
     }
 }
 
-static void pop_lock()
+static void tos_pop_lock()
 {
     (*lockstack).pop_back();
 }
@@ -138,7 +144,7 @@ void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs
 
 void LeaveCritical()
 {
-    pop_lock();
+    tos_pop_lock();
 }
 
 std::string LocksHeld()
