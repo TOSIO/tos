@@ -588,7 +588,7 @@ void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) {
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)
 {
-    return strprintf("%s%s (code %i)",
+    return strprintf("%s%s (code = %i)",
         state.GetRejectReason(),
         state.GetDebugMessage().empty() ? "" : ", "+state.GetDebugMessage(),
         state.GetRejectCode());
@@ -4860,6 +4860,12 @@ CVerifyDB::~CVerifyDB()
 {
     uiInterface.ShowProgress("", 100);
 }
+
+CVerifyDB::CVerifyDBShowProgress()
+{
+    uiInterface.ShowProgress(_("验证区块..."), 0);
+}
+
 
 bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth)
 {
