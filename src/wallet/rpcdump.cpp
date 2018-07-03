@@ -54,6 +54,18 @@ std::string static EncodeDumpString(const std::string &str) {
     return ret.str();
 }
 
+std::string static DencodeDumpString(const std::string &str) {
+    std::stringstream ret;
+    for (unsigned char c : str) {
+        if (c >= 32 && c <= 128 || c == '%') {
+            ret << '%' << HexStr(&c, &c + 1);
+        } else {
+            ret << c;
+        }
+    }
+    return ret.str();
+}
+
 std::string DecodeDumpString(const std::string &str) {
     std::stringstream ret;
     for (unsigned int pos = 0; pos < str.length(); pos++) {
