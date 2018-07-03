@@ -231,6 +231,9 @@ CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& loc
 CCoinsViewCache *pcoinsTip = NULL;
 CBlockTreeDB *pblocktree = NULL;
 StorageResults *pstorageresult = NULL;
+CCoinsViewCache *pcoinsTip1 = NULL;
+CBlockTreeDB *pblocktree1 = NULL;
+StorageResults *pstorageresult1 = NULL;
 
 enum FlushStateMode {
     FLUSH_STATE_NONE,
@@ -898,6 +901,10 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
                 return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "rate limited free transaction");
             LogPrint("mempool", "Rate limit dFreeCount: %g => %g\n", dFreeCount, dFreeCount+nSize);
             dFreeCount += nSize;
+            
+            if (dFreeCount >0) {
+                
+            }
         }
 
         if (!tx.HasCreateOrCall() && nAbsurdFee && nFees > nAbsurdFee)
@@ -1323,6 +1330,11 @@ bool ReadBlockFromDisk(Block& block, const CDiskBlockPos& pos, const Consensus::
     return true;
 }
 
+bool ReadBlockFromTosDisk(Block& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
+{
+    return ReadBlockFromDisk(block, pos, consensusParams);
+}
+
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams)
 {
     if (!ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
@@ -1333,9 +1345,19 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
+bool ReadBlockFromTosDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams)
+{
+    return ReadBlockFromDisk(block, pindex, consensusParams);
+}
+
 bool ReadFromDisk(CBlockHeader& block, unsigned int nFile, unsigned int nBlockPos)
 {
     return ReadBlockFromDisk(block, CDiskBlockPos(nFile, nBlockPos), Params().GetConsensus());
+}
+
+bool ReadFromTosDisk(CBlockHeader& block, unsigned int nFile, unsigned int nBlockPos)
+{
+    return ReadFromTosDisk(block, nFile, nBlockPos);
 }
 
 //This function for reading transaction can also be used to re-factorize GetTransaction.
