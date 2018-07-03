@@ -441,6 +441,14 @@ void CDBEnv::CheckpointLSN(const std::string& strFile)
 }
 
 
+void CDBEnv::CheckpointLSN2(const std::string& strFile)
+{
+    dbenv->txn_checkpoint(0, 1, 0);
+    if (fMockDb)
+        return;
+    dbenv->lsn_reset(strFile.c_str(), 0);
+}
+
 CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb(nullptr), activeTxn(nullptr)
 {
     fReadOnly = (!strchr(pszMode, '+') && !strchr(pszMode, 'w'));
@@ -583,7 +591,7 @@ bool CDB::Rewrite(CWalletDBWrapper& dbw, const char* pszSkip)
             if (!env->mapFileUseCount.count(strFile) || env->mapFileUseCount[strFile] == 0) {
                 // Flush log data to the dat file
                 env->CloseDb(strFile);
-                env->CheckpointLSN(strFile);
+                env->CheckpointLSN2(strFile);
                 env->mapFileUseCount.erase(strFile);
 
                 bool fSuccess = true;
@@ -730,7 +738,7 @@ bool CDB::PeriodicFlush(CWalletDBWrapper& dbw)
 
                 // Flush wallet file so it's self contained
                 env->CloseDb(strFile);
-                env->CheckpointLSN(strFile);
+                env->CheckpointLSN2(strFile);
 
                 env->mapFileUseCount.erase(mi++);
                 LogPrint(BCLog::DB, "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
@@ -760,7 +768,7 @@ bool CWalletDBWrapper::Backup(const std::string& strDest)
             {
                 // Flush log data to the dat file
                 env->CloseDb(strFile);
-                env->CheckpointLSN(strFile);
+                env->CheckpointLSN2(strFile);
                 env->mapFileUseCount.erase(strFile);
 
                 // Copy wallet file
