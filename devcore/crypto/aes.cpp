@@ -1,216 +1,60 @@
-// Copyright (c) 2016-2017 The Bitcoin Core developers
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+/*
+ This file is part of cpp-ethereum.
+ 
+ cpp-ethereum is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ cpp-ethereum is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/** @file AES.cpp
+ * @author Alex Leverington <nessence@gmail.com>
+ * @date 2014
+ */
 
-#include <crypto/aes.h>
-#include <crypto/common.h>
+#include "AES.h"
+#include <cryptopp/aes.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/pwdbased.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/sha.h>
 
-#include <assert.h>
-#include <string.h>
+using namespace dev;
+using namespace dev::crypto;
 
-extern "C" {
-#include <crypto/ctaes/ctaes.c>
-}
-
-AES128Encrypt::AES128Encrypt(const unsigned char key[16])
+bytes dev::aesDecrypt(bytesConstRef _ivCipher, std::string const& _password, unsigned _rounds, bytesConstRef _salt)
 {
-    AES128_init(&ctx, key);
-}
+	bytes pw = asBytes(_password);
 
-AES128Encrypt::~AES128Encrypt()
-{
-    memset(&ctx, 0, sizeof(ctx));
-}
+	if (!_salt.size())
+		_salt = &pw;
 
-void AES128Encrypt::Encrypt(unsigned char ciphertext[16], const unsigned char plaintext[16]) const
-{
-    AES128_encrypt(&ctx, 1, ciphertext, plaintext);
-}
+	bytes target(64);
+	CryptoPP::PKCS5_PBKDF2_HMAC<CryptoPP::SHA256>().DeriveKey(target.data(), target.size(), 0, pw.data(), pw.size(), _salt.data(), _salt.size(), _rounds);
 
-AES128Decrypt::AES128Decrypt(const unsigned char key[16])
-{
-    AES128_init(&ctx, key);
-}
-
-AES128Decrypt::~AES128Decrypt()
-{
-    memset(&ctx, 0, sizeof(ctx));
-}
-
-void AES128Decrypt::Decrypt(unsigned char plaintext[16], const unsigned char ciphertext[16]) const
-{
-    AES128_decrypt(&ctx, 1, plaintext, ciphertext);
-}
-
-AES256Encrypt::AES256Encrypt(const unsigned char key[32])
-{
-    AES256_init(&ctx, key);
-}
-
-AES256Encrypt::~AES256Encrypt()
-{
-    memset(&ctx, 0, sizeof(ctx));
-}
-
-void AES256Encrypt::Encrypt(unsigned char ciphertext[16], const unsigned char plaintext[16]) const
-{
-    AES256_encrypt(&ctx, 1, ciphertext, plaintext);
-}
-
-AES256Decrypt::AES256Decrypt(const unsigned char key[32])
-{
-    AES256_init(&ctx, key);
-}
-
-AES256Decrypt::~AES256Decrypt()
-{
-    memset(&ctx, 0, sizeof(ctx));
-}
-
-void AES256Decrypt::Decrypt(unsigned char plaintext[16], const unsigned char ciphertext[16]) const
-{
-    AES256_decrypt(&ctx, 1, plaintext, ciphertext);
-}
-
-
-template <typename T>
-static int CBCEncrypt(const T& enc, const unsigned char iv[AES_BLOCKSIZE], const unsigned char* data, int size, bool pad, unsigned char* out)
-{
-    int written = 0;
-    int padsize = size % AES_BLOCKSIZE;
-    unsigned char mixed[AES_BLOCKSIZE];
-
-    if (!data || !size || !out)
-        return 0;
-
-    if (!pad && padsize != 0)
-        return 0;
-
-    memcpy(mixed, iv, AES_BLOCKSIZE);
-
-    // Write all but the last block
-    while (written + AES_BLOCKSIZE <= size) {
-        for (int i = 0; i != AES_BLOCKSIZE; i++)
-            mixed[i] ^= *data++;
-        enc.Encrypt(out + written, mixed);
-        memcpy(mixed, out + written, AES_BLOCKSIZE);
-        written += AES_BLOCKSIZE;
-    }
-    if (pad) {
-        // For all that remains, pad each byte with the value of the remaining
-        // space. If there is none, pad by a full block.
-        for (int i = 0; i != padsize; i++)
-            mixed[i] ^= *data++;
-        for (int i = padsize; i != AES_BLOCKSIZE; i++)
-            mixed[i] ^= AES_BLOCKSIZE - padsize;
-        enc.Encrypt(out + written, mixed);
-        written += AES_BLOCKSIZE;
-    }
-    return written;
-}
-
-template <typename T>
-static int CBCDecrypt(const T& dec, const unsigned char iv[AES_BLOCKSIZE], const unsigned char* data, int size, bool pad, unsigned char* out)
-{
-    int written = 0;
-    bool fail = false;
-    const unsigned char* prev = iv;
-
-    if (!data || !size || !out)
-        return 0;
-
-    if (size % AES_BLOCKSIZE != 0)
-        return 0;
-
-    // Decrypt all data. Padding will be checked in the output.
-    while (written != size) {
-        dec.Decrypt(out, data + written);
-        for (int i = 0; i != AES_BLOCKSIZE; i++)
-            *out++ ^= prev[i];
-        prev = data + written;
-        written += AES_BLOCKSIZE;
-    }
-
-    // When decrypting padding, attempt to run in constant-time
-    if (pad) {
-        // If used, padding size is the value of the last decrypted byte. For
-        // it to be valid, It must be between 1 and AES_BLOCKSIZE.
-        unsigned char padsize = *--out;
-        fail = !padsize | (padsize > AES_BLOCKSIZE);
-
-        // If not well-formed, treat it as though there's no padding.
-        padsize *= !fail;
-
-        // All padding must equal the last byte otherwise it's not well-formed
-        for (int i = AES_BLOCKSIZE; i != 0; i--)
-            fail |= ((i > AES_BLOCKSIZE - padsize) & (*out-- != padsize));
-
-        written -= padsize;
-    }
-    return written * !fail;
-}
-
-AES256CBCEncrypt::AES256CBCEncrypt(const unsigned char key[AES256_KEYSIZE], const unsigned char ivIn[AES_BLOCKSIZE], bool padIn)
-    : enc(key), pad(padIn)
-{
-    memcpy(iv, ivIn, AES_BLOCKSIZE);
-}
-
-int AES256CBCEncrypt::Encrypt(const unsigned char* data, int size, unsigned char* out) const
-{
-    return CBCEncrypt(enc, iv, data, size, pad, out);
-}
-
-AES256CBCEncrypt::~AES256CBCEncrypt()
-{
-    memset(iv, 0, sizeof(iv));
-}
-
-AES256CBCDecrypt::AES256CBCDecrypt(const unsigned char key[AES256_KEYSIZE], const unsigned char ivIn[AES_BLOCKSIZE], bool padIn)
-    : dec(key), pad(padIn)
-{
-    memcpy(iv, ivIn, AES_BLOCKSIZE);
-}
-
-
-int AES256CBCDecrypt::Decrypt(const unsigned char* data, int size, unsigned char* out) const
-{
-    return CBCDecrypt(dec, iv, data, size, pad, out);
-}
-
-AES256CBCDecrypt::~AES256CBCDecrypt()
-{
-    memset(iv, 0, sizeof(iv));
-}
-
-AES128CBCEncrypt::AES128CBCEncrypt(const unsigned char key[AES128_KEYSIZE], const unsigned char ivIn[AES_BLOCKSIZE], bool padIn)
-    : enc(key), pad(padIn)
-{
-    memcpy(iv, ivIn, AES_BLOCKSIZE);
-}
-
-AES128CBCEncrypt::~AES128CBCEncrypt()
-{
-    memset(iv, 0, AES_BLOCKSIZE);
-}
-
-int AES128CBCEncrypt::Encrypt(const unsigned char* data, int size, unsigned char* out) const
-{
-    return CBCEncrypt(enc, iv, data, size, pad, out);
-}
-
-AES128CBCDecrypt::AES128CBCDecrypt(const unsigned char key[AES128_KEYSIZE], const unsigned char ivIn[AES_BLOCKSIZE], bool padIn)
-    : dec(key), pad(padIn)
-{
-    memcpy(iv, ivIn, AES_BLOCKSIZE);
-}
-
-AES128CBCDecrypt::~AES128CBCDecrypt()
-{
-    memset(iv, 0, AES_BLOCKSIZE);
-}
-
-int AES128CBCDecrypt::Decrypt(const unsigned char* data, int size, unsigned char* out) const
-{
-    return CBCDecrypt(dec, iv, data, size, pad, out);
+	try
+	{
+		CryptoPP::AES::Decryption aesDecryption(target.data(), 16);
+		auto cipher = _ivCipher.cropped(16);
+		auto iv = _ivCipher.cropped(0, 16);
+		CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv.data());
+		std::string decrypted;
+		CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption, new CryptoPP::StringSink(decrypted));
+		stfDecryptor.Put(cipher.data(), cipher.size());
+		stfDecryptor.MessageEnd();
+		return asBytes(decrypted);
+	}
+	catch (std::exception const& e)
+	{
+		// FIXME: Handle this error better.
+		std::cerr << e.what() << '\n';
+		return bytes();
+	}
 }

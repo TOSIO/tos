@@ -14,21 +14,22 @@
  You should have received a copy of the GNU General Public License
  along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** @file AES.h
- * @author Alex Leverington <nessence@gmail.com>
- * @date 2014
- *
- * AES
- * todo: use openssl
+/**
+ * @file LibSnark.h
  */
 
 #pragma once
 
-#include "Common.h"
+#include <libdevcore/Common.h>
 
 namespace dev
 {
+namespace crypto
+{
 
-bytes aesDecrypt(bytesConstRef _cipher, std::string const& _password, unsigned _rounds = 2000, bytesConstRef _salt = bytesConstRef());
+std::pair<bool, bytes> alt_bn128_pairing_product(bytesConstRef _in);
+std::pair<bool, bytes> alt_bn128_G1_add(bytesConstRef _in);
+std::pair<bool, bytes> alt_bn128_G1_mul(bytesConstRef _in);
 
+}
 }

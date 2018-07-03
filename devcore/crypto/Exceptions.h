@@ -14,23 +14,22 @@
 	You should have received a copy of the GNU General Public License
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file Hash.h
- * @author Gav Wood <i@gavwood.com>
- * @date 2014
- *
- * The FixedHash fixed-size "hash" container type.
+/** @file Exceptions.h
+ * @author Christian <c@ethdev.com>
+ * @date 2016
  */
 
 #pragma once
 
-#include "libdevcore/FixedHash.h"
-#include "libdevcore/vector_ref.h"
+#include <libdevcore/Exceptions.h>
 
 namespace dev
 {
+namespace crypto
+{
 
-h256 sha256(bytesConstRef _input) noexcept;
+/// Rare malfunction of cryptographic functions.
+DEV_SIMPLE_EXCEPTION(CryptoException);
 
-h160 ripemd160(bytesConstRef _input);
-
+}
 }
