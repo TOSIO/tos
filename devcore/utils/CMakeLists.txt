@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.5.1)
+project(devcoreutil)
+file(GLOB SOURCES "*.cpp")
+file(GLOB HEADERS "*.h")
+SET(CMAKE_CXX_FLAGS "-std=c++11 -O3")
+# cable_add_buildinfo_library(PREFIX aleth)
+# add_library(devcoreutil ${SOURCES} ${HEADERS})
+# target_include_directories(devcoreutil SYSTEM PUBLIC ${Boost_INCLUDE_DIR})
+# target_link_libraries(devcoreutil PUBLIC aleth-buildinfo Boost::filesystem Boost::system Boost::log Boost::thread Threads::Threads PRIVATE ethash::ethash)
+
+# target_include_directories(utils PRIVATE ${UTILS_INCLUDE_DIR})
