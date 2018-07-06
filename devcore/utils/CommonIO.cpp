@@ -20,7 +20,7 @@
  */
 
 #include "CommonIO.h"
-#include <libdevcore/FileSystem.h>
+#include "FileSystem.h"
 #include <iostream>
 #include <cstdlib>
 #include <fstream>

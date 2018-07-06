@@ -19,7 +19,8 @@
 #include "Exceptions.h"
 #include "Log.h"
 
-#include <aleth-buildinfo.h>
+#include "aleth-buildinfo.h"
+
 
 using namespace std;
 
