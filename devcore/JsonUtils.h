@@ -16,7 +16,7 @@
 */
 
 #include "Exceptions.h"
-#include "json_spirit/JsonSpiritHeaders.h"
+#include <json_spirit/JsonSpiritHeaders.h>
 #include <set>
 #include <string>
 
