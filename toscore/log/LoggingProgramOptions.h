@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <log/Log.h>
+#include "Log.h"
 #include <boost/program_options/options_description.hpp>
 
 namespace dev
