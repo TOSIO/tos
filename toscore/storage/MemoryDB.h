@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include <common/Common.h>
 #include <log/Log.h>
-#include "RLP.h"
+#include <utils/RLP.h>
 
 namespace dev
 {

@@ -16,7 +16,7 @@
 */
 
 #include "SHA3.h"
-#include "RLP.h"
+#include <utils/RLP.h>
 
 #include <ethash/keccak.hpp>
 

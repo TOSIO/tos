@@ -22,7 +22,7 @@
 #pragma once
 
 #include <common/Common.h>
-#include "RLP.h"
+#include <utils/RLP.h>
 
 namespace dev
 {
