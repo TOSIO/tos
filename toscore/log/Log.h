@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <tosbase/CommonIO.h>
+#include <common/CommonIO.h>
 
-#include <tosbase/FixedHash.h>
+#include <common/FixedHash.h>
 
 #include "Terminal.h"
 #include <string>

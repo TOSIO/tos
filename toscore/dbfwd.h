@@ -14,34 +14,16 @@
 	You should have received a copy of the GNU General Public License
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file TrieHash.h
- * @author Gav Wood <i@gavwood.com>
- * @date 2014
- */
 
 #pragma once
-
-#include <tosbase/FixedHash.h>
-
-#include <vector>
+#include <common/vector_ref.h>
 
 namespace dev
 {
-
-bytes rlp256(BytesMap const& _s);
-h256 hash256(BytesMap const& _s);
-
-h256 orderedTrieRoot(std::vector<bytes> const& _data);
-
-template <class T, class U> inline h256 trieRootOver(unsigned _itemCount, T const& _getKey, U const& _getValue)
+namespace db
 {
-	BytesMap m;
-	for (unsigned i = 0; i < _itemCount; ++i)
-		m[_getKey(i)] = _getValue(i);
-	return hash256(m);
+using Slice = vector_ref<char const>;
+class WriteBatchFace;
+class DatabaseFace;
 }
-
-h256 orderedTrieRoot(std::vector<bytesConstRef> const& _data);
-h256 orderedTrieRoot(std::vector<bytes> const& _data);
-
 }

@@ -22,8 +22,8 @@
  */
 
 #include "FileSystem.h"
-#include <tosbase/Common.h>
-#include "Log.h"
+#include <common/Common.h>
+#include <log/Log.h>
 
 #if defined(_WIN32)
 #include <shlobj.h>

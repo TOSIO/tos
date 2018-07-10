@@ -11,5 +11,6 @@ target_link_libraries(devcore PRIVATE ${LEVELDB_LIBRARIES})
 include_directories(./)
 add_subdirectory(jsonspirit)
 
-include_directories(./)
-add_subdirectory(tosbase)
+add_subdirectory(common)
+
+add_subdirectory(log)

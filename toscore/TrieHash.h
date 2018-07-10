@@ -14,35 +14,34 @@
 	You should have received a copy of the GNU General Public License
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
-/// @file
-/// This file defined Address alias for FixedHash of 160 bits and some
-/// special Address constants.
+/** @file TrieHash.h
+ * @author Gav Wood <i@gavwood.com>
+ * @date 2014
+ */
 
 #pragma once
 
-#include <tosbase/FixedHash.h>
+#include <common/FixedHash.h>
+
+#include <vector>
 
 namespace dev
 {
 
-/// An Ethereum address: 20 bytes.
-/// @NOTE This is not endian-specific; it's just a bunch of bytes.
-using Address = h160;
+bytes rlp256(BytesMap const& _s);
+h256 hash256(BytesMap const& _s);
 
-/// A vector of Ethereum addresses.
-using Addresses = h160s;
+h256 orderedTrieRoot(std::vector<bytes> const& _data);
 
-/// A hash set of Ethereum addresses.
-using AddressHash = std::unordered_set<h160>;
-
-/// The zero address.
-extern Address const ZeroAddress;
-
-/// The last address.
-extern Address const MaxAddress;
-
-/// The SYSTEM address.
-extern Address const SystemAddress;
-
+template <class T, class U> inline h256 trieRootOver(unsigned _itemCount, T const& _getKey, U const& _getValue)
+{
+	BytesMap m;
+	for (unsigned i = 0; i < _itemCount; ++i)
+		m[_getKey(i)] = _getValue(i);
+	return hash256(m);
 }
 
+h256 orderedTrieRoot(std::vector<bytesConstRef> const& _data);
+h256 orderedTrieRoot(std::vector<bytes> const& _data);
+
+}

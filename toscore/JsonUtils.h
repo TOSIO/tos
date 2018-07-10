@@ -15,7 +15,7 @@
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <tosbase/Exceptions.h>
+#include <common/Exceptions.h>
 #include <jsonspirit/JsonSpiritHeaders.h>
 #include <set>
 #include <string>

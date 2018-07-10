@@ -23,8 +23,8 @@
 
 #include <memory>
 #include "db.h"
-#include <tosbase/Common.h>
-#include "Log.h"
+#include <common/Common.h>
+#include <log/Log.h>
 #include "MemoryDB.h"
 
 namespace dev

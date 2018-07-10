@@ -14,16 +14,35 @@
 	You should have received a copy of the GNU General Public License
 	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
 */
+/// @file
+/// This file defined Address alias for FixedHash of 160 bits and some
+/// special Address constants.
 
 #pragma once
-#include <tosbase/vector_ref.h>
+
+#include <common/FixedHash.h>
 
 namespace dev
 {
-namespace db
-{
-using Slice = vector_ref<char const>;
-class WriteBatchFace;
-class DatabaseFace;
+
+/// An Ethereum address: 20 bytes.
+/// @NOTE This is not endian-specific; it's just a bunch of bytes.
+using Address = h160;
+
+/// A vector of Ethereum addresses.
+using Addresses = h160s;
+
+/// A hash set of Ethereum addresses.
+using AddressHash = std::unordered_set<h160>;
+
+/// The zero address.
+extern Address const ZeroAddress;
+
+/// The last address.
+extern Address const MaxAddress;
+
+/// The SYSTEM address.
+extern Address const SystemAddress;
+
 }
-}
+

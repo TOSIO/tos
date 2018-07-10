@@ -111,4 +111,4 @@ include_directories("${CMAKE_SOURCE_DIR}")
 option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OFF)
 
 
-add_subdirectory(devcore)
+add_subdirectory(toscore)

@@ -21,10 +21,10 @@
 
 #include <thread>
 #include <boost/filesystem.hpp>
-#include <tosbase/Exceptions.h>
+#include <common/Exceptions.h>
 #include "TransientDirectory.h"
-#include <tosbase/CommonIO.h>
-#include "Log.h"
+#include <common/CommonIO.h>
+#include <log/Log.h>
 using namespace std;
 using namespace dev;
 namespace fs = boost::filesystem;

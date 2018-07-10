@@ -29,7 +29,7 @@
 #pragma once
 
 #include <string>
-#include <tosbase/FixedHash.h>
+#include <common/FixedHash.h>
 
 namespace dev
 {

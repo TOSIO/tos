@@ -17,7 +17,7 @@
 
 #include "Common.h"
 #include "Exceptions.h"
-#include "./Log.h"
+#include <log/Log.h>
 
 #include <aleth-buildinfo.h>
 

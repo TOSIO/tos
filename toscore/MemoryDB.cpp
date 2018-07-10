@@ -20,8 +20,8 @@
  */
 
 #include "MemoryDB.h"
-#include <tosbase/Common.h>
-#include <tosbase/CommonData.h>
+#include <common/Common.h>
+#include <common/CommonData.h>
 using namespace std;
 using namespace dev;
 

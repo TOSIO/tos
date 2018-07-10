@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <tosbase/Exceptions.h>
+#include <common/Exceptions.h>
 #include "dbfwd.h"
 
 #include <memory>

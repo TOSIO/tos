@@ -22,8 +22,8 @@
 #pragma once
 
 #include <unordered_map>
-#include <tosbase/Common.h>
-#include "Log.h"
+#include <common/Common.h>
+#include <log/Log.h>
 #include "RLP.h"
 
 namespace dev

@@ -22,8 +22,8 @@
 #pragma once
 
 #include <memory>
-#include "Log.h"
-#include <tosbase/Exceptions.h>
+#include <log/Log.h>
+#include <common/Exceptions.h>
 #include "SHA3.h"
 #include "TrieCommon.h"
 
