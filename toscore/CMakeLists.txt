@@ -13,7 +13,7 @@ add_subdirectory(jsonspirit)
 
 add_subdirectory(common)
 
-add_subdirectory(log)
+add_subdirectory(log) 
 
 add_subdirectory(crypto)
 
