@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <common/FixedHash.h>
+#include <crypto/FixedHash.h>
 
 #include <vector>
 

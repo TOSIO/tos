@@ -30,7 +30,7 @@
 #include <iomanip>
 #include <common/vector_ref.h>
 #include <common/Exceptions.h>
-#include <common/FixedHash.h>
+#include <crypto/FixedHash.h>
 
 namespace dev
 {

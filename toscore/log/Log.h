@@ -19,7 +19,7 @@
 
 #include <common/CommonIO.h>
 
-#include <common/FixedHash.h>
+#include <crypto/FixedHash.h>
 
 #include "Terminal.h"
 #include <string>

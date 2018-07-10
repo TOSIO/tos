@@ -20,7 +20,7 @@
  */
 
 #include "TrieCommon.h"
-#include "SHA3.h"
+#include <crypto/SHA3.h>
 
 namespace dev
 {

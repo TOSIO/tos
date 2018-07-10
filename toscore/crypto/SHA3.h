@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <common/FixedHash.h>
+#include <crypto/FixedHash.h>
 #include <common/vector_ref.h>
 
 #include <ethash/keccak.hpp>

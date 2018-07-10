@@ -24,7 +24,7 @@
 #include <memory>
 #include <log/Log.h>
 #include <common/Exceptions.h>
-#include "SHA3.h"
+#include <crypto/SHA3.h>
 #include "TrieCommon.h"
 
 namespace dev

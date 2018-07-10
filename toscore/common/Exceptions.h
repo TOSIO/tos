@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "FixedHash.h"
+#include <crypto/FixedHash.h>
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/exception/errinfo_api_function.hpp>
 #include <boost/exception/exception.hpp>

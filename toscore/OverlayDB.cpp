@@ -18,7 +18,7 @@
 #include <thread>
 #include "db.h"
 #include <common/Common.h>
-#include "SHA3.h"
+#include <crypto/SHA3.h>
 #include "OverlayDB.h"
 #include "TrieDB.h"
 

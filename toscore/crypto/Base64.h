@@ -29,7 +29,7 @@
 #pragma once
 
 #include <string>
-#include <common/FixedHash.h>
+#include <crypto/FixedHash.h>
 
 namespace dev
 {
