@@ -16,7 +16,7 @@
 */
 
 #include <tosbase/Exceptions.h>
-#include <json_spirit/JsonSpiritHeaders.h>
+#include <jsonspirit/JsonSpiritHeaders.h>
 #include <set>
 #include <string>
 

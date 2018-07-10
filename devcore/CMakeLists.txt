@@ -9,7 +9,7 @@ target_include_directories(devcore SYSTEM PUBLIC ${LEVELDB_INCLUDE_DIRS})
 target_link_libraries(devcore PRIVATE ${LEVELDB_LIBRARIES})
 
 include_directories(./)
-add_subdirectory(json_spirit)
+add_subdirectory(jsonspirit)
 
 include_directories(./)
 add_subdirectory(tosbase)

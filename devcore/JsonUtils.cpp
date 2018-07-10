@@ -21,7 +21,7 @@
 #include <ostream>
 #include <set>
 #include <string>
-#include <json_spirit/JsonSpiritHeaders.h>
+#include <jsonspirit/JsonSpiritHeaders.h>
 void dev::validateFieldNames(json_spirit::mObject const& _obj, std::set<std::string> const& _allowedFields)
 {
 	for (auto const& elm: _obj)
