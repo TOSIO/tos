@@ -23,7 +23,7 @@
 
 #include <memory>
 #include "db.h"
-#include "Common.h"
+#include <tosbase/Common.h>
 #include "Log.h"
 #include "MemoryDB.h"
 

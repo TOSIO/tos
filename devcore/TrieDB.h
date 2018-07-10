@@ -23,7 +23,7 @@
 
 #include <memory>
 #include "Log.h"
-#include "Exceptions.h"
+#include <tosbase/Exceptions.h>
 #include "SHA3.h"
 #include "TrieCommon.h"
 

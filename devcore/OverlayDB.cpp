@@ -17,7 +17,7 @@
 
 #include <thread>
 #include "db.h"
-#include "Common.h"
+#include <tosbase/Common.h>
 #include "SHA3.h"
 #include "OverlayDB.h"
 #include "TrieDB.h"

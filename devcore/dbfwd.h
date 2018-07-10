@@ -16,8 +16,7 @@
 */
 
 #pragma once
-
-#include "vector_ref.h"
+#include <tosbase/vector_ref.h>
 
 namespace dev
 {

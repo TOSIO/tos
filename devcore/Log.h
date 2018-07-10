@@ -17,8 +17,10 @@
 
 #pragma once
 
-#include "CommonIO.h"
-#include "FixedHash.h"
+#include <tosbase/CommonIO.h>
+
+#include <tosbase/FixedHash.h>
+
 #include "Terminal.h"
 #include <string>
 #include <vector>

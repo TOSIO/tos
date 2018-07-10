@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "FixedHash.h"
-#include "vector_ref.h"
+#include <tosbase/FixedHash.h>
+#include <tosbase/vector_ref.h>
 
 #include <ethash/keccak.hpp>
 

@@ -56,6 +56,7 @@ string memDump(bytes const& _bytes, unsigned _width, bool _html)
 {
     stringstream ret;
     if (_html)
+}
         ret << "<pre style=\"font-family: Monospace,Lucida Console,Courier,Courier New,sans-serif; font-size: small\">";
     for (unsigned i = 0; i < _bytes.size(); i += _width)
     {

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "FixedHash.h"
+#include <tosbase/FixedHash.h>
 
 #include <vector>
 
