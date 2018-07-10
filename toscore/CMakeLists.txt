@@ -22,4 +22,4 @@ add_subdirectory(storage)
 add_subdirectory(utils)
 
 
-target_link_libraries(toscore PRIVATE common log crypto storage utils)
+target_link_libraries(toscore PUBLIC common log crypto storage utils)

@@ -112,3 +112,6 @@ option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OF
 
 
 add_subdirectory(toscore)
+
+
+add_subdirectory(tos)
