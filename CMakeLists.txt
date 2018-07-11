@@ -46,7 +46,7 @@ HunterGate(
     LOCAL
 )
 
-project(tos)
+project(toschain)
 set(PROJECT_VERSION 1.4.0.dev1)
 
 
