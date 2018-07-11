@@ -34,16 +34,3 @@ add_subdirectory(jsonspirit)
 
 target_link_libraries(toscore PUBLIC jsonspirit)
 
-#add_subdirectory(common)
-
-#add_subdirectory(log) 
-
-#add_subdirectory(crypto)
-
-#add_subdirectory(storage)
-
-#add_subdirectory(utils)
-
-#add_subdirectory(concurrent)
-
-#target_link_libraries(toscore PUBLIC common log crypto storage utils)
