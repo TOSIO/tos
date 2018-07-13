@@ -46,7 +46,7 @@ HunterGate(
     LOCAL
 )
 
-project(tos)
+project(toschain)
 set(PROJECT_VERSION 1.4.0.dev1)
 
 
@@ -111,4 +111,7 @@ include_directories("${CMAKE_SOURCE_DIR}")
 option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OFF)
 
 
-add_subdirectory(devcore)
+add_subdirectory(toscore)
+
+
+add_subdirectory(tos)
