@@ -6,13 +6,13 @@
 #define BITCOIN_NETADDRESS_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/tos-config.h>
 #endif
 
-#include <compat.h>
-#include <serialize.h>
+#include <deps/compat.h>
+//#include <serialize.h>
 
-#include <stdint.h>
+//#include <deps/stdint.h>
 #include <string>
 #include <vector>
 
@@ -89,11 +89,16 @@ class CNetAddr
         friend bool operator!=(const CNetAddr& a, const CNetAddr& b);
         friend bool operator<(const CNetAddr& a, const CNetAddr& b);
 
-        ADD_SERIALIZE_METHODS;
+        //ADD_SERIALIZE_METHODS;
 
-        template <typename Stream, typename Operation>
+/*         template <typename Stream, typename Operation>
         inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(FLATDATA(ip));
+            //READWRITE(FLATDATA(ip));
+        } */
+
+        void Serialize(RLPStream& strem)
+        {
+            stream.appendVector(vector_ref(ip,16));
         }
 
         friend class CSubNet;
@@ -126,13 +131,21 @@ class CSubNet
         friend bool operator!=(const CSubNet& a, const CSubNet& b);
         friend bool operator<(const CSubNet& a, const CSubNet& b);
 
-        ADD_SERIALIZE_METHODS;
+        //ADD_SERIALIZE_METHODS;
 
-        template <typename Stream, typename Operation>
+/*         template <typename Stream, typename Operation>
         inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(network);
+/*             READWRITE(network);
             READWRITE(FLATDATA(netmask));
-            READWRITE(FLATDATA(valid));
+            READWRITE(FLATDATA(valid)); */
+        } */
+
+        void Serialize(RLPStream& strem)
+        {
+            stream.appendList(3);
+            network.Serialize(stream);
+            stream.appendVector(vector_ref(netmask));
+            stream.appendVector(vector_ref(valid));
         }
 };
 
@@ -162,15 +175,23 @@ class CService : public CNetAddr
         CService(const struct in6_addr& ipv6Addr, unsigned short port);
         explicit CService(const struct sockaddr_in6& addr);
 
-        ADD_SERIALIZE_METHODS;
+        //ADD_SERIALIZE_METHODS;
 
-        template <typename Stream, typename Operation>
+/*         template <typename Stream, typename Operation>
         inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(FLATDATA(ip));
+/*             READWRITE(FLATDATA(ip));
             unsigned short portN = htons(port);
             READWRITE(FLATDATA(portN));
             if (ser_action.ForRead())
-                 port = ntohs(portN);
+                 port = ntohs(portN); */
+        } */
+
+        void Serialize(RLPStream& stream)
+        {
+            unsigned short portN = htons(port);
+            stream.appendList(2);
+            stream.append(vector_ref(ip));
+            stream<<portN;
         }
 };
 
