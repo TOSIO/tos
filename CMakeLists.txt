@@ -115,3 +115,6 @@ add_subdirectory(toscore)
 
 
 add_subdirectory(tos)
+
+
+add_subdirectory(test)
