@@ -53,18 +53,18 @@ dev::bytes rlpEncode()
 void rlpDecode(dev::bytes output)
 {
 
-std::map<int,std::string> banlist= {{1,"hello"},{4,"world"},{3,"lamchee"}};
-dev::RLPStream root;
-root.append(banlist);
+// std::map<int,std::string> banlist= {{1,"hello"},{4,"world"},{3,"lamchee"}};
+// dev::RLPStream root;
+// root.append(banlist);
 
 
-dev::RLP rlp0(root.out());
-std::map<int,std::string> ret = rlp0.toMap<int,std::string>();
+// dev::RLP rlp0(root.out());
+// std::map<int,std::string> ret = rlp0.toMap<int,std::string>();
 
-    for (auto kv : ret)
-    {
-        printf("key : %d -> value : %s\n",kv.first, kv.second.c_str());
-    }
+    // for (auto kv : ret)
+    // {
+    //     printf("key : %d -> value : %s\n",kv.first, kv.second.c_str());
+    // }
     dev::RLP rlp(output);
     printf("trace1\n");
 
