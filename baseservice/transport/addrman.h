@@ -8,10 +8,10 @@
 
 #include <netaddress.h>
 #include <protocol.h>
-#include <random.h>
-#include <sync.h>
+#include <deps/random.h>
+#include <deps/sync.h>
 #include <timedata.h>
-#include <util.h>
+//#include <util.h>
 
 #include <map>
 #include <set>
@@ -55,14 +55,14 @@ private:
 
 public:
 
-    ADD_SERIALIZE_METHODS;
+    //ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(*(CAddress*)this);
+/*         READWRITE(*(CAddress*)this);
         READWRITE(source);
         READWRITE(nLastSuccess);
-        READWRITE(nAttempts);
+        READWRITE(nAttempts); */
     }
 
     void Init()
@@ -297,7 +297,7 @@ public:
      * We don't use ADD_SERIALIZE_METHODS since the serialization and deserialization code has
      * very little in common.
      */
-    template<typename Stream>
+/*     template<typename Stream>
     void Serialize(Stream &s) const
     {
         LOCK(cs);
@@ -447,10 +447,20 @@ public:
             }
         }
         if (nLost + nLostUnk > 0) {
-            LogPrint(BCLog::ADDRMAN, "addrman lost %i new and %i tried addresses due to collisions\n", nLostUnk, nLost);
+            //LogPrint(BCLog::ADDRMAN, "addrman lost %i new and %i tried addresses due to collisions\n", nLostUnk, nLost);
         }
 
         Check();
+    } */
+
+    void Serialize(RLPStream& out)
+    {
+
+    }
+
+    void Unserialize(bytesConstRef in)
+    {
+
     }
 
     void Clear()
@@ -502,7 +512,7 @@ public:
             LOCK(cs);
             int err;
             if ((err=Check_()))
-                LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
+                //LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
         }
 #endif
     }
@@ -516,7 +526,7 @@ public:
         fRet |= Add_(addr, source, nTimePenalty);
         Check();
         if (fRet) {
-            LogPrint(BCLog::ADDRMAN, "Added %s from %s: %i tried, %i new\n", addr.ToStringIPPort(), source.ToString(), nTried, nNew);
+            //LogPrint(BCLog::ADDRMAN, "Added %s from %s: %i tried, %i new\n", addr.ToStringIPPort(), source.ToString(), nTried, nNew);
         }
         return fRet;
     }
@@ -531,7 +541,7 @@ public:
             nAdd += Add_(*it, source, nTimePenalty) ? 1 : 0;
         Check();
         if (nAdd) {
-            LogPrint(BCLog::ADDRMAN, "Added %i addresses from %s: %i tried, %i new\n", nAdd, source.ToString(), nTried, nNew);
+            //LogPrint(BCLog::ADDRMAN, "Added %i addresses from %s: %i tried, %i new\n", nAdd, source.ToString(), nTried, nNew);
         }
         return nAdd > 0;
     }

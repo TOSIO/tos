@@ -6,11 +6,13 @@
 #ifndef BITCOIN_ADDRDB_H
 #define BITCOIN_ADDRDB_H
 
-#include <devcore/fs.h>
-#include <devcore/serialize.h>
+//#include <devcore/utils/serialize.h>
 
 #include <string>
 #include <map>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 class CSubNet;
 class CAddrMan;
@@ -43,14 +45,20 @@ public:
         nCreateTime = nCreateTimeIn;
     }
 
-    ADD_SERIALIZE_METHODS;
+    //ADD_SERIALIZE_METHODS;
 
-    template <typename Stream, typename Operation>
+/*     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(this->nVersion);
         READWRITE(nCreateTime);
         READWRITE(nBanUntil);
         READWRITE(banReason);
+    } */
+
+    void Serialize(RLPStream& stream)
+    {
+        stream.appendList(4);
+        stream << this->nVersion<<nCreateTime<<nBanUntil<<banReason;
     }
 
     void SetNull()
@@ -85,7 +93,7 @@ public:
     CAddrDB();
     bool Write(const CAddrMan& addr);
     bool Read(CAddrMan& addr);
-    static bool Read(CAddrMan& addr, CDataStream& ssPeers);
+    /* static bool Read(CAddrMan& addr, CDataStream& ssPeers); */
 };
 
 /** Access to the banlist database (banlist.dat) */
