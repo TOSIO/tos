@@ -532,7 +532,13 @@ public:
             throw std::ios_base::failure("CAutoFile::write: write failed");
     }
 
-    template<typename T>
+    void write(bytesConstRef data)
+    {
+        write(data.data(), data.size());
+    } 
+
+
+/*     template<typename T>
     CAutoFile& operator<<(const T& obj)
     {
         // Serialize to this stream
@@ -550,7 +556,7 @@ public:
             throw std::ios_base::failure("CAutoFile::operator>>: file handle is nullptr");
         ::Unserialize(*this, obj);
         return (*this);
-    }
+    } */
 };
 
 /** Non-refcounted RAII wrapper around a FILE* that implements a ring buffer to

@@ -44,15 +44,19 @@ public:
 
     ADD_SERIALIZE_METHODS;
 
-    template <typename Stream, typename Operation>
+/*     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
         READWRITE(FLATDATA(pchMessageStart));
         READWRITE(FLATDATA(pchCommand));
         READWRITE(nMessageSize);
         READWRITE(FLATDATA(pchChecksum));
-    }
+    } */
 
+    void Serialize(RLPStream& strem)
+    {
+
+    }
     char pchMessageStart[MESSAGE_START_SIZE];
     char pchCommand[COMMAND_SIZE];
     uint32_t nMessageSize;
@@ -333,7 +337,7 @@ public:
 
     ADD_SERIALIZE_METHODS;
 
-    template <typename Stream, typename Operation>
+/*     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
         if (ser_action.ForRead())
@@ -348,8 +352,13 @@ public:
         READWRITE(nServicesInt);
         nServices = (ServiceFlags)nServicesInt;
         READWRITE(*(CService*)this);
-    }
+    } */
 
+    void Serialize(RLPStream& stream)
+    {
+
+    }
+    
     // TODO: make private (improves encapsulation)
 public:
     ServiceFlags nServices;

@@ -3,18 +3,18 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/tos-config.h>
 #endif
 
 #include <timedata.h>
 
 #include <netaddress.h>
 #include <sync.h>
-#include <ui_interface.h>
-#include <util.h>
+//#include <ui_interface.h>
+//#include <util.h>
 #include <utilstrencodings.h>
-#include <warnings.h>
-
+//#include <warnings.h>
+#include <set>
 
 static CCriticalSection cs_nTimeOffset;
 static int64_t nTimeOffset = 0;
@@ -34,7 +34,8 @@ int64_t GetTimeOffset()
 
 int64_t GetAdjustedTime()
 {
-    return GetTime() + GetTimeOffset();
+    //return GetTime() + GetTimeOffset();
+    return 0;
 }
 
 static int64_t abs64(int64_t n)
@@ -57,7 +58,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
     // Add data
     static CMedianFilter<int64_t> vTimeOffsets(BITCOIN_TIMEDATA_MAX_SAMPLES, 0);
     vTimeOffsets.input(nOffsetSample);
-    LogPrint(BCLog::NET,"added time data, samples %d, offset %+d (%+d minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample/60);
+    //LogPrint(BCLog::NET,"added time data, samples %d, offset %+d (%+d minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample/60);
 
     // There is a known issue here (see issue #4521):
     //
@@ -81,11 +82,11 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
         int64_t nMedian = vTimeOffsets.median();
         std::vector<int64_t> vSorted = vTimeOffsets.sorted();
         // Only let other nodes change our time by so much
-        if (abs64(nMedian) <= std::max<int64_t>(0, gArgs.GetArg("-maxtimeadjustment", DEFAULT_MAX_TIME_ADJUSTMENT)))
+      /*   if (abs64(nMedian) <= std::max<int64_t>(0, gArgs.GetArg("-maxtimeadjustment", DEFAULT_MAX_TIME_ADJUSTMENT)))
         {
             nTimeOffset = nMedian;
         }
-        else
+        else */
         {
             nTimeOffset = 0;
 
@@ -101,20 +102,20 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
                 if (!fMatch)
                 {
                     fDone = true;
-                    std::string strMessage = strprintf(_("Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly."), _(PACKAGE_NAME));
+/*                     std::string strMessage = strprintf(_("Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly."), _(PACKAGE_NAME));
                     SetMiscWarning(strMessage);
-                    uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);
+                    uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING); */
                 }
             }
         }
 
-        if (LogAcceptCategory(BCLog::NET)) {
+/*         if (LogAcceptCategory(BCLog::NET)) {
             for (int64_t n : vSorted) {
                 LogPrint(BCLog::NET, "%+d  ", n);
             }
             LogPrint(BCLog::NET, "|  ");
 
             LogPrint(BCLog::NET, "nTimeOffset = %+d  (%+d minutes)\n", nTimeOffset, nTimeOffset/60);
-        }
+        } */
     }
 }

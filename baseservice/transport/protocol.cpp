@@ -5,7 +5,7 @@
 
 #include <protocol.h>
 
-#include <util.h>
+//#include <util.h>
 #include <utilstrencodings.h>
 
 #ifndef WIN32
@@ -119,7 +119,7 @@ bool CMessageHeader::IsValid(const MessageStartChars& pchMessageStartIn) const
     // Message size
     if (nMessageSize > MAX_SIZE)
     {
-        LogPrintf("CMessageHeader::IsValid(): (%s, %u bytes) nMessageSize > MAX_SIZE\n", GetCommand(), nMessageSize);
+        //LogPrintf("CMessageHeader::IsValid(): (%s, %u bytes) nMessageSize > MAX_SIZE\n", GetCommand(), nMessageSize);
         return false;
     }
 

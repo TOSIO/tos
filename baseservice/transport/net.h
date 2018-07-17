@@ -9,18 +9,18 @@
 #include <addrdb.h>
 #include <addrman.h>
 #include <amount.h>
-#include <bloom.h>
+//#include <bloom.h>
 #include <compat.h>
-#include <hash.h>
-#include <limitedmap.h>
+//#include <hash.h>
+#include <deps/limitedmap.h>
 #include <netaddress.h>
-#include <policy/feerate.h>
+//#include <policy/feerate.h>
 #include <protocol.h>
-#include <random.h>
-#include <streams.h>
-#include <sync.h>
-#include <uint256.h>
-#include <threadinterrupt.h>
+#include <deps/random.h>
+#include <deps/streams.h>
+#include <deps/sync.h>
+#include <deps/uint256.h>
+#include <deps/threadinterrupt.h>
 
 #include <atomic>
 #include <deque>
@@ -33,6 +33,13 @@
 #include <arpa/inet.h>
 #endif
 
+namespace tos
+{
+    class ArgsProxy;
+    class ChainParamsProxy;
+}
+
+using namespace tos;
 
 class CScheduler;
 class CNode;
@@ -97,6 +104,7 @@ struct AddedNodeInfo
     bool fInbound;
 };
 
+
 class CNodeStats;
 class CClientUIInterface;
 
@@ -154,7 +162,7 @@ public:
         nMaxAddnode = connOptions.nMaxAddnode;
         nMaxFeeler = connOptions.nMaxFeeler;
         nBestHeight = connOptions.nBestHeight;
-        clientInterface = connOptions.uiInterface;
+        //clientInterface = connOptions.uiInterface;
         m_msgproc = connOptions.m_msgproc;
         nSendBufferMaxSize = connOptions.nSendBufferMaxSize;
         nReceiveFloodSize = connOptions.nReceiveFloodSize;
@@ -309,7 +317,7 @@ public:
     int GetBestHeight() const;
 
     /** Get a unique deterministic randomizer. */
-    CSipHasher GetDeterministicRandomizer(uint64_t id) const;
+    //CSipHasher GetDeterministicRandomizer(uint64_t id) const;
 
     unsigned int GetReceiveFloodSize() const;
 
@@ -412,7 +420,7 @@ private:
     int nMaxAddnode;
     int nMaxFeeler;
     std::atomic<int> nBestHeight;
-    CClientUIInterface* clientInterface;
+    //CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
 
     /** SipHasher seeds for deterministic randomness */
@@ -439,6 +447,9 @@ private:
     std::atomic_bool m_try_another_outbound_peer;
 
     friend struct CConnmanTest;
+
+    ArgsProxy* _argsProxy;
+    ChainParamsProxy* _paramsProxy;
 };
 extern std::unique_ptr<CConnman> g_connman;
 void Discover(boost::thread_group& threadGroup);
@@ -555,7 +566,7 @@ public:
 
 class CNetMessage {
 private:
-    mutable CHash256 hasher;
+    //mutable CHash256 hasher;
     mutable uint256 data_hash;
 public:
     bool in_data;                   // parsing header (false) or data (true)
@@ -654,7 +665,7 @@ public:
     bool fSentAddr;
     CSemaphoreGrant grantOutbound;
     CCriticalSection cs_filter;
-    std::unique_ptr<CBloomFilter> pfilter;
+    //std::unique_ptr<CBloomFilter> pfilter;
     std::atomic<int> nRefCount;
 
     const uint64_t nKeyedNetGroup;
@@ -671,14 +682,14 @@ public:
 
     // flood relay
     std::vector<CAddress> vAddrToSend;
-    CRollingBloomFilter addrKnown;
+    //CRollingBloomFilter addrKnown;
     bool fGetAddr;
     std::set<uint256> setKnown;
     int64_t nNextAddrSend;
     int64_t nNextLocalAddrSend;
 
     // inventory based relay
-    CRollingBloomFilter filterInventoryKnown;
+    //CRollingBloomFilter filterInventoryKnown;
     // Set of transaction ids we still have to announce.
     // They are sorted by the mempool before relay, so the order is not important.
     std::set<uint256> setInventoryTxToSend;
@@ -792,7 +803,7 @@ public:
 
     void AddAddressKnown(const CAddress& _addr)
     {
-        addrKnown.insert(_addr.GetKey());
+        //addrKnown.insert(_addr.GetKey());
     }
 
     void PushAddress(const CAddress& _addr, FastRandomContext &insecure_rand)
@@ -800,13 +811,13 @@ public:
         // Known checking here is only to save space from duplicates.
         // SendMessages will filter it again for knowns that were added
         // after addresses were pushed.
-        if (_addr.IsValid() && !addrKnown.contains(_addr.GetKey())) {
+       /*  if (_addr.IsValid() && !addrKnown.contains(_addr.GetKey())) {
             if (vAddrToSend.size() >= MAX_ADDR_TO_SEND) {
                 vAddrToSend[insecure_rand.randrange(vAddrToSend.size())] = _addr;
             } else {
                 vAddrToSend.push_back(_addr);
             }
-        }
+        } */
     }
 
 
@@ -814,7 +825,7 @@ public:
     {
         {
             LOCK(cs_inventory);
-            filterInventoryKnown.insert(inv.hash);
+            //filterInventoryKnown.insert(inv.hash);
         }
     }
 
@@ -822,9 +833,9 @@ public:
     {
         LOCK(cs_inventory);
         if (inv.type == MSG_TX) {
-            if (!filterInventoryKnown.contains(inv.hash)) {
+/*             if (!filterInventoryKnown.contains(inv.hash)) {
                 setInventoryTxToSend.insert(inv.hash);
-            }
+            } */
         } else if (inv.type == MSG_BLOCK) {
             vInventoryBlockToSend.push_back(inv.hash);
         }
