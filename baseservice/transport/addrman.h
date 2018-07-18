@@ -18,6 +18,9 @@
 #include <stdint.h>
 #include <vector>
 
+#include <deps/stream.h>
+
+
 /**
  * Extended statistics about a CAddress
  */
@@ -63,6 +66,27 @@ public:
         READWRITE(source);
         READWRITE(nLastSuccess);
         READWRITE(nAttempts); */
+    }
+
+    void Serialize(DataStream& stream)
+    {
+        stream.stream()->appendList(4);
+        *(CAddress*)this.Serialize(stream);
+        source.Serialize(stream);
+        *stream.stream() << bigint(nLastSuccess) << nAttempts;
+    }
+
+    void UnSerialize(const bytes& stream)
+    {
+        RLP rlp(stream);
+        if (!rlp.isList() || rlp.itemCount() != 4)
+        {
+            BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
+        }
+        *(CAddress*)this.Unserialize(item[0].toBytes());
+        source.Unserialize(item[1].toBytes());
+        nLastSuccess = item[2].toInt<int64_t>();
+        nAttempts = item[2].toInt<int>();
     }
 
     void Init()

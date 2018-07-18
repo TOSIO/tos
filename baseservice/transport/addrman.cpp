@@ -14,6 +14,11 @@ int CAddrInfo::GetTriedBucket(const uint256& nKey) const
 /*     uint64_t hash1 = (CHashWriter(SER_GETHASH, 0) << nKey << GetKey()).GetHash().GetCheapHash();
     uint64_t hash2 = (CHashWriter(SER_GETHASH, 0) << nKey << GetGroup() << (hash1 % ADDRMAN_TRIED_BUCKETS_PER_GROUP)).GetHash().GetCheapHash();
     return hash2 % ADDRMAN_TRIED_BUCKET_COUNT;  */
+    
+    RLPStream stream;
+    stream.appendList(2);
+    stream<<nKey<<GetKey();
+    
     return 0;
 }
 

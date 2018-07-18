@@ -22,6 +22,11 @@
 #include <utility>
 #include <vector>
 
+#include <memory>
+#include <toscore/util/RLPStream.h>
+
+using namespace dev;
+
 template<typename Stream>
 class OverrideStream
 {
@@ -436,7 +441,32 @@ public:
 };
 
 
+class DataStream
+{
+    protected:
+    int _type;
+    int _version;
 
+    std::shared_ptr<RLPStream> _rlpstream;
+
+    public:
+    explicit DataStream(int type,int version):_type(type),_version(version),_rlpstream(new RLPStream){}
+
+    std::shared_ptr<RLPStream> stream()
+    {
+        return _rlpstream;
+    }
+
+    int getType()
+    {
+        return type;
+    }
+    
+    int getVersion()
+    {
+        return version;
+    }
+}
 
 
 

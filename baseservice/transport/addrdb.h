@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <boost/filesystem.hpp>
+#include <deps/streams.h>
 
 namespace fs = boost::filesystem;
 
@@ -55,10 +56,23 @@ public:
         READWRITE(banReason);
     } */
 
-    void Serialize(RLPStream& stream)
+    void Serialize(DataStream& stream)
     {
-        stream.appendList(4);
-        stream << this->nVersion<<nCreateTime<<nBanUntil<<banReason;
+        stream.stream()->appendList(4);
+        *stream.stream() << this->nVersion<<bigint(nCreateTime)<<bigint(nBanUntil)<<banReason;
+    }
+
+    void Unserialize(const bytes& stream)
+    {
+        RLP rlp(stream);
+        if (!rlp.isList() || rlp.itemCount() != 4)
+        {
+            BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
+        }
+        this->nVersion = rlp[0].toInt();
+        nCreateTime = rlp[1].toInt<int64_t>();
+        nBanUntil = rlp[2].toInt<int64_t>();
+        banReason =  rlp[3].toInt<uint8_t>();
     }
 
     void SetNull()
