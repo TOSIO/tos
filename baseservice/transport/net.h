@@ -317,7 +317,7 @@ public:
     int GetBestHeight() const;
 
     /** Get a unique deterministic randomizer. */
-    //CSipHasher GetDeterministicRandomizer(uint64_t id) const;
+    CSipHasher GetDeterministicRandomizer(uint64_t id) const;
 
     unsigned int GetReceiveFloodSize() const;
 
@@ -566,7 +566,7 @@ public:
 
 class CNetMessage {
 private:
-    //mutable CHash256 hasher;
+    mutable Hash256 hasher;
     mutable uint256 data_hash;
 public:
     bool in_data;                   // parsing header (false) or data (true)

@@ -7,7 +7,7 @@
 
 //#include <hash.h>
 #include <deps/serialize.h>
-//#include <streams.h>
+#include <toscore/crypto/Hash.h>
 
 int CAddrInfo::GetTriedBucket(const uint256& nKey) const
 {
@@ -18,8 +18,13 @@ int CAddrInfo::GetTriedBucket(const uint256& nKey) const
     RLPStream stream;
     stream.appendList(2);
     stream<<nKey<<GetKey();
-    
-    return 0;
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+
+    stream.clear();
+    stream.appendList(3);
+    stream<<nKey<<GetGroup()<<(hash1 % ADDRMAN_TRIED_BUCKETS_PER_GROUP);
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(stream.out()));
+    return hash2 % ADDRMAN_TRIED_BUCKET_COUNT; 
 }
 
 int CAddrInfo::GetNewBucket(const uint256& nKey, const CNetAddr& src) const
@@ -28,14 +33,29 @@ int CAddrInfo::GetNewBucket(const uint256& nKey, const CNetAddr& src) const
     uint64_t hash1 = (CHashWriter(SER_GETHASH, 0) << nKey << GetGroup() << vchSourceGroupKey).GetHash().GetCheapHash();
     uint64_t hash2 = (CHashWriter(SER_GETHASH, 0) << nKey << vchSourceGroupKey << (hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP)).GetHash().GetCheapHash();
     return hash2 % ADDRMAN_NEW_BUCKET_COUNT; */
-    return 0;
+    
+    std::vector<unsigned char> vchSourceGroupKey = src.GetGroup();
+    RLPStream stream;
+    stream.appendList(3);
+    stream<<nKey<<GetGroup()<<vchSourceGroupKey;
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+
+    stream.clear();
+    stream.appendList(3);
+    stream<<nKey<<vchSourceGroupKey<<(hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP);
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(stream.out()));
+    return hash2 % ADDRMAN_NEW_BUCKET_COUNT;
 }
 
 int CAddrInfo::GetBucketPosition(const uint256 &nKey, bool fNew, int nBucket) const
 {
 /*     uint64_t hash1 = (CHashWriter(SER_GETHASH, 0) << nKey << (fNew ? 'N' : 'K') << nBucket << GetKey()).GetHash().GetCheapHash();
     return hash1 % ADDRMAN_BUCKET_SIZE; */
-    return 0;
+    RLPStream stream;
+    stream.appendList(4);
+    stream<<nKey << (fNew ? 'N' : 'K') << nBucket << GetKey();
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+    return hash1 % ADDRMAN_BUCKET_SIZE;
 }
 
 bool CAddrInfo::IsTerrible(int64_t nNow) const
