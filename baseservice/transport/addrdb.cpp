@@ -21,37 +21,51 @@ using namespace dev;
 
 namespace {
 
-bool Serialize(RLPStream& stream,banmap_t& banSet)
+void Serialize(DataStream& stream,banmap_t& banSet)
 {
     bytes start;
-    stream.appendList(3);
-    stream.appendRaw(start);
-    stream.appendList(banSet.size());
+    stream.stream()->appendList(3);
+    stream.stream()->append(start);
+    stream.stream()->appendList(banSet.size());
     for (auto item : banSet)
     {
-        stream.appendList(2);
-        stream << item;
+        stream.stream()->appendList(2);
+        item.first.Serialize(stream)
+        item.second.Serialize(stream);
     }
-    h256 hash = sha256(stream.out());
-    stream.append(hash);
+    h256 hash = sha256(stream.stream()->out());
+    stream.stream()->append(hash);
 }
 
-bool Deserialize(bytesConstRef bytes,banmap_t& banSet)
+void Unserialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
 {
-    RLP rlp(bytes);
-}
-
-bool SerializeFileDB(const fs::path& path, const RLPStream& stream)
-{
-    try
+    RLP rlp(stream);
+    if (!rlp.isList() || rlp.itemCount() != 3)
     {
-        dev::writeFile(path, stream.out(),true);
-        fileout.write(stream.out());
+        BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
     }
-    catch (const std::exception& e) {
-        return error("%s: Serialize or I/O error - %s", __func__, e.what());
+
+    bytes start = rlp[0].toBytes();
+    for (auto item : rlp[1])
+    {
+        RLPs kv = item.toList();
+        CSubNet key;
+        CBanEntry value;
+        key.Unserialize(kv[0].toBytes());
+        value.Unserialize(kv[1].toBytes());
+        banSet.insert(make_pair(key,value));
     }
-    return true;
+    if (fCheckSum)
+    {
+        h256 decHash = rlp[2].toHash<h256>();
+        bytes bans = rlp[1].toBytes();
+        start.insert(start.end(),bans.begin(),bans.end());
+        h256 streamHash = sha(start);
+        if (decHash != streamHash)
+        {
+             BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Checksum is inconsistent."));
+        }
+    }
 }
 
 /* template <typename Stream, typename Data>
@@ -151,10 +165,15 @@ CBanDB::CBanDB()
 bool CBanDB::Write(const banmap_t& banSet)
 {
     //return SerializeFileDB("banlist", pathBanlist, banSet);
-    RLPStream stream;
-    if(!Serialize(stream,banSet) && !SerializeFileDB(pathBanlist,stream.out()))
+    try
     {
-        return false;
+        DataStream stream;
+        Serialize(stream,banSet) 
+        dev::writeFile(pathBanlist, stream.stream()->out(),true);
+    } 
+    catch (const std::exception& e) 
+    {
+        return error("%s: Serialize or I/O error - %s", __func__, e.what());
     }
     return true;
 }
@@ -162,8 +181,17 @@ bool CBanDB::Write(const banmap_t& banSet)
 bool CBanDB::Read(banmap_t& banSet)
 {
     //return DeserializeFileDB(pathBanlist, banSet);
-    bytes content = dev::contents(pathBanlist);
-    return Deserialize(&contents,banSet);
+    try
+    {
+        bytes content = dev::contents(pathBanlist);
+        Deserialize(&contents,banSet);
+    }
+    catch (const std::exception& e) 
+    {
+        //return error("%s: Serialize or I/O error - %s", __func__, e.what());
+        return false;
+    }
+    return true;
 }
 
 CAddrDB::CAddrDB()
@@ -174,10 +202,15 @@ CAddrDB::CAddrDB()
 bool CAddrDB::Write(const CAddrMan& addr)
 {
     //return SerializeFileDB("peers", pathAddr, addr);
-    RLPStream stream;
-    if(!addr.Serialize(stream) && !SerializeFileDB(pathAddr,stream.out()))
+    try
     {
-        return false;
+        DataStream stream;
+        addr.Serialize(stream);
+        dev::writeFile(pathAddr, stream.stream()->out(),true);
+    } 
+    catch (const std::exception& e) 
+    {
+        return error("%s: Serialize or I/O error - %s", __func__, e.what());
     }
     return true;
 }
@@ -185,8 +218,17 @@ bool CAddrDB::Write(const CAddrMan& addr)
 bool CAddrDB::Read(CAddrMan& addr)
 {
     //return DeserializeFileDB(pathAddr, addr);
-    bytes content = dev::contents(pathAddr);
-    return addr.Deserialize(&contents);
+    try
+    {
+        bytes content = dev::contents(pathAddr);
+        addr.Deserialize(&contents);
+    }
+    catch (const std::exception& e) 
+    {
+        //return error("%s: Serialize or I/O error - %s", __func__, e.what());
+        return false;
+    }
+    return true;
 }
 
 /* bool CAddrDB::Read(CAddrMan& addr, CDataStream& ssPeers)

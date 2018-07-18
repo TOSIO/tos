@@ -10,6 +10,8 @@
 #endif
 
 #include <deps/compat.h>
+#include <deps/streams.h>
+
 //#include <serialize.h>
 
 //#include <deps/stdint.h>
@@ -96,9 +98,14 @@ class CNetAddr
             //READWRITE(FLATDATA(ip));
         } */
 
-        void Serialize(RLPStream& strem)
+        void Serialize(DataStream& strem)
         {
-            stream.appendVector(vector_ref(ip,16));
+            stream.stream()->appendVector(vector_ref<unsigned char>(ip,16));
+        }
+
+        void UnSerialize(bytesConstRef bytes)
+        {
+
         }
 
         friend class CSubNet;
@@ -140,12 +147,24 @@ class CSubNet
             READWRITE(FLATDATA(valid)); */
         } */
 
-        void Serialize(RLPStream& strem)
+        void Serialize(DataStream& strem)
         {
-            stream.appendList(3);
+            stream.stream()->appendList(3);
             network.Serialize(stream);
-            stream.appendVector(vector_ref(netmask));
-            stream.appendVector(vector_ref(valid));
+            stream.stream()->appendVector(vector_ref<uint8_t>(netmask,16));
+            stream.stream()->append(valid);
+        }
+
+        void UnSerialize(const bytes& stream)
+        {
+            RLP rlp(stream);
+            if (!rlp.isList() || rlp.itemCount() != 3)
+            {
+                BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
+            }
+            network.Unserialize(rlp[0].toBytes());
+            bytes nm = rlp[1].toVector<uint8_t>();
+            valid = rlp[2].toInt<int>();
         }
 };
 
@@ -186,13 +205,26 @@ class CService : public CNetAddr
                  port = ntohs(portN); */
         } */
 
-        void Serialize(RLPStream& stream)
+        void Serialize(DataStream& strem)
         {
             unsigned short portN = htons(port);
-            stream.appendList(2);
-            stream.append(vector_ref(ip));
-            stream<<portN;
+            stream.stream()->appendList(2);
+            stream.stream()->append(vector_ref<unsigned char>(ip));
+            *stream.stream()<<portN;
         }
+
+        void UnSerialize(const bytes& stream)
+        {
+            RLP rlp(stream);
+            if (!rlp.isList() || rlp.itemCount() != 2)
+            {
+                BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
+            }
+            network.Unserialize(rlp[0].toBytes());
+            bytes ip_ = rlp[1].toVector<unsigned char>();
+            port = rlp[2].toInt<int>();
+        }
+
 };
 
 #endif // BITCOIN_NETADDRESS_H
