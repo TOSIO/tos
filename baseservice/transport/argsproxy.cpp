@@ -8,7 +8,7 @@ using namespace tos;
  * @param strArg Argument to get (e.g. "-foo")
  * @return command-line arguments
  */
-std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg)
+std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg) const
 {
     std::vector<std::string> result;
     return result;
@@ -19,7 +19,7 @@ std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg)
  * @param strArg Argument to get (e.g. "-foo")
  * @return true if the argument has been set
  */
-bool ArgsProxy::IsArgSet(const std::string& strArg)
+bool ArgsProxy::IsArgSet(const std::string& strArg) const
 {
     return true;
 }
@@ -31,7 +31,7 @@ bool ArgsProxy::IsArgSet(const std::string& strArg)
  * @param strDefault (e.g. "1")
  * @return command-line argument or default value
  */
-std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strDefault)
+std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strDefault) const
 {
     return std::string();
 }
@@ -42,7 +42,7 @@ std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strD
  * @param nDefault (e.g. 1)
  * @return command-line argument (0 if invalid number) or default value
  */
-int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault)
+int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault) const
 {
     return 0;
 }
@@ -54,7 +54,7 @@ int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault)
  * @param fDefault (true or false)
  * @return command-line argument or default value
  */
-bool ArgsProxy::GetBoolArg(const std::string& strArg, bool fDefault)
+bool ArgsProxy::GetBoolArg(const std::string& strArg, bool fDefault) const
 {
     return false;
 }
