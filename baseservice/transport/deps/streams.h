@@ -22,6 +22,11 @@
 #include <utility>
 #include <vector>
 
+#include <memory>
+#include <toscore/util/RLPStream.h>
+
+using namespace dev;
+
 template<typename Stream>
 class OverrideStream
 {
@@ -436,278 +441,31 @@ public:
 };
 
 
-
-
-
-
-
-
-
-
-/** Non-refcounted RAII wrapper for FILE*
- *
- * Will automatically close the file when it goes out of scope if not null.
- * If you're returning the file pointer, return file.release().
- * If you need to close the file early, use file.fclose() instead of fclose(file).
- */
-class CAutoFile
+class DataStream
 {
-private:
-    const int nType;
-    const int nVersion;
+    protected:
+    int _type;
+    int _version;
 
-    FILE* file;	
+    std::shared_ptr<RLPStream> _rlpstream;
 
-public:
-    CAutoFile(FILE* filenew, int nTypeIn, int nVersionIn) : nType(nTypeIn), nVersion(nVersionIn)
+    public:
+    explicit DataStream(int type,int version):_type(type),_version(version),_rlpstream(new RLPStream){}
+
+    std::shared_ptr<RLPStream> stream()
     {
-        file = filenew;
+        return _rlpstream;
     }
 
-    ~CAutoFile()
+    int getType()
     {
-        fclose();
+        return type;
     }
-
-    // Disallow copies
-    CAutoFile(const CAutoFile&) = delete;
-    CAutoFile& operator=(const CAutoFile&) = delete;
-
-    void fclose()
+    
+    int getVersion()
     {
-        if (file) {
-            ::fclose(file);
-            file = nullptr;
-        }
+        return version;
     }
-
-    /** Get wrapped FILE* with transfer of ownership.
-     * @note This will invalidate the CAutoFile object, and makes it the responsibility of the caller
-     * of this function to clean up the returned FILE*.
-     */
-    FILE* release()             { FILE* ret = file; file = nullptr; return ret; }
-
-    /** Get wrapped FILE* without transfer of ownership.
-     * @note Ownership of the FILE* will remain with this class. Use this only if the scope of the
-     * CAutoFile outlives use of the passed pointer.
-     */
-    FILE* Get() const           { return file; }
-
-    /** Return true if the wrapped FILE* is nullptr, false otherwise.
-     */
-    bool IsNull() const         { return (file == nullptr); }
-
-    //
-    // Stream subset
-    //
-    int GetType() const          { return nType; }
-    int GetVersion() const       { return nVersion; }
-
-    void read(char* pch, size_t nSize)
-    {
-        if (!file)
-            throw std::ios_base::failure("CAutoFile::read: file handle is nullptr");
-        if (fread(pch, 1, nSize, file) != nSize)
-            throw std::ios_base::failure(feof(file) ? "CAutoFile::read: end of file" : "CAutoFile::read: fread failed");
-    }
-
-    void ignore(size_t nSize)
-    {
-        if (!file)
-            throw std::ios_base::failure("CAutoFile::ignore: file handle is nullptr");
-        unsigned char data[4096];
-        while (nSize > 0) {
-            size_t nNow = std::min<size_t>(nSize, sizeof(data));
-            if (fread(data, 1, nNow, file) != nNow)
-                throw std::ios_base::failure(feof(file) ? "CAutoFile::ignore: end of file" : "CAutoFile::read: fread failed");
-            nSize -= nNow;
-        }
-    }
-
-    void write(const char* pch, size_t nSize)
-    {
-        if (!file)
-            throw std::ios_base::failure("CAutoFile::write: file handle is nullptr");
-        if (fwrite(pch, 1, nSize, file) != nSize)
-            throw std::ios_base::failure("CAutoFile::write: write failed");
-    }
-
-    void write(bytesConstRef data)
-    {
-        write(data.data(), data.size());
-    } 
-
-
-/*     template<typename T>
-    CAutoFile& operator<<(const T& obj)
-    {
-        // Serialize to this stream
-        if (!file)
-            throw std::ios_base::failure("CAutoFile::operator<<: file handle is nullptr");
-        ::Serialize(*this, obj);
-        return (*this);
-    }
-
-    template<typename T>
-    CAutoFile& operator>>(T& obj)
-    {
-        // Unserialize from this stream
-        if (!file)
-            throw std::ios_base::failure("CAutoFile::operator>>: file handle is nullptr");
-        ::Unserialize(*this, obj);
-        return (*this);
-    } */
-};
-
-/** Non-refcounted RAII wrapper around a FILE* that implements a ring buffer to
- *  deserialize from. It guarantees the ability to rewind a given number of bytes.
- *
- *  Will automatically close the file when it goes out of scope if not null.
- *  If you need to close the file early, use file.fclose() instead of fclose(file).
- */
-class CBufferedFile
-{
-private:
-    const int nType;
-    const int nVersion;
-
-    FILE *src;            // source file
-    uint64_t nSrcPos;     // how many bytes have been read from source
-    uint64_t nReadPos;    // how many bytes have been read from this
-    uint64_t nReadLimit;  // up to which position we're allowed to read
-    uint64_t nRewind;     // how many bytes we guarantee to rewind
-    std::vector<char> vchBuf; // the buffer
-
-protected:
-    // read data from the source to fill the buffer
-    bool Fill() {
-        unsigned int pos = nSrcPos % vchBuf.size();
-        unsigned int readNow = vchBuf.size() - pos;
-        unsigned int nAvail = vchBuf.size() - (nSrcPos - nReadPos) - nRewind;
-        if (nAvail < readNow)
-            readNow = nAvail;
-        if (readNow == 0)
-            return false;
-        size_t nBytes = fread((void*)&vchBuf[pos], 1, readNow, src);
-        if (nBytes == 0) {
-            throw std::ios_base::failure(feof(src) ? "CBufferedFile::Fill: end of file" : "CBufferedFile::Fill: fread failed");
-        } else {
-            nSrcPos += nBytes;
-            return true;
-        }
-    }
-
-public:
-    CBufferedFile(FILE *fileIn, uint64_t nBufSize, uint64_t nRewindIn, int nTypeIn, int nVersionIn) :
-        nType(nTypeIn), nVersion(nVersionIn), nSrcPos(0), nReadPos(0), nReadLimit((uint64_t)(-1)), nRewind(nRewindIn), vchBuf(nBufSize, 0)
-    {
-        src = fileIn;
-    }
-
-    ~CBufferedFile()
-    {
-        fclose();
-    }
-
-    // Disallow copies
-    CBufferedFile(const CBufferedFile&) = delete;
-    CBufferedFile& operator=(const CBufferedFile&) = delete;
-
-    int GetVersion() const { return nVersion; }
-    int GetType() const { return nType; }
-
-    void fclose()
-    {
-        if (src) {
-            ::fclose(src);
-            src = nullptr;
-        }
-    }
-
-    // check whether we're at the end of the source file
-    bool eof() const {
-        return nReadPos == nSrcPos && feof(src);
-    }
-
-    // read a number of bytes
-    void read(char *pch, size_t nSize) {
-        if (nSize + nReadPos > nReadLimit)
-            throw std::ios_base::failure("Read attempted past buffer limit");
-        if (nSize + nRewind > vchBuf.size())
-            throw std::ios_base::failure("Read larger than buffer size");
-        while (nSize > 0) {
-            if (nReadPos == nSrcPos)
-                Fill();
-            unsigned int pos = nReadPos % vchBuf.size();
-            size_t nNow = nSize;
-            if (nNow + pos > vchBuf.size())
-                nNow = vchBuf.size() - pos;
-            if (nNow + nReadPos > nSrcPos)
-                nNow = nSrcPos - nReadPos;
-            memcpy(pch, &vchBuf[pos], nNow);
-            nReadPos += nNow;
-            pch += nNow;
-            nSize -= nNow;
-        }
-    }
-
-    // return the current reading position
-    uint64_t GetPos() const {
-        return nReadPos;
-    }
-
-    // rewind to a given reading position
-    bool SetPos(uint64_t nPos) {
-        nReadPos = nPos;
-        if (nReadPos + nRewind < nSrcPos) {
-            nReadPos = nSrcPos - nRewind;
-            return false;
-        } else if (nReadPos > nSrcPos) {
-            nReadPos = nSrcPos;
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    bool Seek(uint64_t nPos) {
-        long nLongPos = nPos;
-        if (nPos != (uint64_t)nLongPos)
-            return false;
-        if (fseek(src, nLongPos, SEEK_SET))
-            return false;
-        nLongPos = ftell(src);
-        nSrcPos = nLongPos;
-        nReadPos = nLongPos;
-        return true;
-    }
-
-    // prevent reading beyond a certain position
-    // no argument removes the limit
-    bool SetLimit(uint64_t nPos = (uint64_t)(-1)) {
-        if (nPos < nReadPos)
-            return false;
-        nReadLimit = nPos;
-        return true;
-    }
-
-    template<typename T>
-    CBufferedFile& operator>>(T& obj) {
-        // Unserialize from this stream
-        ::Unserialize(*this, obj);
-        return (*this);
-    }
-
-    // search for a given byte in the stream, and remain positioned on it
-    void FindByte(char ch) {
-        while (true) {
-            if (nReadPos == nSrcPos)
-                Fill();
-            if (vchBuf[nReadPos % vchBuf.size()] == ch)
-                break;
-            nReadPos++;
-        }
-    }
-};
+}
 
 #endif // BITCOIN_STREAMS_H

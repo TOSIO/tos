@@ -475,7 +475,7 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
 
     // Add node
     NodeId id = GetNewNodeId();
-    //uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
+    uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     uint64_t nonce = 0;
     CAddress addr_bind = GetBindAddress(hSocket);
     CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
@@ -879,7 +879,7 @@ int CNetMessage::readData(const char *pch, unsigned int nBytes)
         vRecv.resize(std::min(hdr.nMessageSize, nDataPos + nCopy + 256 * 1024));
     }
 
-    //hasher.Write((const unsigned char*)pch, nCopy);
+    hasher.Write((const unsigned char*)pch, nCopy);
     memcpy(&vRecv[nDataPos], pch, nCopy);
     nDataPos += nCopy;
 
@@ -890,7 +890,7 @@ const uint256& CNetMessage::GetMessageHash() const
 {
     assert(complete());
     if (data_hash.IsNull())
-        //hasher.Finalize(data_hash.begin());
+        hasher.Finalize(data_hash.begin());
     return data_hash;
 }
 
@@ -1157,7 +1157,7 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     }
 
     NodeId id = GetNewNodeId();
-    //uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
+    uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     uint64_t nonce = 0;
     CAddress addr_bind = GetBindAddress(hSocket);
 
@@ -2836,7 +2836,7 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     std::vector<unsigned char> serializedHeader;
     serializedHeader.reserve(CMessageHeader::HEADER_SIZE);
     //uint256 hash = Hash(msg.data.data(), msg.data.data() + nMessageSize);
-    uint256 hash;
+    h256 hash = dev::hash(bytesConstRef(msg.data.data(),nMessageSize));
     CMessageHeader hdr(Params().MessageStart(), msg.command.c_str(), nMessageSize);
     memcpy(hdr.pchChecksum, hash.begin(), CMessageHeader::CHECKSUM_SIZE);
 
@@ -2882,15 +2882,15 @@ int64_t PoissonNextSend(int64_t nNow, int average_interval_seconds) {
     return nNow + (int64_t)(log1p(GetRand(1ULL << 48) * -0.0000000000000035527136788 /* -1/2^48 */) * average_interval_seconds * -1000000.0 + 0.5);
 }
 
-/* CSipHasher CConnman::GetDeterministicRandomizer(uint64_t id) const
+CSipHasher CConnman::GetDeterministicRandomizer(uint64_t id) const
 {
     return CSipHasher(nSeed0, nSeed1).Write(id);
-} */
+} 
 
 uint64_t CConnman::CalculateKeyedNetGroup(const CAddress& ad) const
 {
     std::vector<unsigned char> vchNetGroup(ad.GetGroup());
 
-    //return GetDeterministicRandomizer(RANDOMIZER_ID_NETGROUP).Write(vchNetGroup.data(), vchNetGroup.size()).Finalize();
+    return GetDeterministicRandomizer(RANDOMIZER_ID_NETGROUP).Write(vchNetGroup.data(), vchNetGroup.size()).Finalize();
     return 0;
 }
