@@ -168,7 +168,7 @@ void setupLogging(LoggingOptions const &_options)
 
     //
 
-    g_InitLog();
+    // g_InitLog();
 }
 
 void g_InitLog()

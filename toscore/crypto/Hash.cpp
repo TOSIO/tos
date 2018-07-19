@@ -41,12 +41,12 @@ Hash256& Hash256::Write(const unsigned char* data, size_t len)
 
 void Hash256::Finalize(unsigned char hash[OUTPUT_SIZE])
 {
-	secp256k1_sha256_finalize(&ctx, hash.data());
+	secp256k1_sha256_finalize(&ctx, hash);
 }
 
-Hash256& Secp256k1sha256::Reset()
+Hash256& Hash256::Reset()
 {
-    sha256::Initialize(&ctx);
+    secp256k1_sha256_initialize(&ctx);
     return *this;
 }
 

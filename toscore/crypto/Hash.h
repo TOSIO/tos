@@ -25,7 +25,7 @@
 
 #include "toscore/crypto/FixedHash.h"
 #include "toscore/common/vector_ref.h"
-
+#include <secp256k1_sha256.h>
 namespace dev
 {
 
