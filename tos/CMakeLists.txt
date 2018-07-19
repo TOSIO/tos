@@ -2,7 +2,10 @@ set(
     sources
     main.cpp
 )
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 
+set(CMAKE_CXX_FLAGS "-BOOST_ALL_DYN_LINK")   
 # ADD_DEFINITIONS(-DBoost_USE_STATIC_LIBS=ON)
 # ADD_DEFINITIONS(-DBOOST_ALL_DYN_LIN)
 # add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
@@ -20,8 +23,8 @@ project(tos)
 # LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 include_directories("../toscore")
 
-
-target_link_libraries(tos PUBLIC toscore Boost::system Boost::filesystem Boost::log Boost::thread Boost::program_options)
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(tos PUBLIC toscore ${Boost_LIBRARIES} Boost::system Boost::filesystem  Boost::log Boost::thread Boost::program_options)
 
 
 
