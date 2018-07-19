@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string>
-#include <list>
 #include <toscore/utils/RLP.h>
+#include <list>
+#include <toscore/log/Log.h>
 #include <toscore/common/vector_ref.h>
 #include <toscore/common/Exceptions.h>
 
@@ -110,7 +111,7 @@ void rlpDecode(dev::bytes output)
 
 void runRlpTest()
 {
-
+   
     BOOST_CHECK_MESSAGE(2 + 2 == 4, "description…");
     try
     {
