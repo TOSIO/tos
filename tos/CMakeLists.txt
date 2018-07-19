@@ -2,7 +2,7 @@ set(
     sources
     main.cpp
 )
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_LOG_DYN_LINK")
 
 # ADD_DEFINITIONS(-DBoost_USE_STATIC_LIBS=ON)
 # ADD_DEFINITIONS(-DBOOST_ALL_DYN_LIN)
@@ -25,6 +25,7 @@ find_package(Boost
              COMPONENTS thread
                         system
                         log
+                        log-mt
                         log_setup
                         program_options
              REQUIRED)

@@ -21,7 +21,6 @@ int c_lineWidth = 160;
 LoggingOptions loggingOptions;
     po::options_description loggingProgramOptions(
         dev::createLoggingProgramOptions(c_lineWidth, loggingOptions));
-
 dev::setupLogging(loggingOptions);
 cnote<<"sfs123232" << "***8***";
  clog(dev::VerbosityError, "error")<<"twststs3213423sdfasdf";

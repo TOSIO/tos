@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "libdevcore/FixedHash.h"
-#include "libdevcore/vector_ref.h"
+#include "toscore/crypto/FixedHash.h"
+#include "toscore/common/vector_ref.h"
 
 namespace dev
 {
