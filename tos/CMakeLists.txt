@@ -2,7 +2,6 @@ set(
     sources
     main.cpp
 )
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_LOG_DYN_LINK")
 
 # ADD_DEFINITIONS(-DBoost_USE_STATIC_LIBS=ON)
 # ADD_DEFINITIONS(-DBOOST_ALL_DYN_LIN)
@@ -20,21 +19,12 @@ project(tos)
 # include_directories(${Boost_INCLUDE_DIRS})
 # LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 include_directories("../toscore")
-find_package(Boost
-             1.65.1
-             COMPONENTS thread
-                        system
-                        log
-                        log-mt
-                        log_setup
-                        program_options
-             REQUIRED)
+
 
 target_link_libraries(tos PUBLIC toscore Boost::system Boost::filesystem Boost::log Boost::thread Boost::program_options)
 
 
-# target_link_libraries(<target_name> ${Boost_LIBRARIES})
 
 
-# install(TARGETS tos DESTINATION bin)
+install(TARGETS tos DESTINATION bin)
 
