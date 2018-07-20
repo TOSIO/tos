@@ -23,7 +23,7 @@
 #include <vector>
 
 #include <memory>
-#include <toscore/util/RLPStream.h>
+#include <toscore/utils/RLP.h>
 
 using namespace dev;
 
@@ -459,13 +459,13 @@ class DataStream
 
     int getType()
     {
-        return type;
+        return _type;
     }
     
     int getVersion()
     {
-        return version;
+        return _version;
     }
-}
+};
 
 #endif // BITCOIN_STREAMS_H

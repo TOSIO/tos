@@ -29,6 +29,7 @@
 #include <fcntl.h>
  #include <unistd.h>
  #include <atomic> 
+ #include "log.h"
 /////////////////////////////////////
 
 
@@ -58,7 +59,7 @@
 
 [[noreturn]] static void RandFailure()
 {
-    //LogPrintf("Failed to read randomness, aborting\n");
+    LogPrintf("Failed to read randomness, aborting\n");
     std::abort();
 }
 
@@ -91,7 +92,7 @@ static void RDRandInit()
 {
     uint32_t eax, ebx, ecx, edx;
     if (__get_cpuid(1, &eax, &ebx, &ecx, &edx) && (ecx & CPUID_F1_ECX_RDRAND)) {
-        //LogPrintf("Using RdRand as an additional entropy source\n");
+        LogPrintf("Using RdRand as an additional entropy source\n");
         rdrand_supported = true;
     }
     hwrand_initialized.store(true);
@@ -178,7 +179,7 @@ static void RandAddSeedPerfmon()
     } else {
         static bool warned = false; // Warn only once
         if (!warned) {
-            //LogPrintf("%s: Warning: RegQueryValueExA(HKEY_PERFORMANCE_DATA) failed with code %i\n", __func__, ret);
+            LogPrintf("%s: Warning: RegQueryValueExA(HKEY_PERFORMANCE_DATA) failed with code %i\n", __func__, ret);
             warned = true;
         }
     }
