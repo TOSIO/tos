@@ -420,7 +420,7 @@ private:
     int nMaxAddnode;
     int nMaxFeeler;
     std::atomic<int> nBestHeight;
-    //CClientUIInterface* clientInterface;
+    CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
 
     /** SipHasher seeds for deterministic randomness */
@@ -448,8 +448,8 @@ private:
 
     friend struct CConnmanTest;
 
-    ArgsProxy* _argsProxy;
-    ChainParamsProxy* _paramsProxy;
+    //ArgsProxy* _argsProxy;
+    //ChainParamsProxy* _paramsProxy;
 };
 extern std::unique_ptr<CConnman> g_connman;
 void Discover(boost::thread_group& threadGroup);

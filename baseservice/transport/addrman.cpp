@@ -6,7 +6,7 @@
 #include <addrman.h>
 
 //#include <hash.h>
-#include <deps/serialize.h>
+//#include <deps/serialize.h>
 #include <toscore/crypto/Hash.h>
 
 int CAddrInfo::GetTriedBucket(const uint256& nKey) const
@@ -261,7 +261,7 @@ void CAddrMan::Good_(const CService& addr, int64_t nTime)
     if (nUBucket == -1)
         return;
 
-    //LogPrint(BCLog::ADDRMAN, "Moving %s to tried\n", addr.ToString());
+    LogPrint(BCLog::ADDRMAN, "Moving %s to tried\n", addr.ToString());
 
     // move nId to the tried tables
     MakeTried(info, nId);
