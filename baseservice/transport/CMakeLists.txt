@@ -12,6 +12,7 @@ SET(SRC_LIST ./netaddress.cpp
             ./protocol.cpp
             ./timedata.cpp
             ./ui_interface.cpp
+            ./deps/util.cpp
             ./deps/log.cpp
             ./deps/uint256.cpp
             ./deps/sync.cpp
@@ -30,6 +31,8 @@ SET(SRC_LIST ./netaddress.cpp
 INCLUDE_DIRECTORIES("./")
 INCLUDE_DIRECTORIES("./deps")
 INCLUDE_DIRECTORIES("../../")
+INCLUDE_DIRECTORIES("../../toscore")
+INCLUDE_DIRECTORIES("../../build/deps/include")
 
 #INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}")
 #INCLUDE_DIRECTORIES("/mnt/hgfs/vm-shared/secp256k1/include")
