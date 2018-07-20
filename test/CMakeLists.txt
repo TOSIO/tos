@@ -1,9 +1,7 @@
+set(–DBOOST_build_info=yes)
+set(–DBOOST_log_level=all)
 
 
-#target_link_libraries(hello ${Boost_LIBRARIES})
-
-
-#find_package (Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 include_directories (
                      ${Boost_INCLUDE_DIRS}
                      )
@@ -14,8 +12,11 @@ target_link_libraries (tostest PRIVATE
 toscore 
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
-                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
                        )
 
-                       include_directories("../toscore")
+include_directories("../toscore")
 
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(tostest PUBLIC toscore ${Boost_LIBRARIES} Boost::system Boost::filesystem  Boost::log Boost::thread Boost::program_options)
+                       
