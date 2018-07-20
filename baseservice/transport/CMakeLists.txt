@@ -8,8 +8,16 @@ SET(SRC_LIST ./netaddress.cpp
             ./addrman.cpp
             ./addrdb.cpp
             ./net.cpp
+            ./argsproxy.cpp
+            ./protocol.cpp
+            ./timedata.cpp
+            ./ui_interface.cpp
+            ./deps/log.cpp
+            ./deps/uint256.cpp
+            ./deps/sync.cpp
+            ./deps/threadinterrupt.cpp
+            ./deps/threadtrace.cpp
             ./deps/utilstrencodings.cpp
-            ./deps/timedata.cpp
             ./deps/uint256.cpp
             ./deps/utiltime.cpp
             ./deps/random.cpp
@@ -29,4 +37,8 @@ INCLUDE_DIRECTORIES("../../")
 add_definitions(-std=c++11)
 add_definitions(-DHAVE_CONFIG_H)
 #link_libraries("libsecp256k1.a")
-ADD_EXECUTABLE(hello ${SRC_LIST})
+
+
+ADD_EXECUTABLE(transport ${SRC_LIST} )
+
+set_target_properties(transport PROPERTIES LINKER_LANGUAGE CXX)
