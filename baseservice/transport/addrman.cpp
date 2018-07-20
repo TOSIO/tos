@@ -17,13 +17,18 @@ int CAddrInfo::GetTriedBucket(const uint256& nKey) const
     
     RLPStream stream;
     stream.appendList(2);
-    stream<<nKey<<GetKey();
-    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+    stream<<u256(nKey.ToString())<<GetKey();
+    bytes hashsource = stream.out();
+    
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
 
     stream.clear();
     stream.appendList(3);
-    stream<<nKey<<GetGroup()<<(hash1 % ADDRMAN_TRIED_BUCKETS_PER_GROUP);
-    uint64_t hash2 = dev::extractCheapHash(dev::hash(stream.out()));
+    stream<<u256(nKey.ToString())<<GetGroup()<<(hash1 % ADDRMAN_TRIED_BUCKETS_PER_GROUP);
+
+    hashsource.clear();
+    hashsource = stream.out();
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(&hashsource));
     return hash2 % ADDRMAN_TRIED_BUCKET_COUNT; 
 }
 
@@ -37,13 +42,16 @@ int CAddrInfo::GetNewBucket(const uint256& nKey, const CNetAddr& src) const
     std::vector<unsigned char> vchSourceGroupKey = src.GetGroup();
     RLPStream stream;
     stream.appendList(3);
-    stream<<nKey<<GetGroup()<<vchSourceGroupKey;
-    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+    stream<<u256(nKey.ToString())<<GetGroup()<<vchSourceGroupKey;
+    bytes hashsource = stream.out();
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
 
     stream.clear();
     stream.appendList(3);
-    stream<<nKey<<vchSourceGroupKey<<(hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP);
-    uint64_t hash2 = dev::extractCheapHash(dev::hash(stream.out()));
+    stream<<u256(nKey.ToString())<<vchSourceGroupKey<<(hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP);
+    hashsource.clear();
+    hashsource = stream.out();
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(&hashsource));
     return hash2 % ADDRMAN_NEW_BUCKET_COUNT;
 }
 
@@ -53,8 +61,10 @@ int CAddrInfo::GetBucketPosition(const uint256 &nKey, bool fNew, int nBucket) co
     return hash1 % ADDRMAN_BUCKET_SIZE; */
     RLPStream stream;
     stream.appendList(4);
-    stream<<nKey << (fNew ? 'N' : 'K') << nBucket << GetKey();
-    uint64_t hash1 = dev::extractCheapHash(dev::hash(stream.out()));
+    stream<<u256(nKey.ToString()) << (fNew ? 'N' : 'K') << nBucket << GetKey();
+    bytes hashsource = stream.out();
+    
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
     return hash1 % ADDRMAN_BUCKET_SIZE;
 }
 

@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <deps/streams.h>
 
+
 namespace fs = boost::filesystem;
 
 class CSubNet;
@@ -62,7 +63,7 @@ public:
         *stream.stream() << this->nVersion<<bigint(nCreateTime)<<bigint(nBanUntil)<<banReason;
     }
 
-    void Unserialize(const bytes& stream)
+    void UnSerialize(const bytes& stream)
     {
         RLP rlp(stream);
         if (!rlp.isList() || rlp.itemCount() != 4)
@@ -105,7 +106,7 @@ private:
     fs::path pathAddr;
 public:
     CAddrDB();
-    bool Write(const CAddrMan& addr);
+    bool Write(CAddrMan& addr);
     bool Read(CAddrMan& addr);
     /* static bool Read(CAddrMan& addr, CDataStream& ssPeers); */
 };
@@ -117,7 +118,7 @@ private:
     fs::path pathBanlist;
 public:
     CBanDB();
-    bool Write(const banmap_t& banSet);
+    bool Write( banmap_t& banSet);
     bool Read(banmap_t& banSet);
 };
 
