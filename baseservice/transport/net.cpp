@@ -110,12 +110,6 @@ ChainParamsProxy& Params()
     return proxy;
 }
 
-//! Substitute for C++14 std::make_unique.
-template <typename T, typename... Args>
-std::unique_ptr<T> MakeUnique(Args&&... args)
-{
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
 
 
 void CConnman::AddOneShot(const std::string& strDest)
@@ -483,7 +477,6 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
     // Add node
     NodeId id = GetNewNodeId();
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-    uint64_t nonce = 0;
     CAddress addr_bind = GetBindAddress(hSocket);
     CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false);
     pnode->AddRef();
@@ -860,7 +853,7 @@ int CNetMessage::readHeader(const char *pch, unsigned int nBytes)
 
     // deserialize to CMessageHeader
     try {
-        hdrbuf >> hdr;
+        //hdrbuf >> hdr;
     }
     catch (const std::exception&) {
         return -1;
@@ -1165,7 +1158,6 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
 
     NodeId id = GetNewNodeId();
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
-    uint64_t nonce = 0;
     CAddress addr_bind = GetBindAddress(hSocket);
 
     CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
@@ -2316,9 +2308,9 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
     int64_t nStart = GetTimeMillis();
     {
         CAddrDB adb;
-        if (adb.Read(addrman)){}
+        if (adb.Read(addrman)){
             LogPrintf("Loaded %i addresses from peers.dat  %dms\n", addrman.size(), GetTimeMillis() - nStart);
-        else {
+        }else {
             addrman.Clear(); // Addrman can be in an inconsistent state after failure, reset it
             LogPrintf("Invalid or missing peers.dat; recreating\n");
             DumpAddresses();
@@ -2372,11 +2364,11 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
     // Send and receive from sockets, accept connections
     threadSocketHandler = std::thread(&TraceThread<std::function<void()> >, "net", std::function<void()>(std::bind(&CConnman::ThreadSocketHandler, this)));
 
-    if (!Args()->GetBoolArg("-dnsseed", true)){}
+    if (!Args()->GetBoolArg("-dnsseed", true)){
         LogPrintf("DNS seeding disabled\n");
-    else{}
+    }else{
         threadDNSAddressSeed = std::thread(&TraceThread<std::function<void()> >, "dnsseed", std::function<void()>(std::bind(&CConnman::ThreadDNSAddressSeed, this)));
-
+    }
     // Initiate outbound connections from -addnode
     threadOpenAddedConnections = std::thread(&TraceThread<std::function<void()> >, "addcon", std::function<void()>(std::bind(&CConnman::ThreadOpenAddedConnections, this)));
 

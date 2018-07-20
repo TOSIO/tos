@@ -21,6 +21,7 @@
 #include <deps/sync.h>
 #include <deps/uint256.h>
 #include <deps/threadinterrupt.h>
+#include <toscore/crypto/Hash.h>
 
 #include <atomic>
 #include <deque>
@@ -40,6 +41,7 @@ namespace tos
 }
 
 using namespace tos;
+using namespace dev;
 
 class CScheduler;
 class CNode;

@@ -18,8 +18,8 @@
 #include <stdint.h>
 #include <vector>
 
-#include <deps/stream.h>
-
+#include <deps/streams.h>
+#include <deps/log.h>
 
 /**
  * Extended statistics about a CAddress
@@ -71,7 +71,7 @@ public:
     void Serialize(DataStream& stream)
     {
         stream.stream()->appendList(4);
-        *(CAddress*)this.Serialize(stream);
+        (*(CAddress*)this).Serialize(stream);
         source.Serialize(stream);
         *stream.stream() << bigint(nLastSuccess) << nAttempts;
     }
@@ -83,10 +83,13 @@ public:
         {
             BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
         }
-        *(CAddress*)this.Unserialize(item[0].toBytes());
-        source.Unserialize(item[1].toBytes());
-        nLastSuccess = item[2].toInt<int64_t>();
-        nAttempts = item[2].toInt<int>();
+        bytes item = rlp[0].toBytes();
+        (*(CAddress*)this).UnSerialize(item);
+        item.clear();
+        item = rlp[1].toBytes();
+        source.UnSerialize(item);
+        nLastSuccess = rlp[2].toInt<int64_t>();
+        nAttempts = rlp[2].toInt<int>();
     }
 
     void Init()
@@ -477,12 +480,12 @@ public:
         Check();
     } */
 
-    void Serialize(RLPStream& out)
+    void Serialize(DataStream& out)
     {
 
     }
 
-    void Unserialize(bytesConstRef in)
+    void UnSerialize(bytesConstRef in)
     {
 
     }
