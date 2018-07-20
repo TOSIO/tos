@@ -54,7 +54,7 @@ bool CNetAddr::SetInternal(const std::string &name)
     memcpy(ip, g_internal_prefix, sizeof(g_internal_prefix));
     memcpy(ip + sizeof(g_internal_prefix), hash, sizeof(ip) - sizeof(g_internal_prefix)); */
 
-    h256 hash = dev::hash(bytesConstRef(name.data(),name.size()));
+    h256 hash = dev::hash(bytesConstRef((const unsigned char*)name.data(),name.size()));
     memcpy(ip, g_internal_prefix, sizeof(g_internal_prefix));
     memcpy(ip + sizeof(g_internal_prefix), hash.data(), sizeof(ip) - sizeof(g_internal_prefix));
 
@@ -405,7 +405,7 @@ uint64_t CNetAddr::GetHash() const
     return nRet; */
     h256 hash = dev::hash(bytesConstRef(ip,16));
     uint64_t nRet;
-    memcpy(&nRet, &hash.data(), sizeof(nRet));
+    memcpy(&nRet, hash.data(), sizeof(nRet));
     return nRet;
 }
 

@@ -13,7 +13,7 @@
 #include <utilstrencodings.h>
 #include <tinyformat.h>
 #include <utiltime.h>
-
+#include <deps/log.h>
 #include <atomic>
 
 #ifndef WIN32
@@ -26,13 +26,6 @@
 #if !defined(HAVE_MSG_NOSIGNAL)
 #define MSG_NOSIGNAL 0
 #endif
-
-template<typename... Args>
-bool error(const char* fmt, const Args&... args)
-{
-    LogPrintStr("ERROR: " + tfm::format(fmt, args...) + "\n");
-    return false;
-}
 
 // Settings
 static proxyType proxyInfo[NET_MAX];

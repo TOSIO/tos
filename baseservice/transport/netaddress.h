@@ -98,12 +98,12 @@ class CNetAddr
             //READWRITE(FLATDATA(ip));
         } */
 
-        void Serialize(DataStream& strem)
+        void Serialize(DataStream& stream)
         {
-            stream.stream()->appendVector(vector_ref<unsigned char>(ip,16));
+            stream.stream()->append(vector_ref<unsigned char>(ip,16));
         }
 
-        void UnSerialize(bytesConstRef bytes)
+        void UnSerialize(bytes& stream)
         {
 
         }
@@ -142,16 +142,16 @@ class CSubNet
 
 /*         template <typename Stream, typename Operation>
         inline void SerializationOp(Stream& s, Operation ser_action) {
-/*             READWRITE(network);
+             READWRITE(network);
             READWRITE(FLATDATA(netmask));
-            READWRITE(FLATDATA(valid)); */
-        } */
+            READWRITE(FLATDATA(valid)); 
+        }*/ 
 
-        void Serialize(DataStream& strem)
+        void Serialize(DataStream& stream)
         {
             stream.stream()->appendList(3);
             network.Serialize(stream);
-            stream.stream()->appendVector(vector_ref<uint8_t>(netmask,16));
+            stream.stream()->append(vector_ref<uint8_t>(netmask,16));
             stream.stream()->append(valid);
         }
 
@@ -162,7 +162,8 @@ class CSubNet
             {
                 BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
             }
-            network.Unserialize(rlp[0].toBytes());
+            bytes bs = rlp[0].toBytes();
+            network.UnSerialize(bs);
             bytes nm = rlp[1].toVector<uint8_t>();
             valid = rlp[2].toInt<int>();
         }
@@ -198,18 +199,18 @@ class CService : public CNetAddr
 
 /*         template <typename Stream, typename Operation>
         inline void SerializationOp(Stream& s, Operation ser_action) {
-/*             READWRITE(FLATDATA(ip));
+             READWRITE(FLATDATA(ip));
             unsigned short portN = htons(port);
             READWRITE(FLATDATA(portN));
             if (ser_action.ForRead())
-                 port = ntohs(portN); */
+                 port = ntohs(portN); 
         } */
 
-        void Serialize(DataStream& strem)
+        void Serialize(DataStream& stream)
         {
             unsigned short portN = htons(port);
             stream.stream()->appendList(2);
-            stream.stream()->append(vector_ref<unsigned char>(ip));
+            stream.stream()->append(vector_ref<unsigned char>(ip,16));
             *stream.stream()<<portN;
         }
 
@@ -220,7 +221,6 @@ class CService : public CNetAddr
             {
                 BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
             }
-            network.Unserialize(rlp[0].toBytes());
             bytes ip_ = rlp[1].toVector<unsigned char>();
             port = rlp[2].toInt<int>();
         }
