@@ -42,7 +42,7 @@ public:
     std::string GetCommand() const;
     bool IsValid(const MessageStartChars& messageStart) const;
 
-    ADD_SERIALIZE_METHODS;
+    //ADD_SERIALIZE_METHODS;
 
 /*     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
@@ -53,7 +53,7 @@ public:
         READWRITE(FLATDATA(pchChecksum));
     } */
 
-    void Serialize(RLPStream& strem)
+    void Serialize(RLPStream& stream)
     {
 
     }
@@ -335,7 +335,7 @@ public:
 
     void Init();
 
-    ADD_SERIALIZE_METHODS;
+    //ADD_SERIALIZE_METHODS;
 
 /*     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
@@ -354,7 +354,7 @@ public:
         READWRITE(*(CService*)this);
     } */
 
-    void Serialize(RLPStream& stream)
+    void Serialize(DataStream& stream)
     {
 
     }
@@ -395,7 +395,7 @@ public:
     CInv();
     CInv(int typeIn, const uint256& hashIn);
 
-    ADD_SERIALIZE_METHODS;
+    //ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
