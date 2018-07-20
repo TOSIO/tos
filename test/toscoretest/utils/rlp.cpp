@@ -231,8 +231,8 @@ void runRlpTest(string _name, fs::path const& _path)
 
 using namespace dev::test;
 
-BOOST_AUTO_TEST_SUITE(RlpTests)
-
+// BOOST_AUTO_TEST_SUITE(RlpTests)
+BOOST_FIXTURE_TEST_SUITE(RlpTests, TestHelperFixture)
 BOOST_AUTO_TEST_CASE(EmptyArrayList)
 {
 	try

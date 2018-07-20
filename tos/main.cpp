@@ -12,10 +12,9 @@
 //  #include <boost/program_options/options_description.hpp>
 
 #include <boost/program_options.hpp>
-using std::cout;
+
 namespace po = boost::program_options;
 using dev::LoggingOptions;
-using dev::RLP;
 
 void setupLog();
 

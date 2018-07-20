@@ -5,7 +5,7 @@
 #include <toscore/log/Log.h>
 #include <toscore/common/vector_ref.h>
 #include <toscore/common/Exceptions.h>
-
+#include <test/tools/TosTestUtils.h>
 #define BOOST_TEST_MODULE maintest
  #include <boost/test/included/unit_test.hpp>
 //#include <boost/test/unit_test.hpp>
@@ -19,18 +19,7 @@ using std::cout;
 using std::string;
 dev::bytes rlpEncode();
 void rlpDecode(dev::bytes output);
-// int main(int argc, char const *argv[])
-// {
-//     /* code */
-//     cout<<"encode" << std::endl;
-//     dev::bytes  byts = rlpEncode();
-//     //cout<<byts<< std::endl;
 
-//     rlpDecode(byts);
-
-
-//     return 0;
-// }
 
 dev::bytes rlpEncode()
 {
@@ -115,7 +104,7 @@ void runRlpTest()
     BOOST_CHECK_MESSAGE(2 + 2 == 4, "description…");
     try
     {
-
+        cerror<<"rlp error";
         BOOST_CHECK_MESSAGE(2 + 2 == 4, "description…");
         cout << "encode" << std::endl;
         dev::bytes byts = rlpEncode();
@@ -133,17 +122,15 @@ void runRlpTest()
     }
 }
 
-BOOST_AUTO_TEST_SUITE(s_smart_ptr)
- 
+BOOST_FIXTURE_TEST_SUITE(RlpTests, TestHelperFixture)
 
-BOOST_AUTO_TEST_CASE(runRlpTest)
+BOOST_FIXTURE_TEST_CASE(runRlpTest, TestHelperFixture)
 {
-BOOST_CHECK_MESSAGE(2+2==4, "description…" );
     runRlpTest();
 }
 
 
-BOOST_AUTO_TEST_CASE(t_scoped_ptr)
+BOOST_FIXTURE_TEST_CASE(t_scoped_ptr, TestHelperFixture)
 {
     scoped_ptr<int> p(new int(874));
     BOOST_CHECK(p);
