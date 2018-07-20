@@ -14,33 +14,23 @@ using std::cout;
 namespace po = boost::program_options;
 using dev::LoggingOptions;
 using dev::RLP;
-//template<typename T>
+
+void setupLog();
+
 int main(int argc, char const *argv[])
 {
-int c_lineWidth = 160;
-LoggingOptions loggingOptions;
+    setupLog();
+    cnote << "************start toschain*********";
+    cerror << "error test";
+    cwarn << "warning test";
+    return 0;
+}
+
+void setupLog()
+{
+    int c_lineWidth = 160;
+    LoggingOptions loggingOptions;
     po::options_description loggingProgramOptions(
         dev::createLoggingProgramOptions(c_lineWidth, loggingOptions));
-dev::setupLogging(loggingOptions);
-cnote<<"sfs123232" << "***8***";
- clog(dev::VerbosityError, "error")<<"twststs3213423sdfasdf";
-
-    /* code */
-    printf("asdfasdf\n");
-    //BOOST_LOG_INLINE_GLOBAL_LOGGER_CTOR_ARGS('dsfdfsd', 12);
-    const std::string str = "13123weriouweoruweo";
-
-    cout << str << std::endl;
-
-    std::vector<unsigned char> valList = {'0', '1', '3', '4'};
-    // std::string str1;// = dev::toBase64(valList);
-    // cout<<str1<< std::endl;
-
-    dev::bytesRef vec(valList.data(), valList.size());
-    dev::RLP rlp(vec, dev::RLP::AllowNonCanon);
-    // rlp::isInt();
-    cout << valList.data() << std::endl;
-    cout << rlp.sizeStrict() << std::endl;
-
-    return 0;
+    dev::setupLogging(loggingOptions);
 }

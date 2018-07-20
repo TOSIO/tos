@@ -113,14 +113,14 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(log_severity, "Severity", dev::Verbosity)
 BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp", boost::posix_time::ptime)
 BOOST_LOG_ATTRIBUTE_KEYWORD(log_uptime, "Uptime", attrs::timer::value_type)
 BOOST_LOG_ATTRIBUTE_KEYWORD(log_scope, "Scope", attrs::named_scope::value_type)
-void g_InitLog();
+void g_InitLog(logging::formatter formatter);
 void setupLogging(LoggingOptions const& _options)
 {
-    auto sink = boost::make_shared<log_sink<boost::log::sinks::text_ostream_backend>>();
+    auto sink = boost::make_shared<log_sink<sinks::text_ostream_backend>>();
 
     boost::shared_ptr<std::ostream> stream{&std::cout, boost::null_deleter{}};
     sink->locked_backend()->add_stream(stream);
-    sink->set_filter([_options](boost::log::attribute_value_set const& _set) {
+    sink->set_filter([_options](logging::attribute_value_set const& _set) {
         if (_set["Severity"].extract<int>() > _options.verbosity)
             return false;
 
@@ -130,45 +130,32 @@ void setupLogging(LoggingOptions const& _options)
                !contains(_options.excludeChannels, messageChannel);
     });
 
-    namespace expr = boost::log::expressions;
-    sink->set_formatter(expr::stream
-                        << EthViolet << expr::format_date_time(timestamp, "%Y-%m-%d %H:%M:%S")
-                        << EthReset " " EthNavy << threadName << EthReset " " << channel
+    logging::formatter formatter = expr::stream
+                        << EthViolet "[" << expr::format_date_time(timestamp, "%Y-%m-%d %H:%M:%S")
+                        <<"]" EthReset "" EthNavy "[" << threadName << "]" EthReset "<" << channel << ">"
                         << expr::if_(expr::has_attr(
                                context))[expr::stream << " " EthNavy << context << EthReset]
-                        << " " << expr::smessage);
+                        << " " << expr::smessage;
 
-    boost::log::core::get()->add_sink(sink);
+    sink->set_formatter(formatter);
 
-    boost::log::core::get()->add_global_attribute(
-        "ThreadName", boost::log::attributes::make_function(&getThreadName));
-    boost::log::core::get()->add_global_attribute(
-        "TimeStamp", boost::log::attributes::local_clock());
+    logging::core::get()->add_sink(sink);
 
-    boost::log::core::get()->set_exception_handler(
-        boost::log::make_exception_handler<std::exception>([](std::exception const& _ex) {
+    logging::core::get()->add_global_attribute(
+        "ThreadName", logging::attributes::make_function(&getThreadName));
+    logging::core::get()->add_global_attribute(
+        "TimeStamp", logging::attributes::local_clock());
+
+    logging::core::get()->set_exception_handler(
+        logging::make_exception_handler<std::exception>([](std::exception const& _ex) {
         std::cerr << "Exception from the logging library: " << _ex.what() << '\n';
     }));
-
-
-
-     g_InitLog();
+     g_InitLog(formatter);
 }
 
-void g_InitLog()
+void g_InitLog(logging::formatter formatter)
 {
-    logging::formatter formatter =
-        expr::stream
-        << "[" << expr::format_date_time(timestamp, "%H:%M:%S")
-        << "]" << expr::if_(expr::has_attr(log_uptime))[expr::stream << " [" << format_date_time(timestamp, "%O:%M:%S") << "]"]
-
-        << expr::if_(expr::has_attr(log_scope))
-               [expr::stream << "[" << expr::format_named_scope(log_scope, keywords::format = "%n") << "]"]
-        << "<" << log_severity << ">" << expr::message;
-
     logging::add_common_attributes();
-
-    auto console_sink = logging::add_console_log();
     auto file_sink = logging::add_file_log(
         keywords::file_name = "%Y-%m-%d_%N.log",                                     //文件名
         keywords::rotation_size = 10 * 1024 * 1024,                                  //单个文件限制大小
@@ -176,22 +163,16 @@ void g_InitLog()
     );
 
     file_sink->locked_backend()->set_file_collector(sinks::file::make_collector(
-        keywords::target = "logs",                   //文件夹名
+        keywords::target = "TOSLOG",                   //文件夹名
         keywords::max_size = 50 * 1024 * 1024,       //文件夹所占最大空间
         keywords::min_free_space = 100 * 1024 * 1024 //磁盘最小预留空间
         ));
 
-    file_sink->set_filter(log_severity >= VerbosityWarning); //日志级别过滤
-
+    // file_sink->set_filter(log_severity >= VerbosityWarning); //日志级别过滤
     file_sink->locked_backend()->scan_for_files();
-
-    console_sink->set_formatter(formatter);
     file_sink->set_formatter(formatter);
     file_sink->locked_backend()->auto_flush(true);
-
-    logging::core::get()->add_global_attribute("Scope", attrs::named_scope());
-    logging::core::get()->add_sink(console_sink);
     logging::core::get()->add_sink(file_sink);
 }
 
-}  // namespace dev
+} 
