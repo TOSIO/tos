@@ -21,6 +21,7 @@
 #include <deps/sync.h>
 #include <deps/uint256.h>
 #include <deps/threadinterrupt.h>
+#include <toscore/crypto/Hash.h>
 
 #include <atomic>
 #include <deque>
@@ -40,6 +41,7 @@ namespace tos
 }
 
 using namespace tos;
+using namespace dev;
 
 class CScheduler;
 class CNode;
@@ -317,7 +319,7 @@ public:
     int GetBestHeight() const;
 
     /** Get a unique deterministic randomizer. */
-    //CSipHasher GetDeterministicRandomizer(uint64_t id) const;
+    CSipHasher GetDeterministicRandomizer(uint64_t id) const;
 
     unsigned int GetReceiveFloodSize() const;
 
@@ -420,7 +422,7 @@ private:
     int nMaxAddnode;
     int nMaxFeeler;
     std::atomic<int> nBestHeight;
-    //CClientUIInterface* clientInterface;
+    CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
 
     /** SipHasher seeds for deterministic randomness */
@@ -448,8 +450,8 @@ private:
 
     friend struct CConnmanTest;
 
-    ArgsProxy* _argsProxy;
-    ChainParamsProxy* _paramsProxy;
+    //ArgsProxy* _argsProxy;
+    //ChainParamsProxy* _paramsProxy;
 };
 extern std::unique_ptr<CConnman> g_connman;
 void Discover(boost::thread_group& threadGroup);
@@ -566,7 +568,7 @@ public:
 
 class CNetMessage {
 private:
-    //mutable CHash256 hasher;
+    mutable Hash256 hasher;
     mutable uint256 data_hash;
 public:
     bool in_data;                   // parsing header (false) or data (true)

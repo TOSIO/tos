@@ -16,8 +16,8 @@ static_assert(false, "thread_local is not supported");
 #endif
 void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 {
-    //LogPrintf("LOCKCONTENTION: %s\n", pszName);
-    //LogPrintf("Locker: %s:%d\n", pszFile, nLine);
+    LogPrintf("LOCKCONTENTION: %s\n", pszName);
+    LogPrintf("Locker: %s:%d\n", pszFile, nLine);
 }
 #endif /* DEBUG_LOCKCONTENTION */
 
@@ -76,26 +76,26 @@ static thread_local std::unique_ptr<LockStack> lockstack;
 
 static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch, const LockStack& s1, const LockStack& s2)
 {
-    //LogPrintf("POTENTIAL DEADLOCK DETECTED\n");
-    //LogPrintf("Previous lock order was:\n");
+    LogPrintf("POTENTIAL DEADLOCK DETECTED\n");
+    LogPrintf("Previous lock order was:\n");
     for (const std::pair<void*, CLockLocation> & i : s2) {
         if (i.first == mismatch.first) {
-            //LogPrintf(" (1)");
+            LogPrintf(" (1)");
         }
         if (i.first == mismatch.second) {
-            //LogPrintf(" (2)");
+            LogPrintf(" (2)");
         }
-        //LogPrintf(" %s\n", i.second.ToString());
+        LogPrintf(" %s\n", i.second.ToString());
     }
-    //LogPrintf("Current lock order is:\n");
+    LogPrintf("Current lock order is:\n");
     for (const std::pair<void*, CLockLocation> & i : s1) {
         if (i.first == mismatch.first) {
-            //LogPrintf(" (1)");
+            LogPrintf(" (1)");
         }
         if (i.first == mismatch.second) {
-            //LogPrintf(" (2)");
+            LogPrintf(" (2)");
         }
-        //LogPrintf(" %s\n", i.second.ToString());
+        LogPrintf(" %s\n", i.second.ToString());
     }
     assert(false);
 }

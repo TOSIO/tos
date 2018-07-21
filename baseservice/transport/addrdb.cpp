@@ -14,12 +14,16 @@
 #include <tinyformat.h>
 //#include <util.h>
 
+#include <deps/streams.h>
 #include <toscore/utils/FileSystem.h>
 #include <toscore/common/CommonIO.h>
+#include <toscore/crypto/Hash.h>
+
+#include <utility>
 
 using namespace dev;
 
-namespace {
+namespace tos {
 
 void Serialize(DataStream& stream,banmap_t& banSet)
 {
@@ -30,14 +34,16 @@ void Serialize(DataStream& stream,banmap_t& banSet)
     for (auto item : banSet)
     {
         stream.stream()->appendList(2);
-        item.first.Serialize(stream)
+        CSubNet net = item.first;
+        net.Serialize(stream);
         item.second.Serialize(stream);
     }
-    h256 hash = sha256(stream.stream()->out());
+    bytes hashsource = stream.stream()->out();
+    h256 hash = dev::hash(&hashsource);
     stream.stream()->append(hash);
 }
 
-void Unserialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
+void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
 {
     RLP rlp(stream);
     if (!rlp.isList() || rlp.itemCount() != 3)
@@ -51,16 +57,16 @@ void Unserialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
         RLPs kv = item.toList();
         CSubNet key;
         CBanEntry value;
-        key.Unserialize(kv[0].toBytes());
-        value.Unserialize(kv[1].toBytes());
-        banSet.insert(make_pair(key,value));
+        key.UnSerialize(kv[0].toBytes());
+        value.UnSerialize(kv[1].toBytes());
+        banSet.insert(std::make_pair(key,value));
     }
     if (fCheckSum)
     {
         h256 decHash = rlp[2].toHash<h256>();
         bytes bans = rlp[1].toBytes();
         start.insert(start.end(),bans.begin(),bans.end());
-        h256 streamHash = sha(start);
+        h256 streamHash = dev::hash(&start);
         if (decHash != streamHash)
         {
              BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Checksum is inconsistent."));
@@ -162,13 +168,13 @@ CBanDB::CBanDB()
     pathBanlist = dev::getDataDir() / "banlist.dat";
 }
 
-bool CBanDB::Write(const banmap_t& banSet)
+bool CBanDB::Write( banmap_t& banSet)
 {
     //return SerializeFileDB("banlist", pathBanlist, banSet);
     try
     {
-        DataStream stream;
-        Serialize(stream,banSet) 
+        DataStream stream(0,0);
+        tos::Serialize(stream,banSet);
         dev::writeFile(pathBanlist, stream.stream()->out(),true);
     } 
     catch (const std::exception& e) 
@@ -184,7 +190,7 @@ bool CBanDB::Read(banmap_t& banSet)
     try
     {
         bytes content = dev::contents(pathBanlist);
-        Deserialize(&contents,banSet);
+        tos::UnSerialize(content,banSet);
     }
     catch (const std::exception& e) 
     {
@@ -199,12 +205,12 @@ CAddrDB::CAddrDB()
     pathAddr = dev::getDataDir() / "peers.dat";
 }
 
-bool CAddrDB::Write(const CAddrMan& addr)
+bool CAddrDB::Write(CAddrMan& addr)
 {
     //return SerializeFileDB("peers", pathAddr, addr);
     try
     {
-        DataStream stream;
+        DataStream stream(0,0);
         addr.Serialize(stream);
         dev::writeFile(pathAddr, stream.stream()->out(),true);
     } 
@@ -221,7 +227,7 @@ bool CAddrDB::Read(CAddrMan& addr)
     try
     {
         bytes content = dev::contents(pathAddr);
-        addr.Deserialize(&contents);
+        addr.UnSerialize(&content);
     }
     catch (const std::exception& e) 
     {

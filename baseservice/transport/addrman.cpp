@@ -6,8 +6,8 @@
 #include <addrman.h>
 
 //#include <hash.h>
-#include <deps/serialize.h>
-//#include <streams.h>
+//#include <deps/serialize.h>
+#include <toscore/crypto/Hash.h>
 
 int CAddrInfo::GetTriedBucket(const uint256& nKey) const
 {
@@ -17,9 +17,19 @@ int CAddrInfo::GetTriedBucket(const uint256& nKey) const
     
     RLPStream stream;
     stream.appendList(2);
-    stream<<nKey<<GetKey();
+    stream<<u256(nKey.ToString())<<GetKey();
+    bytes hashsource = stream.out();
     
-    return 0;
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
+
+    stream.clear();
+    stream.appendList(3);
+    stream<<u256(nKey.ToString())<<GetGroup()<<(hash1 % ADDRMAN_TRIED_BUCKETS_PER_GROUP);
+
+    hashsource.clear();
+    hashsource = stream.out();
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(&hashsource));
+    return hash2 % ADDRMAN_TRIED_BUCKET_COUNT; 
 }
 
 int CAddrInfo::GetNewBucket(const uint256& nKey, const CNetAddr& src) const
@@ -28,14 +38,34 @@ int CAddrInfo::GetNewBucket(const uint256& nKey, const CNetAddr& src) const
     uint64_t hash1 = (CHashWriter(SER_GETHASH, 0) << nKey << GetGroup() << vchSourceGroupKey).GetHash().GetCheapHash();
     uint64_t hash2 = (CHashWriter(SER_GETHASH, 0) << nKey << vchSourceGroupKey << (hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP)).GetHash().GetCheapHash();
     return hash2 % ADDRMAN_NEW_BUCKET_COUNT; */
-    return 0;
+    
+    std::vector<unsigned char> vchSourceGroupKey = src.GetGroup();
+    RLPStream stream;
+    stream.appendList(3);
+    stream<<u256(nKey.ToString())<<GetGroup()<<vchSourceGroupKey;
+    bytes hashsource = stream.out();
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
+
+    stream.clear();
+    stream.appendList(3);
+    stream<<u256(nKey.ToString())<<vchSourceGroupKey<<(hash1 % ADDRMAN_NEW_BUCKETS_PER_SOURCE_GROUP);
+    hashsource.clear();
+    hashsource = stream.out();
+    uint64_t hash2 = dev::extractCheapHash(dev::hash(&hashsource));
+    return hash2 % ADDRMAN_NEW_BUCKET_COUNT;
 }
 
 int CAddrInfo::GetBucketPosition(const uint256 &nKey, bool fNew, int nBucket) const
 {
 /*     uint64_t hash1 = (CHashWriter(SER_GETHASH, 0) << nKey << (fNew ? 'N' : 'K') << nBucket << GetKey()).GetHash().GetCheapHash();
     return hash1 % ADDRMAN_BUCKET_SIZE; */
-    return 0;
+    RLPStream stream;
+    stream.appendList(4);
+    stream<<u256(nKey.ToString()) << (fNew ? 'N' : 'K') << nBucket << GetKey();
+    bytes hashsource = stream.out();
+    
+    uint64_t hash1 = dev::extractCheapHash(dev::hash(&hashsource));
+    return hash1 % ADDRMAN_BUCKET_SIZE;
 }
 
 bool CAddrInfo::IsTerrible(int64_t nNow) const
@@ -241,7 +271,7 @@ void CAddrMan::Good_(const CService& addr, int64_t nTime)
     if (nUBucket == -1)
         return;
 
-    //LogPrint(BCLog::ADDRMAN, "Moving %s to tried\n", addr.ToString());
+    LogPrint(BCLog::ADDRMAN, "Moving %s to tried\n", addr.ToString());
 
     // move nId to the tried tables
     MakeTried(info, nId);

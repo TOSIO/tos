@@ -3,7 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <ui_interface.h>
-#include <util.h>
+#include <deps/tinyformat.h>
+#include <deps/util.h>
 
 CClientUIInterface uiInterface;
 

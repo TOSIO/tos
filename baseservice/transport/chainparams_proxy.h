@@ -22,6 +22,7 @@ namespace tos
             CMessageHeader::MessageStartChars start;
             return start; 
         }
+        
         int GetDefaultPort() const { return 0; }
 
          const std::vector<std::string>& DNSSeeds() const 
