@@ -1,20 +1,16 @@
 #pragma once
 #include <boost/program_options.hpp>
+#include <utility>
+#include <mutex>
 
 namespace tos
 {
     class ArgsManager
     {
         public:
-        explicit ArgsManager(boost::program_options::variables_map& vm);
+        ArgsManager(){};
 
-/**
-     * Return a vector of strings of the given argument
-     *
-     * @param strArg Argument to get (e.g. "-foo")
-     * @return command-line arguments
-     */
-    std::vector<std::string> GetArgs(const std::string& strArg) const;
+    void Set(boost::program_options::variables_map& agrsMap);
 
     /**
      * Return true if the given argument has been manually set
@@ -53,5 +49,8 @@ namespace tos
 
     private:
     boost::program_options::variables_map _vm;
+    std::mutex _vm_lock;
     };
 }
+
+extern tos::ArgsManager g_args;

@@ -9,13 +9,6 @@ namespace tos
     class ArgsProxy
     {
 public:
-    /**
-     * Return a vector of strings of the given argument
-     *
-     * @param strArg Argument to get (e.g. "-foo")
-     * @return command-line arguments
-     */
-    std::vector<std::string> GetArgs(const std::string& strArg) const;
 
     /**
      * Return true if the given argument has been manually set

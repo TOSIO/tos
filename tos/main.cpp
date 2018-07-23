@@ -16,11 +16,11 @@
 namespace po = boost::program_options;
 using dev::LoggingOptions;
 
-void setupLog();
+tos::ArgsManager g_args;
 
 int main(int argc, char const *argv[])
 {
-    setupLog();
+    
     cnote << "************start toschain*********";
     cerror << "error test";
     cwarn << "warning test";
@@ -30,9 +30,17 @@ int main(int argc, char const *argv[])
     auto addClientOption = defaultMode.add_options();
     addClientOption("test", "Use the main network protocol");
    
-   po::options_description allowedOptions("Allowed options");
-    allowedOptions.add(defaultMode);
+    po::options_description clientNetworking("CLIENT NETWORKING", lineWidth);
+    //auto addNetworkingOption = clientNetworking.add_options();
 
+    LoggingOptions loggingOptions;
+    po::options_description loggingProgramOptions(
+    dev::createLoggingProgramOptions(lineWidth, loggingOptions));
+    po::options_description allowedOptions("Allowed options");
+    allowedOptions.add(defaultMode)
+    .add(clientNetworking)
+    .add(loggingProgramOptions);
+    
     po::variables_map vm;
     std::vector<std::string> unrecognisedOptions;
 
@@ -49,14 +57,6 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    return 0;
-}
-
-void setupLog()
-{
-    int c_lineWidth = 160;
-    LoggingOptions loggingOptions;
-    po::options_description loggingProgramOptions(
-        dev::createLoggingProgramOptions(c_lineWidth, loggingOptions));
     dev::setupLogging(loggingOptions);
+    return 0;
 }

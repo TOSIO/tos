@@ -1,18 +1,9 @@
 #include "argsproxy.h"
+#include "../../tos/args_manager.h"
 
 using namespace tos;
 
-/**
- * Return a vector of strings of the given argument
- *
- * @param strArg Argument to get (e.g. "-foo")
- * @return command-line arguments
- */
-std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg) const
-{
-    std::vector<std::string> result;
-    return result;
-}
+
 /**
  * Return true if the given argument has been manually set
  *
@@ -21,7 +12,7 @@ std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg) const
  */
 bool ArgsProxy::IsArgSet(const std::string& strArg) const
 {
-    return true;
+    return g_args.IsArgSet(strArg);
 }
 
 /**
@@ -33,7 +24,7 @@ bool ArgsProxy::IsArgSet(const std::string& strArg) const
  */
 std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strDefault) const
 {
-    return std::string();
+    return g_args.GetArg(strArg,strDefault);
 }
 /**
  * Return integer argument or default value
@@ -44,7 +35,7 @@ std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strD
  */
 int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault) const
 {
-    return 0;
+    return g_args.GetArg(strArg,nDefault);
 }
 
 /**
@@ -56,35 +47,5 @@ int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault) const
  */
 bool ArgsProxy::GetBoolArg(const std::string& strArg, bool fDefault) const
 {
-    return false;
-}
-/**
- * Set an argument if it doesn't already have a value
- *
- * @param strArg Argument to set (e.g. "-foo")
- * @param strValue Value (e.g. "1")
- * @return true if argument gets set, false if it already had a value
- */
-bool ArgsProxy::SoftSetArg(const std::string& strArg, const std::string& strValue)
-{
-    return false;
-}
-
-/**
- * Set a boolean argument if it doesn't already have a value
- *
- * @param strArg Argument to set (e.g. "-foo")
- * @param fValue Value (e.g. false)
- * @return true if argument gets set, false if it already had a value
- */
-bool ArgsProxy::SoftSetBoolArg(const std::string& strArg, bool fValue)
-{
-    return false;
-}
-
-// Forces an arg setting. Called by SoftSetArg() if the arg hasn't already
-// been set. Also called directly in testing.
-void ForceSetArg(const std::string& strArg, const std::string& strValue)
-{
-    
+    return g_args.GetBoolArg(strArg,fDefault);
 }
