@@ -31,11 +31,10 @@ int main(int argc, char const *argv[])
     addClientOption("test", "Use the main network protocol");
    
    po::options_description allowedOptions("Allowed options");
-    allowedOptions.add(defaultMode)
-        .add(clientTransacting);
+    allowedOptions.add(defaultMode);
 
     po::variables_map vm;
-    vector<string> unrecognisedOptions;
+    std::vector<std::string> unrecognisedOptions;
 
     try
     {
@@ -46,17 +45,8 @@ int main(int argc, char const *argv[])
     }
     catch (po::error const& e)
     {
-        cerr << e.what();
+        std::cerr << e.what();
         return -1;
-    }
-
-    for (size_t i = 0; i < unrecognisedOptions.size(); ++i)
-    {
-        if (!m.interpretOption(i, unrecognisedOptions))
-        {
-            cerr << "Invalid argument: " << unrecognisedOptions[i] << "\n";
-            return -1;
-        }
     }
 
     return 0;
