@@ -54,12 +54,12 @@ cable_add_buildinfo_library(PREFIX tos)
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY On)
 
-include(EthCcache)
-include(EthOptions)
-include(EthCompilerSettings)
-include(EthExecutableHelper)
-include(EthDependencies)
-include(EthUtils)
+include(TOSCcache)
+include(TOSOptions)
+include(TOSCompilerSettings)
+include(TOSExecutableHelper)
+include(TOSDependencies)
+include(TOSUtils)
 
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON) 
