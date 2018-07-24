@@ -30,12 +30,11 @@ int main(int argc, char const *argv[])
     auto addClientOption = defaultMode.add_options();
     addClientOption("test", "Use the main network protocol");
    
-    po::options_description allowedOptions("Allowed options");
-    allowedOptions.add(defaultMode)
-        .add(clientTransacting);
+   po::options_description allowedOptions("Allowed options");
+    allowedOptions.add(defaultMode);
 
     po::variables_map vm;
-    vector<string> unrecognisedOptions;
+    std::vector<std::string> unrecognisedOptions;
 
     try
     {
@@ -46,7 +45,7 @@ int main(int argc, char const *argv[])
     }
     catch (po::error const& e)
     {
-        cerr << e.what();
+        std::cerr << e.what();
         return -1;
     }
 
@@ -58,6 +57,7 @@ int main(int argc, char const *argv[])
             return -1;
         }
     }*/
+
 
     return 0;
 }

@@ -20,6 +20,7 @@ file(GLOB utilsh "utils/*.h")
 file(GLOB concurrents "concurrent/*.cpp")
 file(GLOB concurrenth "concurrent/*.h")
 
+add_definitions(-std=c++11)
 
 add_library(toscore ${sources} ${headers} ${commons} ${commonh} ${logs} ${logh} ${cryptos} ${cryptoh} ${storages} ${storageh} ${utilss} ${utilsh} ${concurrents} ${concurrenth})
 
@@ -30,7 +31,8 @@ target_include_directories(toscore SYSTEM PUBLIC ${LEVELDB_INCLUDE_DIRS})
 target_link_libraries(toscore PRIVATE ${LEVELDB_LIBRARIES})
 
 include_directories(./)
-add_subdirectory(jsonspirit)d
+add_subdirectory(jsonspirit)
+
 
 target_link_libraries(toscore PUBLIC jsonspirit)
 
