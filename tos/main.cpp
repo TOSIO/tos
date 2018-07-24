@@ -24,13 +24,13 @@ int main(int argc, char const *argv[])
     cnote << "************start toschain*********";
     cerror << "error test";
     cwarn << "warning test";
-
+    /*
     unsigned const lineWidth = 160;
     po::options_description defaultMode("TOS CLIENT MODE (default)", lineWidth);
     auto addClientOption = defaultMode.add_options();
     addClientOption("test", "Use the main network protocol");
    
-   po::options_description allowedOptions("Allowed options");
+    po::options_description allowedOptions("Allowed options");
     allowedOptions.add(defaultMode)
         .add(clientTransacting);
 
@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
             cerr << "Invalid argument: " << unrecognisedOptions[i] << "\n";
             return -1;
         }
-    }
+    }*/
 
     return 0;
 }

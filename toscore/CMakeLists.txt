@@ -23,14 +23,14 @@ file(GLOB concurrenth "concurrent/*.h")
 
 add_library(toscore ${sources} ${headers} ${commons} ${commonh} ${logs} ${logh} ${cryptos} ${cryptoh} ${storages} ${storageh} ${utilss} ${utilsh} ${concurrents} ${concurrenth})
 
-target_link_libraries(toscore PUBLIC aleth-buildinfo Boost::filesystem Boost::system Boost::log Boost::thread Threads::Threads PRIVATE ethash::ethash Secp256k1 PRIVATE libff::ff cryptopp-static libscrypt::scrypt)
+target_link_libraries(toscore PUBLIC tos-buildinfo Boost::filesystem Boost::system Boost::log Boost::thread Threads::Threads PRIVATE ethash::ethash Secp256k1 PRIVATE libff::ff cryptopp-static libscrypt::scrypt)
 
 find_package(LevelDB)
 target_include_directories(toscore SYSTEM PUBLIC ${LEVELDB_INCLUDE_DIRS})
 target_link_libraries(toscore PRIVATE ${LEVELDB_LIBRARIES})
 
 include_directories(./)
-add_subdirectory(jsonspirit)
+add_subdirectory(jsonspirit)d
 
 target_link_libraries(toscore PUBLIC jsonspirit)
 
