@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
     cnote << "************start toschain*********";
     cerror << "error test";
     cwarn << "warning test";
-
+    /*
     unsigned const lineWidth = 160;
     po::options_description defaultMode("TOS CLIENT MODE (default)", lineWidth);
     auto addClientOption = defaultMode.add_options();
@@ -48,6 +48,16 @@ int main(int argc, char const *argv[])
         std::cerr << e.what();
         return -1;
     }
+
+    for (size_t i = 0; i < unrecognisedOptions.size(); ++i)
+    {
+        if (!m.interpretOption(i, unrecognisedOptions))
+        {
+            cerr << "Invalid argument: " << unrecognisedOptions[i] << "\n";
+            return -1;
+        }
+    }*/
+
 
     return 0;
 }

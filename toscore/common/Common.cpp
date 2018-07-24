@@ -20,13 +20,13 @@
 
 #include <log/Log.h>
 
-#include <aleth-buildinfo.h>
+#include <tos-buildinfo.h>
 
 using namespace std;
 
 namespace dev
 {
-char const* Version = aleth_get_buildinfo()->project_version;
+char const* Version = tos_get_buildinfo()->project_version;
 bytes const NullBytes;
 std::string const EmptyString;
 

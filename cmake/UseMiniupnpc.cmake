@@ -1,4 +1,4 @@
-function(eth_apply TARGET REQUIRED)
+function(tos_apply TARGET REQUIRED)
 	find_package (Miniupnpc 1.8.2013)
 	if (MINIUPNPC AND MINIUPNPC_FOUND)
 		target_include_directories(${TARGET} SYSTEM PRIVATE ${MINIUPNPC_INCLUDE_DIRS})

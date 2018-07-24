@@ -24,12 +24,12 @@ if (MSVC)
 	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0.0)
 		message(FATAL_ERROR "ERROR - As of the 1.3.0 release, cpp-ethereum only supports Visual Studio 2015 or newer.\nPlease download from https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx.")
 	else()
-		get_filename_component(ETH_DEPENDENCY_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}/../deps/x64" ABSOLUTE)
+		get_filename_component(TOS_DEPENDENCY_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}/../deps/x64" ABSOLUTE)
 	endif()
-	set (CMAKE_PREFIX_PATH ${ETH_DEPENDENCY_INSTALL_DIR} ${CMAKE_PREFIX_PATH})
+	set (CMAKE_PREFIX_PATH ${TOS_DEPENDENCY_INSTALL_DIR} ${CMAKE_PREFIX_PATH})
 endif()
 
 # custom cmake scripts
-set(ETH_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(ETH_SCRIPTS_DIR ${ETH_CMAKE_DIR}/scripts)
+set(TOS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(TOS_SCRIPTS_DIR ${TOS_CMAKE_DIR}/scripts)
 

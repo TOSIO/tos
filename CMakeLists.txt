@@ -1,6 +1,3 @@
-# Aleth: Ethereum C++ client, tools and libraries.
-# Copyright 2018 Aleth Autors.
-# Licensed under the GNU General Public License, Version 3. See the LICENSE file.
 
 cmake_minimum_required(VERSION 3.5.1)
 
@@ -18,8 +15,8 @@ else()
 endif()
 cable_configure_toolchain(DEFAULT ${toolchain})
 
-set(ETH_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake" CACHE PATH "The path to the cmake directory")
-list(APPEND CMAKE_MODULE_PATH ${ETH_CMAKE_DIR})
+set(TOS_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake" CACHE PATH "The path to the cmake directory")
+list(APPEND CMAKE_MODULE_PATH ${TOS_CMAKE_DIR})
 
 # Map current configuration to configurations of imported targets.
 set(CMAKE_MAP_IMPORTED_CONFIG_DEBUG Release)
@@ -27,7 +24,7 @@ set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
 
 set(HUNTER_CONFIGURATION_TYPES Release)
 set(HUNTER_JOBS_NUMBER 4)
-set(HUNTER_CACHE_SERVERS "https://github.com/ethereum/hunter-cache")
+set(HUNTER_CACHE_SERVERS "https://github.com/TOSIO/hunter-cache")
 set(HUNTER_PASSWORDS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Hunter/passwords.cmake)
 
 # In CI builds upload the binaries if the GITHUB_USER_PASSWORD was decrypted
@@ -51,23 +48,23 @@ set(PROJECT_VERSION 1.4.0.dev1)
 
 
 
-cable_set_build_type(DEFAULT RelWithDebInfo CONFIGURATION_TYPES Debug;Release;RelWithDebInfo)
+cable_set_build_type(DEFAULT Debug CONFIGURATION_TYPES Debug;Release;RelWithDebInfo)
 
-cable_add_buildinfo_library(PREFIX aleth)
+cable_add_buildinfo_library(PREFIX tos)
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY On)
 
-include(EthCcache)
-include(EthOptions)
-include(EthCompilerSettings)
-include(EthExecutableHelper)
-include(EthDependencies)
-include(EthUtils)
+include(TOSCcache)
+include(TOSOptions)
+include(TOSCompilerSettings)
+include(TOSExecutableHelper)
+include(TOSDependencies)
+include(TOSUtils)
 
 set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_MULTITHREADED ON) 
 hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log)
-find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log_setup log)
+find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log)
 
 hunter_add_package(jsoncpp)
 find_package(jsoncpp CONFIG REQUIRED)
@@ -99,7 +96,6 @@ if(MINIUPNPC)
     find_package(Miniupnpc 1.8.2013 REQUIRED)
 endif()
 
-#set(UTILS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/utils")
 
 configure_project()
 
@@ -108,7 +104,7 @@ configure_project()
 #Global include path for all libs.
 include_directories("${CMAKE_SOURCE_DIR}")
 
-option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OFF)
+# option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OFF)
 
 
 add_subdirectory(toscore)
