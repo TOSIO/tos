@@ -9,13 +9,13 @@ namespace dev
 namespace eth
 {
 
-class ${ETH_RESOURCE_NAME}
+class ${TOS_RESOURCE_NAME}
 {
 public:
-	${ETH_RESOURCE_NAME}()
+	${TOS_RESOURCE_NAME}()
 	{
-${ETH_RESULT_DATA}
-${ETH_RESULT_INIT}
+${TOS_RESULT_DATA}
+${TOS_RESULT_INIT}
 	}
 
 	std::string loadResourceAsString(std::string _name) { return std::string(m_resources[_name], m_sizes[_name]); }
