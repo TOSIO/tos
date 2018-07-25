@@ -106,7 +106,7 @@ std::shared_ptr<ArgsProxy> Args()
 
 ChainParamsProxy& Params()
 {
-    ChainParamsProxy proxy;
+    static ChainParamsProxy proxy;
     return proxy;
 }
 
@@ -500,8 +500,8 @@ void CConnman::DumpBanlist()
         SetBannedSetDirty(false);
     }
 
-/*     LogPrint(BCLog::NET, "Flushed %d banned node ips/subnets to banlist.dat  %dms\n",
-        banmap.size(), GetTimeMillis() - nStart); */
+     LogPrint(BCLog::NET, "Flushed %d banned node ips/subnets to banlist.dat  %dms\n",
+        banmap.size(), GetTimeMillis() - nStart); 
 }
 
 void CNode::CloseSocketDisconnect()
@@ -1685,8 +1685,8 @@ void CConnman::DumpAddresses()
     CAddrDB adb;
     adb.Write(addrman);
 
-/*     LogPrint(BCLog::NET, "Flushed %d addresses to peers.dat  %dms\n",
-           addrman.size(), GetTimeMillis() - nStart); */
+     LogPrint(BCLog::NET, "Flushed %d addresses to peers.dat  %dms\n",
+           addrman.size(), GetTimeMillis() - nStart); 
 }
 
 void CConnman::DumpData()

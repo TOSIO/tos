@@ -105,7 +105,9 @@ class CNetAddr
 
         void UnSerialize(bytes& stream)
         {
-
+            RLP rlp(stream);
+            bytes bip = rlp[0].toBytes();
+            memcpy(ip,bip.data(),16);
         }
 
         friend class CSubNet;

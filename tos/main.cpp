@@ -16,23 +16,46 @@
 namespace po = boost::program_options;
 using dev::LoggingOptions;
 
-void setupLog();
+tos::ArgsManager g_args;
 
 int main(int argc, char const *argv[])
 {
-    setupLog();
+    
     cnote << "************start toschain*********";
-    cerror << "error test";
-    cwarn << "warning test";
-    /*
     unsigned const lineWidth = 160;
     po::options_description defaultMode("TOS CLIENT MODE (default)", lineWidth);
     auto addClientOption = defaultMode.add_options();
     addClientOption("test", "Use the main network protocol");
    
-   po::options_description allowedOptions("Allowed options");
-    allowedOptions.add(defaultMode);
+    po::options_description clientNetworking("CLIENT NETWORKING", lineWidth);
+    auto addNetworkingOption = clientNetworking.add_options();
+    addNetworkingOption("bootstrap,b",
+        "Connect to the default Tos peer servers (default unless --no-discovery used)");
 
+    addNetworkingOption("no-bootstrap",
+        "Do not connect to the default Tos peer servers (default only when --no-discovery is "
+        "used)");
+
+    addNetworkingOption("listen-ip", po::value<std::string>()->value_name("<ip>(:<port>)"),
+        "Listen on the given IP for incoming connections (default: 0.0.0.0)");
+
+    addNetworkingOption("listen", po::value<unsigned short>()->value_name("<port>"),
+        "Listen on the given port for incoming connections (default: 80909)");
+
+    addNetworkingOption("remote,r", po::value<std::string>()->value_name("<host>(:<port>)"),
+        "Connect to the given remote host (default: none)");
+
+    addNetworkingOption("port", po::value<short>()->value_name("<port>"),
+        "Connect to the given remote port (default: 30303)");
+
+    LoggingOptions loggingOptions;
+    po::options_description loggingProgramOptions(
+    dev::createLoggingProgramOptions(lineWidth, loggingOptions));
+    po::options_description allowedOptions("Allowed options");
+    allowedOptions.add(defaultMode)
+    .add(clientNetworking)
+    .add(loggingProgramOptions);
+    
     po::variables_map vm;
     std::vector<std::string> unrecognisedOptions;
 
@@ -49,24 +72,7 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    for (size_t i = 0; i < unrecognisedOptions.size(); ++i)
-    {
-        if (!m.interpretOption(i, unrecognisedOptions))
-        {
-            cerr << "Invalid argument: " << unrecognisedOptions[i] << "\n";
-            return -1;
-        }
-    }*/
-
-
-    return 0;
-}
-
-void setupLog()
-{
-    int c_lineWidth = 160;
-    LoggingOptions loggingOptions;
-    po::options_description loggingProgramOptions(
-        dev::createLoggingProgramOptions(c_lineWidth, loggingOptions));
+    g_args.Set(vm);
     dev::setupLogging(loggingOptions);
+    return 0;
 }

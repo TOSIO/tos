@@ -4,19 +4,16 @@
 #include <string>
 
 
+
 namespace tos 
 {
+    class ArgsManager;
+
     class ArgsProxy
     {
 public:
-    /**
-     * Return a vector of strings of the given argument
-     *
-     * @param strArg Argument to get (e.g. "-foo")
-     * @return command-line arguments
-     */
-    std::vector<std::string> GetArgs(const std::string& strArg) const;
-
+    ArgsProxy(ArgsManager* manager);
+    
     /**
      * Return true if the given argument has been manually set
      *
@@ -73,5 +70,8 @@ public:
     // Forces an arg setting. Called by SoftSetArg() if the arg hasn't already
     // been set. Also called directly in testing.
     void ForceSetArg(const std::string& strArg, const std::string& strValue);
+
+    private:
+        ArgsManager* _args_manager;
     };
 }

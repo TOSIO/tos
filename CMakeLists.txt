@@ -62,9 +62,9 @@ include(TOSDependencies)
 include(TOSUtils)
 
 set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON) 
-hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log)
-find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log)
+set(Boost_USE_MULTITHREADED ON)
+hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log date_time chrono)
+find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log  date_time chrono unit_test_framework) 
 
 hunter_add_package(jsoncpp)
 find_package(jsoncpp CONFIG REQUIRED)
@@ -109,8 +109,7 @@ include_directories("${CMAKE_SOURCE_DIR}")
 
 add_subdirectory(toscore)
 
+add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
-
-
-add_subdirectory(test)
+add_subdirectory(test/p2ptest)

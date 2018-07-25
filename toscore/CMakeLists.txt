@@ -31,6 +31,7 @@ target_include_directories(toscore SYSTEM PUBLIC ${LEVELDB_INCLUDE_DIRS})
 target_link_libraries(toscore PRIVATE ${LEVELDB_LIBRARIES})
 
 include_directories(./)
+include_directories("../build/deps/include")
 add_subdirectory(jsonspirit)
 
 
