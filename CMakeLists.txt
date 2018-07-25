@@ -62,15 +62,9 @@ include(TOSDependencies)
 include(TOSUtils)
 
 set(Boost_USE_STATIC_LIBS ON)
-<<<<<<< HEAD
 set(Boost_USE_MULTITHREADED ON)
 hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log date_time chrono)
 find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log  date_time chrono unit_test_framework) 
-=======
-set(Boost_USE_MULTITHREADED ON) 
-hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log)
-find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log)
->>>>>>> 07f3bed40f8ef6f255fb6d92e27545d3e5e63690
 
 hunter_add_package(jsoncpp)
 find_package(jsoncpp CONFIG REQUIRED)
