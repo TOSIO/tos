@@ -19,7 +19,7 @@ namespace tos
         } */
         const CMessageHeader::MessageStartChars& MessageStart() const 
         { 
-            CMessageHeader::MessageStartChars start;
+            static CMessageHeader::MessageStartChars start;
             return start; 
         }
         
@@ -27,12 +27,12 @@ namespace tos
 
          const std::vector<std::string>& DNSSeeds() const 
          { 
-             std::vector<std::string> vSeeds;
+             static std::vector<std::string> vSeeds;
              return vSeeds; 
         }
         const std::vector<SeedSpec6>& FixedSeeds() const 
         { 
-            std::vector<SeedSpec6> vSeeds;
+            static std::vector<SeedSpec6> vSeeds;
             return vSeeds; 
         }
     };

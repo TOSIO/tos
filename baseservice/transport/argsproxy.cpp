@@ -4,6 +4,11 @@
 using namespace tos;
 
 
+ArgsProxy::ArgsProxy(ArgsManager* manager):_args_manager(manager)
+{
+
+}
+
 /**
  * Return true if the given argument has been manually set
  *
@@ -12,7 +17,7 @@ using namespace tos;
  */
 bool ArgsProxy::IsArgSet(const std::string& strArg) const
 {
-    return g_args.IsArgSet(strArg);
+    return _args_manager->IsArgSet(strArg);
 }
 
 /**
@@ -24,7 +29,7 @@ bool ArgsProxy::IsArgSet(const std::string& strArg) const
  */
 std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strDefault) const
 {
-    return g_args.GetArg(strArg,strDefault);
+    return _args_manager->GetArg(strArg,strDefault);
 }
 /**
  * Return integer argument or default value
@@ -35,7 +40,7 @@ std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strD
  */
 int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault) const
 {
-    return g_args.GetArg(strArg,nDefault);
+    return _args_manager->GetArg(strArg,nDefault);
 }
 
 /**
@@ -47,5 +52,5 @@ int64_t ArgsProxy::GetArg(const std::string& strArg, int64_t nDefault) const
  */
 bool ArgsProxy::GetBoolArg(const std::string& strArg, bool fDefault) const
 {
-    return g_args.GetBoolArg(strArg,fDefault);
+    return _args_manager->GetArg<bool>(strArg,fDefault);
 }
