@@ -3,7 +3,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #FILE(GLOB SOURCE "./addrdb.cpp")      
-SET(SRC_LIST ./netaddress.cpp
+SET(SRC_LIST main.cpp
+            ./netaddress.cpp
             ./netbase.cpp
             ./addrman.cpp
             ./addrdb.cpp
@@ -12,7 +13,6 @@ SET(SRC_LIST ./netaddress.cpp
             ./protocol.cpp
             ./timedata.cpp
             ./ui_interface.cpp
-            ./deps/util.cpp
             ./deps/log.cpp
             ./deps/uint256.cpp
             ./deps/sync.cpp
@@ -22,10 +22,14 @@ SET(SRC_LIST ./netaddress.cpp
             ./deps/uint256.cpp
             ./deps/utiltime.cpp
             ./deps/random.cpp
+            ./deps/scheduler.cpp
+            ./deps/util.cpp
             ./deps/crypto/chacha20.cpp
             ./deps/crypto/sha512.cpp
             ./deps/support/cleanse.cpp
             ./deps/support/lockedpool.cpp
+            ../../tos/args_manager.cpp
+            ./test/netaddress_tests.cpp
         )
 
 INCLUDE_DIRECTORIES("./")
@@ -39,9 +43,12 @@ INCLUDE_DIRECTORIES("../../build/deps/include")
 #LINK_DIRECTORIES("/mnt/hgfs/vm-shared/secp256k1/lib/lib")  
 add_definitions(-std=c++11)
 add_definitions(-DHAVE_CONFIG_H)
+add_compile_options(-Wno-unused-parameter)
 #link_libraries("libsecp256k1.a")
 
 
 ADD_EXECUTABLE(transport ${SRC_LIST} )
+target_link_libraries(transport PUBLIC toscore ${Boost_LIBRARIES}  ssl crypto Secp256k1 Boost::system Boost::date_time Boost::chrono Boost::filesystem  Boost::log Boost::thread Boost::program_options Boost::unit_test_framework)
 
 set_target_properties(transport PROPERTIES LINKER_LANGUAGE CXX)
+

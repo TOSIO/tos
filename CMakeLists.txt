@@ -66,8 +66,8 @@ include(EthUtils)
 
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
-hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log)
-find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log_setup log)
+hunter_add_package(Boost COMPONENTS program_options filesystem system thread context fiber log date_time chrono)
+find_package(Boost CONFIG REQUIRED program_options filesystem system thread context fiber log  date_time chrono unit_test_framework) 
 
 hunter_add_package(jsoncpp)
 find_package(jsoncpp CONFIG REQUIRED)
@@ -113,8 +113,6 @@ option(ALETH_INTERPRETER_SHARED "Build aleth-interpreter as a shared library" OF
 
 add_subdirectory(toscore)
 
+add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
-
-
-add_subdirectory(test)
