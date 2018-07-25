@@ -22,7 +22,6 @@ int main(int argc, char const *argv[])
 {
     
     cnote << "************start toschain*********";
-
     unsigned const lineWidth = 160;
     po::options_description defaultMode("TOS CLIENT MODE (default)", lineWidth);
     auto addClientOption = defaultMode.add_options();
