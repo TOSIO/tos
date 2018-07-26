@@ -9,6 +9,9 @@ struct CLogCategoryDesc
     std::string category;
 };
 
+/** Log categories bitfield. */
+std::atomic<uint32_t> logCategories(0);
+
 const CLogCategoryDesc LogCategories[] =
 {
     {BCLog::NONE, "0"},
