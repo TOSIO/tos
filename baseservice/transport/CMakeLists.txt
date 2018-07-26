@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #FILE(GLOB SOURCE "./addrdb.cpp")      
-SET(SRC_LIST main.cpp
+SET(SRC_LIST 
             ./netaddress.cpp
             ./netbase.cpp
             ./addrman.cpp
@@ -29,7 +29,6 @@ SET(SRC_LIST main.cpp
             ./deps/support/cleanse.cpp
             ./deps/support/lockedpool.cpp
             ../../tos/args_manager.cpp
-            ./test/netaddress_tests.cpp
         )
 
 INCLUDE_DIRECTORIES("./")
@@ -47,7 +46,7 @@ add_compile_options(-Wno-unused-parameter)
 #link_libraries("libsecp256k1.a")
 
 
-ADD_EXECUTABLE(transport ${SRC_LIST} )
+ADD_LIBRARY(transport ${SRC_LIST} )
 target_link_libraries(transport PUBLIC toscore ${Boost_LIBRARIES}  ssl crypto Secp256k1 Boost::system Boost::date_time Boost::chrono Boost::filesystem  Boost::log Boost::thread Boost::program_options Boost::unit_test_framework)
 
 set_target_properties(transport PROPERTIES LINKER_LANGUAGE CXX)

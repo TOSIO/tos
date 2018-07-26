@@ -187,6 +187,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
+#define HAVE_MSG_NOSIGNAL 1
+
+#define HAVE_MSG_DONTWAIT 1
 /* Define to 1 if you have the `advapi32' library (-ladvapi32). */
 /* #undef HAVE_LIBADVAPI32 */
 
