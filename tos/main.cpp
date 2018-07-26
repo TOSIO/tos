@@ -17,17 +17,20 @@ namespace po = boost::program_options;
 using dev::LoggingOptions;
 
 tos::ArgsManager g_args;
+unsigned const _lineWidth = 160;
+void setupLog();
 
 int main(int argc, char const *argv[])
 {
-    
+    //init log
+    setupLog();
+
     cnote << "************start toschain*********";
-    unsigned const lineWidth = 160;
-    po::options_description defaultMode("TOS CLIENT MODE (default)", lineWidth);
+    po::options_description defaultMode("TOS CLIENT MODE (default)", _lineWidth);
     auto addClientOption = defaultMode.add_options();
     addClientOption("test", "Use the main network protocol");
    
-    po::options_description clientNetworking("CLIENT NETWORKING", lineWidth);
+    po::options_description clientNetworking("CLIENT NETWORKING", _lineWidth);
     auto addNetworkingOption = clientNetworking.add_options();
     addNetworkingOption("bootstrap,b",
         "Connect to the default Tos peer servers (default unless --no-discovery used)");
@@ -48,13 +51,10 @@ int main(int argc, char const *argv[])
     addNetworkingOption("port", po::value<short>()->value_name("<port>"),
         "Connect to the given remote port (default: 30303)");
 
-    LoggingOptions loggingOptions;
-    po::options_description loggingProgramOptions(
-    dev::createLoggingProgramOptions(lineWidth, loggingOptions));
+
     po::options_description allowedOptions("Allowed options");
     allowedOptions.add(defaultMode)
-    .add(clientNetworking)
-    .add(loggingProgramOptions);
+    .add(clientNetworking);
     
     po::variables_map vm;
     std::vector<std::string> unrecognisedOptions;
@@ -73,6 +73,18 @@ int main(int argc, char const *argv[])
     }
 
     g_args.Set(vm);
-    dev::setupLogging(loggingOptions);
     return 0;
 }
+
+/*
+init log
+*/
+void setupLog()
+{
+    LoggingOptions loggingOptions;
+    po::options_description loggingProgramOptions(
+        dev::createLoggingProgramOptions(_lineWidth, loggingOptions));
+    dev::setupLogging(loggingOptions);
+}
+
+

@@ -32,8 +32,13 @@ class TestHelperFixture
 // void setupLog();
 
 public:
-	TestHelperFixture() { setupLog();cnote<<"TestHelperFixture init"; }
-	~TestHelperFixture() { cnote<<"TestHelperFixture finish";}
+	TestHelperFixture() { 
+        setupLog();
+        // cnote<<"TestHelperFixture init"; 
+    }
+	~TestHelperFixture() { 
+        // cnote<<"TestHelperFixture finish";
+    }
 
 
 
