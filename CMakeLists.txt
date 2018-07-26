@@ -111,4 +111,6 @@ add_subdirectory(toscore)
 add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
-add_subdirectory(test/p2ptest)
+
+# unit test library
+add_subdirectory(test)
