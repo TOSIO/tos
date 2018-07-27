@@ -3,7 +3,7 @@
 
 #include "EVMC.h"
 
-#include <libdevcore/Log.h>
+#include <toscore/log/Log.h>
 #include <libevm/VM.h>
 #include <libevm/VMFactory.h>
 

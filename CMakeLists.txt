@@ -112,5 +112,16 @@ add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
 
-# unit test library
+#evm configure begin
+option(EVM_USE  "build libevm" ON )
+option(EVM_TEST "build ethvm test program" OFF )
+message("------------------------------------------------------------- evm begin")
+message("-- EVM_USE                                                   ${EVM_USE}")
+message("-- EVM_TEST                                                  ${EVM_TEST}")
+message("------------------------------------------------------------- evm end")
+message("CMAKE_STATIC_LIBRARY_PREFIX:${CMAKE_STATIC_LIBRARY_PREFIX}")
+if (EVM_USE)
+    add_subdirectory(contract)  
+endif()
+#evm configure end
 add_subdirectory(test)
