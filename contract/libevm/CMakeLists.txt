@@ -17,9 +17,10 @@ set(sources
     VMFactory.cpp VMFactory.h
 )
 
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(evm ${sources})
 
-target_link_libraries(evm PUBLIC ethcore devcore evmc PRIVATE aleth-buildinfo jsoncpp_lib_static Boost::program_options ${CMAKE_DL_LIBS})
+target_link_libraries(evm PUBLIC toscore evmc PRIVATE aleth-buildinfo jsoncpp_lib_static Boost::program_options ${CMAKE_DL_LIBS})
 
 if(EVM_OPTIMIZE)
     target_compile_definitions(evm PRIVATE EVM_OPTIMIZE)

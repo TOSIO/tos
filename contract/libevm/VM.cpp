@@ -18,7 +18,7 @@
 #include "interpreter.h"
 #include "VM.h"
 
-#include <aleth-buildinfo.h>
+#include <tos-buildinfo.h>
 
 extern "C" evmc_instance* evmc_create_interpreter() noexcept
 {
@@ -88,7 +88,7 @@ VM::VM()
   : evmc_instance{
         EVMC_ABI_VERSION,
         "interpreter",
-        aleth_get_buildinfo()->project_version,
+        tos_get_buildinfo()->project_version,
         ::destroy,
         ::execute,
         nullptr,
