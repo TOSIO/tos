@@ -23,9 +23,9 @@
 
 #include <functional>
 #include <mutex>
-#include <libdevcore/FileSystem.h>
-#include <libdevcore/CommonData.h>
-#include <libdevcrypto/SecretStore.h>
+#include <toscore/utils/FileSystem.h>
+#include <toscore/common/CommonData.h>
+#include "SecretStore.h"
 
 #include <boost/filesystem.hpp>
 

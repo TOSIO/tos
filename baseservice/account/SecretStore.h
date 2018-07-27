@@ -23,9 +23,9 @@
 
 #include <functional>
 #include <mutex>
-#include <libdevcore/FixedHash.h>
-#include <libdevcore/FileSystem.h>
-#include "Common.h"
+#include <toscore/crypto/FixedHash.h>
+#include <toscore/utils/FileSystem.h>
+#include "../libethcore/Common.h"
 
 #include <boost/filesystem.hpp>
 
