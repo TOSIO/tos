@@ -140,13 +140,13 @@ inline float ser_uint32_to_float(uint32_t y)
 
 class CSizeComputer;
 
-enum
+/* enum
 {
     // primary actions
     SER_NETWORK         = (1 << 0),
     SER_DISK            = (1 << 1),
     SER_GETHASH         = (1 << 2),
-};
+}; */
 
 #define READWRITE(obj)      (::SerReadWrite(s, (obj), ser_action))
 #define READWRITEMANY(...)      (::SerReadWriteMany(s, ser_action, __VA_ARGS__))

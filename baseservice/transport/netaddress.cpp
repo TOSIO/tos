@@ -635,6 +635,10 @@ CSubNet::CSubNet(const CNetAddr &addr, int32_t mask)
     // Normalize network according to netmask
     for(int x=0; x<16; ++x)
         network.ip[x] &= netmask[x];
+    printf("CSubNet::CSubNet(const CNetAddr &addr, int32_t mask) | netmask : \n");
+            for (int i = 0; i < 16; ++i)
+                printf("%d ", netmask[i]);
+    printf("\n");
 }
 
 CSubNet::CSubNet(const CNetAddr &addr, const CNetAddr &mask)

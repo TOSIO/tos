@@ -356,9 +356,28 @@ public:
 
     void Serialize(DataStream& stream)
     {
-
+        stream.stream()->appendList(4);
+        int ver = stream.getVersion();
+        if (stream.getType() & SER_DISK)
+        {   
+            stream.stream()->append(ver);
+        }
+        if ((stream.getType() & SER_DISK) ||
+            (ver >= CADDR_TIME_VERSION && !(stream.getType() & SER_GETHASH)))
+        {
+            stream.stream()->append(nTime);
+        }
+        uint64_t nServicesInt = nServices;
+        stream.stream()->append(bigint(nServicesInt));
+        nServices = (ServiceFlags)nServicesInt;
+        CService::Serialize(stream);
     }
     
+     void UnSerialize(const bytes& stream)
+     {
+         RLP rlp(stream);
+         
+     }
     // TODO: make private (improves encapsulation)
 public:
     ServiceFlags nServices;
