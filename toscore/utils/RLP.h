@@ -215,6 +215,22 @@ public:
 	}
 
 	template <class T>
+	vector_ref<T>& toVectorRef(vector_ref<T>& out, int _flags = LaissezFaire)
+	{
+		size_t size = out.size();
+		if (itemCountStrict() != size)
+		{
+			if (_flags & ThrowOnFail)
+				BOOST_THROW_EXCEPTION(BadCast());
+			else
+				return out;
+		}
+		for (size_t i = 0; i < size; ++i)
+			out[i] = operator[](i).convert<T>(_flags);
+		return out;
+	}
+
+	template <class T>
 	std::set<T> toSet(int _flags = LaissezFaire) const
 	{
 		std::set<T> ret;
@@ -399,22 +415,29 @@ public:
 	~RLPStream() {}
 
 	/// Append given datum to the byte stream.
-	RLPStream& append(unsigned _s) { return append(bigint(_s)); }
+	RLPStream& append(unsigned _s) {return append(bigint(_s)); }
 	RLPStream& append(u160 _s) { return append(bigint(_s)); }
 	RLPStream& append(u256 _s) { return append(bigint(_s)); }
 	RLPStream& append(bigint _s);
 	RLPStream& append(bytesConstRef _s, bool _compact = false);
-	RLPStream& append(bytes const& _s) { return append(bytesConstRef(&_s)); }
+	RLPStream& append(bytes const& _s) {return append(bytesConstRef(&_s)); }
 	RLPStream& append(std::string const& _s) { return append(bytesConstRef(_s)); }
-	RLPStream& append(char const* _s) { return append(std::string(_s)); }
+	RLPStream& append(char const* _s) { /* printf("append(char const* _s)"); */return append(std::string(_s)); }
 	template <unsigned N> RLPStream& append(FixedHash<N> _s, bool _compact = false, bool _allOrNothing = false) { return _allOrNothing && !_s ? append(bytesConstRef()) : append(_s.ref(), _compact); }
 
 	/// Appends an arbitrary RLP fragment - this *must* be a single item unless @a _itemCount is given.
 	RLPStream& append(RLP const& _rlp, size_t _itemCount = 1) { return appendRaw(_rlp.data(), _itemCount); }
 
 	/// Appends a sequence of data to the stream as a list.
-	template <class _T> RLPStream& append(std::vector<_T> const& _s) { return appendVector(_s); }
+	template <class _T> RLPStream& append(std::vector<_T> const& _s) {return appendVector(_s); }
 	template <class _T> RLPStream& appendVector(std::vector<_T> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
+	template <class _T> RLPStream& append(vector_ref<_T> const& _s)
+	{
+		appendList(_s.size()); 
+		for (auto const& i: _s) 
+			append(i); 
+		return *this;
+	}
 	template <class _T, size_t S> RLPStream& append(std::array<_T, S> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
 	template <class _T> RLPStream& append(std::set<_T> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
 	template <class _T> RLPStream& append(std::unordered_set<_T> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
