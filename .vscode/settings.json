@@ -55,6 +55,13 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "*.ipp": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "ios": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xlocale": "cpp",
+        "xutility": "cpp"
     }
 }

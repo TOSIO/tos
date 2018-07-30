@@ -5,9 +5,9 @@
 
 #include <util.h>
 
-#include <chainparamsbase.h>
+//#include <chainparamsbase.h>
 #include <random.h>
-#include <serialize.h>
+//#include <serialize.h>
 #include <utilstrencodings.h>
 
 #include <stdarg.h>
@@ -78,7 +78,7 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 #include <openssl/conf.h>
-
+#include "log.h"
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
@@ -86,7 +86,7 @@ const int64_t nStartupTime = GetTime();
 CTranslationInterface translationInterface;
 
 /** Log categories bitfield. */
-std::atomic<uint32_t> logCategories(0);
+//std::atomic<uint32_t> logCategories(0);
 
 /** Init OpenSSL library multithreading support */
 static std::unique_ptr<CCriticalSection[]> ppmutexOpenSSL;
@@ -98,6 +98,20 @@ void locking_callback(int mode, int i, const char* file, int line) NO_THREAD_SAF
         LEAVE_CRITICAL_SECTION(ppmutexOpenSSL[i]);
     }
 }
+
+namespace fsbridge {
+
+FILE *fopen(const fs::path& p, const char *mode)
+{
+    return ::fopen(p.string().c_str(), mode);
+}
+
+FILE *freopen(const fs::path& p, const char *mode, FILE *stream)
+{
+    return ::freopen(p.string().c_str(), mode, stream);
+}
+
+} // fsbridge
 
 // Singleton for wrapping OpenSSL setup/teardown.
 class CInit
@@ -147,7 +161,7 @@ instance_of_cinit;
  * the mutex).
  */
 
-static boost::once_flag debugPrintInitFlag = BOOST_ONCE_INIT;
+//static boost::once_flag debugPrintInitFlag = BOOST_ONCE_INIT;
 
 /**
  * We use boost::call_once() to make sure mutexDebugLog and
@@ -158,49 +172,17 @@ static boost::once_flag debugPrintInitFlag = BOOST_ONCE_INIT;
  * the OS/libc. When the shutdown sequence is fully audited and
  * tested, explicit destruction of these objects can be implemented.
  */
-static FILE* fileout = nullptr;
-static boost::mutex* mutexDebugLog = nullptr;
-static std::list<std::string>* vMsgsBeforeOpenLog;
+//static FILE* fileout = nullptr;
+//static boost::mutex* mutexDebugLog = nullptr;
+//static std::list<std::string>* vMsgsBeforeOpenLog;
 
-static int FileWriteStr(const std::string &str, FILE *fp)
+/* static int FileWriteStr(const std::string &str, FILE *fp)
 {
     return fwrite(str.data(), 1, str.size(), fp);
 }
-
-
-
-/**
- * fStartedNewLine is a state variable held by the calling context that will
- * suppress printing of the timestamp when multiple calls are made that don't
- * end in a newline. Initialize it to true, and hold it, in the calling context.
  */
-static std::string LogTimestampStr(const std::string &str, std::atomic_bool *fStartedNewLine)
-{
-    std::string strStamped;
 
-    if (!fLogTimestamps)
-        return str;
 
-    if (*fStartedNewLine) {
-        int64_t nTimeMicros = GetTimeMicros();
-        strStamped = DateTimeStrFormat("%Y-%m-%d %H:%M:%S", nTimeMicros/1000000);
-        if (fLogTimeMicros)
-            strStamped += strprintf(".%06d", nTimeMicros%1000000);
-        int64_t mocktime = GetMockTime();
-        if (mocktime) {
-            strStamped += " (mocktime: " + DateTimeStrFormat("%Y-%m-%d %H:%M:%S", mocktime) + ")";
-        }
-        strStamped += ' ' + str;
-    } else
-        strStamped = str;
-
-    if (!str.empty() && str[str.size()-1] == '\n')
-        *fStartedNewLine = true;
-    else
-        *fStartedNewLine = false;
-
-    return strStamped;
-}
 
 
 /** A map that contains all the currently held directory locks. After
@@ -248,15 +230,15 @@ void ReleaseDirectoryLocks()
 }
 
 /** Interpret string as boolean, for argument parsing */
-static bool InterpretBool(const std::string& strValue)
+/* static bool InterpretBool(const std::string& strValue)
 {
     if (strValue.empty())
         return true;
     return (atoi(strValue) != 0);
-}
+} */
 
 /** Turn -noX into -X=0 */
-static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
+/* static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
 {
     if (strKey.length()>3 && strKey[0]=='-' && strKey[1]=='n' && strKey[2]=='o')
     {
@@ -264,7 +246,7 @@ static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
         strValue = InterpretBool(strValue) ? "0" : "1";
     }
 }
-
+ */
 
 
 
@@ -284,7 +266,7 @@ std::string HelpMessageOpt(const std::string &option, const std::string &message
 }
 
 
-
+/* 
 #ifndef WIN32
 fs::path GetPidFile()
 {
@@ -303,7 +285,7 @@ void CreatePidFile(const fs::path &path, pid_t pid)
     }
 }
 #endif
-
+ */
 bool RenameOver(fs::path src, fs::path dest)
 {
 #ifdef WIN32
@@ -428,7 +410,7 @@ void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
 #endif
 }
 
-void ShrinkDebugFile()
+/* void ShrinkDebugFile()
 {
     // Amount of debug.log to save at end when shrinking (must fit in memory)
     constexpr size_t RECENT_DEBUG_HISTORY_SIZE = 10 * 1000000;
@@ -454,7 +436,7 @@ void ShrinkDebugFile()
     }
     else if (file != nullptr)
         fclose(file);
-}
+} */
 
 #ifdef WIN32
 fs::path GetSpecialFolderPath(int nFolder, bool fCreate)

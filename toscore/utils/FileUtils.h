@@ -10,15 +10,53 @@
 namespace dev
 {
 
+/* 
+    Read the json file to get the file content
+    @param:filePath
+    @return:std::map
+ */
+std::map<std::string, std::string> readJsonFile(boost::filesystem::path const& filePath);
 
-std::map<std::string, std::string> readJson(boost::filesystem::path const& _dataDir);
-std::string readStringFromJson(boost::filesystem::path const& _dataDir, std::string key);
-std::list<map<std::string, std::string>> readListFromJson(boost::filesystem::path const& _dataDir, std::string key);
+/* 
+    Read the json file to get the file content
+    @param:filePath
+    @param:key
+    @return:std::string
+ */
+std::string readStringFromJsonFile(boost::filesystem::path const& filePath, std::string key);
+
+/* 
+    Read the json file to get the file content
+    @param:filePath
+    @param:key
+    @return: std::list
+ */
+std::list<std::map<std::string, std::string>> readListFromJsonFile(boost::filesystem::path const& filePath, std::string key);
+
+/*
+    Read the conf file to get the file content
+    @param:filePath
+    @return:std::map
+*/
+std::map<std::string, std::string> readConfFile(boost::filesystem::path const& filePath);
+
+/* 
+    Read the conf file to get the file content by key
+    @param:filePath
+    @param:key
+    @return:std::string
+ */
+std::string readStringFromConfFile(boost::filesystem::path const& filePath, std::string key);
+
+/* 
+    Read the conf file to get the file content by key
+    @param:filePath
+    @param:key
+    @return: std::list
+ */
+std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesystem::path const& filePath, std::string key);
 
 
-std::map<std::string, std::string> readConf(boost::filesystem::path const& _dataDir);
-std::string readStringFromConf(boost::filesystem::path const& _dataDir, std::string key);
-std::list<> readListFromConf(boost::filesystem::path const& _dataDir, std::string key);
 }
 
 

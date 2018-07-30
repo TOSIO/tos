@@ -23,9 +23,9 @@
 #include <libethcore/ChainOperationParams.h>
 #include <libethcore/Common.h>
 #include <libethcore/LogEntry.h>
-#include <libdevcore/Common.h>
-#include <libdevcore/CommonData.h>
-#include <libdevcore/SHA3.h>
+#include <toscore/common/Common.h>
+#include <toscore/common/CommonData.h>
+#include <toscore/crypto/SHA3.h>
 
 #include <evmc/evmc.h>
 

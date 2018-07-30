@@ -59,8 +59,6 @@ std::vector<CLogCategoryActive> ListActiveLogCategories();
 /** Return true if str parses as a log category and set the flags in f */
 bool GetLogCategory(uint32_t *f, const std::string *str);
 
-/** Send a string to the log output */
-int LogPrintStr(const std::string &str);
 
 /** Get format string from VA_ARGS for error reporting */
 template<typename... Args> std::string FormatStringFromLogArgs(const char *fmt, const Args&... args) { return fmt; }
@@ -101,7 +99,7 @@ template<typename T, typename... Args> static inline void MarkUsed(const T& t, c
 template<typename... Args>
 bool error(const char* fmt, const Args&... args)
 {
-    LogPrintStr("ERROR: " + tfm::format(fmt, args...) + "\n");
+    //LogPrintStr("ERROR: " + tfm::format(fmt, args...) + "\n");
     cnote <<"ERROR: "<<tfm::format(fmt, args...)<<"\n";
     return false;
 }

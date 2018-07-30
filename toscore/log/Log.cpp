@@ -111,8 +111,8 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(context, "Context", std::string)
 BOOST_LOG_ATTRIBUTE_KEYWORD(threadName, "ThreadName", std::string)
 BOOST_LOG_ATTRIBUTE_KEYWORD(log_severity, "Severity", dev::Verbosity)
 BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp", boost::posix_time::ptime)
-BOOST_LOG_ATTRIBUTE_KEYWORD(log_uptime, "Uptime", attrs::timer::value_type)
-BOOST_LOG_ATTRIBUTE_KEYWORD(log_scope, "Scope", attrs::named_scope::value_type)
+// BOOST_LOG_ATTRIBUTE_KEYWORD(log_uptime, "Uptime", attrs::timer::value_type)
+// BOOST_LOG_ATTRIBUTE_KEYWORD(log_scope, "Scope", attrs::named_scope::value_type)
 void g_InitLog(logging::formatter formatter);
 void setupLogging(LoggingOptions const& _options)
 {
@@ -168,7 +168,7 @@ void g_InitLog(logging::formatter formatter)
         keywords::min_free_space = 100 * 1024 * 1024 //磁盘最小预留空间
         ));
 
-    // file_sink->set_filter(log_severity >= VerbosityWarning); //日志级别过滤
+    file_sink->set_filter(log_severity >= VerbosityDebug); //日志级别过滤
     file_sink->locked_backend()->scan_for_files();
     file_sink->set_formatter(formatter);
     file_sink->locked_backend()->auto_flush(true);

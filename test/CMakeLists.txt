@@ -19,4 +19,6 @@ include_directories("../toscore")
 
 include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(tostest PUBLIC toscore ${Boost_LIBRARIES} Boost::system Boost::filesystem  Boost::log Boost::thread Boost::program_options)
-                       
+   
+add_subdirectory(p2ptest)
+# add_subdirectory(toscoretest/storage)
