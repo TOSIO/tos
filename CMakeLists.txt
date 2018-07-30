@@ -112,6 +112,9 @@ add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
 
+add_subdirectory(sdag)
+
+
 #evm configure begin
 option(EVM_USE  "build libevm" ON )
 option(EVM_TEST "build ethvm test program" OFF )
