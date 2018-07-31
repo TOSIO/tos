@@ -22,3 +22,5 @@ target_link_libraries(tostest PUBLIC toscore ${Boost_LIBRARIES} Boost::system Bo
    
 add_subdirectory(p2ptest)
 add_subdirectory(toscoretest/storage)
+add_subdirectory(toscoretest/crypto)
+
