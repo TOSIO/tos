@@ -28,7 +28,7 @@
 #include <toscore/concurrent/Guards.h>
 #include <toscore/crypto/SHA3.h>
 #include <toscore/utils/FileSystem.h>
-#include <json_spirit/JsonSpiritHeaders.h>
+#include <jsonspirit/JsonSpiritHeaders.h>
 #include "Exceptions.h"
 using namespace std;
 using namespace dev;

@@ -126,7 +126,7 @@ std::string readStringFromConfFile(boost::filesystem::path const &filePath, std:
  * */
 std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesystem::path const &filePath, std::string sectionName)
 {
-     std::map<std::string, std::string> Map_of_Conf;
+    std::map<std::string, std::string> Map_of_Conf;
     std::list<std::map<std::string, std::string>> list_of_MapValue;
     dev::ptree pt=getContentOfIni(filePath);
     for(auto& section :pt)

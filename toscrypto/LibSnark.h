@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <libdevcore/Common.h>
+#include <toscore/common/Common.h>
 
 namespace dev
 {
