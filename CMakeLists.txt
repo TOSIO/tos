@@ -113,7 +113,7 @@ add_subdirectory(baseservice/transport)
 add_subdirectory(tos)
 
 add_subdirectory(sdag)
-
+add_subdirectory(toscrypto)
 
 #evm configure begin
 option(EVM_USE  "build libevm" ON )

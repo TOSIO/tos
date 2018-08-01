@@ -25,7 +25,7 @@
 #include <mutex>
 #include <toscore/utils/FileSystem.h>
 #include <toscore/common/CommonData.h>
-#include "SecretStore.h"
+#include <toscrypto/SecretStore.h>
 
 #include <boost/filesystem.hpp>
 
