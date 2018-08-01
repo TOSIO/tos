@@ -3,8 +3,8 @@
 #include <string>
 #include <map>
 #include <list>
-#include "../jsonspirit/json_spirit.h"
-#include "../jsonspirit/json_spirit_reader_template.h"
+#include <jsonspirit/json_spirit.h>
+#include <jsonspirit/json_spirit_reader_template.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem.hpp>
