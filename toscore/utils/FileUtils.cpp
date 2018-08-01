@@ -27,15 +27,15 @@ boost::property_tree::ptree getContentOfIni(boost::filesystem::path const &fileP
  * */
 std::map<std::string, std::string> readJsonFile(boost::filesystem::path const &filePath)
 {
-    std::map<std::string, std::string> json_To_Map;
+    std::map<std::string, std::string> jsonToMap;
     json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
     value=getValue(filePath);
     std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
     for (; beg != value.get_obj().end(); beg++)
     {
-        json_To_Map.insert(std::make_pair(beg->first, beg->second.get_str()));
+        jsonToMap.insert(std::make_pair(beg->first, beg->second.get_str()));
     }
-    return json_To_Map;
+    return jsonToMap;
 }
 
 //调用上面的函数
@@ -59,7 +59,7 @@ std::string readStringFromJsonFile(boost::filesystem::path const &filePath, std:
 std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::filesystem::path const &filePath, std::string key)
 {
 
-    std::list<std::map<std::string, std::string> > json_To_List;
+    std::list<std::map<std::string, std::string> > jsonToList;
     json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
    value=getValue(filePath);
     std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
@@ -71,13 +71,13 @@ std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::files
                 std::map<std::string,json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator iter= beg->second.get_obj().begin();
                  for(;iter!=beg->second.get_obj().end();iter++)
                  {
-                        std::map<std::string, std::string> json_To_Map;
-                        json_To_Map.insert(std::make_pair(iter->first,iter->second.get_str()));
-                        json_To_List.push_back(json_To_Map);
+                        std::map<std::string, std::string> jsonToMap;
+                        jsonToMap.insert(std::make_pair(iter->first,iter->second.get_str()));
+                        jsonToList.push_back(jsonToMap);
                  }
         }
     }
-    return json_To_List;
+    return jsonToList;
 }
 
 /**
@@ -91,7 +91,7 @@ std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::files
  * */
 std::map<std::string, std::string> readConfFile(boost::filesystem::path const &filePath)
 {
-    std::map<std::string, std::string> map_Of_Conf;
+    std::map<std::string, std::string> mapOfConf;
 
    boost::property_tree::ptree pt=getContentOfIni(filePath);
 
@@ -99,10 +99,10 @@ std::map<std::string, std::string> readConfFile(boost::filesystem::path const &f
     {
         for(auto &key:section.second)
         {
-             map_Of_Conf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
+             mapOfConf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
         }
     }
-    return map_Of_Conf;
+    return mapOfConf;
 }
 
 //调用上面的函数
@@ -126,8 +126,8 @@ std::string readStringFromConfFile(boost::filesystem::path const &filePath, std:
  * */
 std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesystem::path const &filePath, std::string sectionName)
 {
-     std::map<std::string, std::string> map_Of_Conf;
-    std::list<std::map<std::string, std::string>> list_Of_MapValue;
+     std::map<std::string, std::string> mapOfConf;
+    std::list<std::map<std::string, std::string>> listOfMapValue;
    boost::property_tree::ptree pt=getContentOfIni(filePath);
     for(auto& section :pt)
     {
@@ -135,11 +135,11 @@ std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesy
         {
             for(auto &key:section.second)
            {
-             map_Of_Conf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
+             mapOfConf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
            }
         }
 
     }
-    list_Of_MapValue.push_back(map_Of_Conf);
-    return list_Of_MapValue;
+    listOfMapValue.push_back(mapOfConf);
+    return listOfMapValue;
 }
