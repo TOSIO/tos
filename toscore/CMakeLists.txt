@@ -21,7 +21,7 @@ file(GLOB concurrents "concurrent/*.cpp")
 file(GLOB concurrenth "concurrent/*.h")
 
 add_definitions(-std=c++11)
-
+add_compile_options(-Wno-unused-parameter)
 add_library(toscore ${sources} ${headers} ${commons} ${commonh} ${logs} ${logh} ${cryptos} ${cryptoh} ${storages} ${storageh} ${utilss} ${utilsh} ${concurrents} ${concurrenth})
 
 target_link_libraries(toscore PUBLIC tos-buildinfo Boost::filesystem Boost::system Boost::log Boost::thread Threads::Threads PRIVATE ethash::ethash Secp256k1 PRIVATE libff::ff cryptopp-static libscrypt::scrypt)
