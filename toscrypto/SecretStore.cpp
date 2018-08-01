@@ -24,13 +24,12 @@
 #include <mutex>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <toscore/log/Log.h>
-#include <toscore/concurrent/Guards.h>
-#include <toscore/crypto/SHA3.h>
-#include <toscore/utils/FileSystem.h>
+#include <libdevcore/Log.h>
+#include <libdevcore/Guards.h>
+#include <libdevcore/SHA3.h>
+#include <libdevcore/FileSystem.h>
 #include <json_spirit/JsonSpiritHeaders.h>
-#include "../libethcore/Exceptions.h"
-
+#include <libdevcrypto/Exceptions.h>
 using namespace std;
 using namespace dev;
 namespace js = json_spirit;

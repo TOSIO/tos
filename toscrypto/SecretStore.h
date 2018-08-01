@@ -25,7 +25,7 @@
 #include <mutex>
 #include <toscore/crypto/FixedHash.h>
 #include <toscore/utils/FileSystem.h>
-#include "../libethcore/Common.h"
+#include "Common.h"
 
 #include <boost/filesystem.hpp>
 
