@@ -73,21 +73,22 @@ public:
         stream.stream()->appendList(4);
         (*(CAddress*)this).Serialize(stream);
         source.Serialize(stream);
-        *stream.stream() << bigint(nLastSuccess) << nAttempts;
+        stream.stream()->append(bigint(nLastSuccess)).append(nAttempts);
     }
 
-    void UnSerialize(const bytes& stream)
+    void UnSerialize(bytesConstRef& stream,int type, int version)
     {
         RLP rlp(stream);
+        //printf("Trace | AddrInfo:: UnSerialize(const bytes& stream,int type, int version) itemCount : %d\n",(int)rlp.itemCount());
         if (!rlp.isList() || rlp.itemCount() != 4)
         {
             BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
         }
-        bytes item = rlp[0].toBytes();
-        (*(CAddress*)this).UnSerialize(item);
-        item.clear();
-        item = rlp[1].toBytes();
-        source.UnSerialize(&item);
+        bytesConstRef item = rlp[0].data();
+        (*(CAddress*)this).UnSerialize(item,type,version);
+        //item.clear();
+        item = rlp[1].data();
+        source.UnSerialize(item,type,version);
         nLastSuccess = rlp[2].toInt<int64_t>();
         nAttempts = rlp[2].toInt<int>();
     }
@@ -208,7 +209,7 @@ public:
  */
 class CAddrMan
 {
-private:
+protected:
     //! critical section to protect the inner data structures
     mutable CCriticalSection cs;
 
@@ -486,7 +487,9 @@ public:
         out.stream()->appendList(9);
         out.stream()->append(nVersion);
         out.stream()->append(32);
-        out.stream()->append(u256(nKey.ToString()));
+        //out.stream()->append(u256(nKey.ToString()));
+        vector_ref<uint8_t> keyRef(nKey.begin(),nKey.size());
+        out.stream()->append(keyRef);
         out.stream()->append(nNew);
         out.stream()->append(nTried);
 
@@ -500,6 +503,7 @@ public:
         int nUBuckets = ADDRMAN_NEW_BUCKET_COUNT ^ (1 << 30);
         //s << nUBuckets;
         out.stream()->append(nUBuckets);
+
 
         std::map<int, int> mapUnkIds;
         int nIds = 0;
@@ -515,6 +519,7 @@ public:
                 nIds++;
             }
         }
+        printf("Trace | Addrman::Serialize(DataStream& out) nNew : %d, nIds : %d\n",nNew, nIds);
        
         out.stream()->appendList(nTried);
         nIds = 0;
@@ -527,6 +532,8 @@ public:
                 nIds++;
             }
         }
+        printf("Trace | Addrman::Serialize(DataStream& out) nTried : %d, nIds : %d\n",nTried, nIds);
+
         std::vector<int> encIndex;
         out.stream()->appendList(ADDRMAN_NEW_BUCKET_COUNT);
         for (int bucket = 0; bucket < ADDRMAN_NEW_BUCKET_COUNT; bucket++) {
@@ -543,18 +550,19 @@ public:
                 if (vvNew[bucket][i] != -1) {
                     int nIndex = mapUnkIds[vvNew[bucket][i]];
                     //s << nIndex;
+                    printf("%d",nIndex);
                     encIndex.emplace_back(nIndex);
                 }
             }
             out.stream()->appendList(encIndex.size());
-            for (auto index : encIndex)
+             for (auto index : encIndex)
             {
                 out.stream()->append(index);
-            }
+            } 
         }
     }
 
-    void UnSerialize(bytesConstRef in)
+    void UnSerialize(bytesConstRef in,int type, int version)
     {
         unsigned char nVersion;
         RLP rlp(in);
@@ -562,6 +570,9 @@ public:
         unsigned char nKeySize = rlp[1].toInt<unsigned char>();
         if (nKeySize != 32) throw std::ios_base::failure("Incorrect keysize in addrman deserialization");
         //nKey.SetHex(rlp[2].toInt<u256>().ToString().c_str()) ;
+        vector_ref<uint8_t> keyRef(nKey.begin(),nKey.size());
+        rlp[2].toVectorRef<uint8_t>(keyRef);
+
         nNew = rlp[3].toInt<int>();
         nTried = rlp[4].toInt<int>();
         int nUBuckets = 0;
@@ -578,11 +589,14 @@ public:
         }
 
         // Deserialize entries from the new table.
+        printf("Trace | Addrman::UnSerialize(bytesConstRef in,int type, int version) List size : %d, subList size : %d, subsubList size :%d\n",
+        (int)rlp.itemCount(),(int)rlp[6].itemCount(),(int)rlp[6][0].itemCount());
         for (int n = 0; n < nNew; n++) {
             CAddrInfo &info = mapInfo[n];
             //s >> info;
-            bytes encSource = rlp[6][n].toBytes();
-            info.UnSerialize(encSource);
+            bytesConstRef encSource = rlp[6][n].data();
+            printf("Trace | Addrman::UnSerialize(bytesConstRef in,int type, int version) 0\n");
+            info.UnSerialize(encSource,type,version);
             mapAddr[info] = n;
             info.nRandomPos = vRandom.size();
             vRandom.push_back(n);
@@ -599,14 +613,15 @@ public:
         }
         nIdCount = nNew;
         
-        
+        printf("Trace | Addrman::UnSerialize(bytesConstRef in,int type, int version) 1\n");
         // Deserialize entries from the tried table.
         int nLost = 0;
         for (int n = 0; n < nTried; n++) {
             CAddrInfo info;
             //s >> info;
-            bytes encSource = rlp[7][n].toBytes();
-            info.UnSerialize(encSource);
+            //bytes encSource = rlp[7][n].toBytes();
+            bytesConstRef source = rlp[7][n].data();
+            info.UnSerialize(source, type,version);
             int nKBucket = info.GetTriedBucket(nKey);
             int nKBucketPos = info.GetBucketPosition(nKey, false, nKBucket);
             if (vvTried[nKBucket][nKBucketPos] == -1) {
@@ -628,11 +643,11 @@ public:
             int nSize = 0;
             
             //s >> nSize;
-            nSize = rlp[8][0].toInt<int>();
+            nSize = rlp[8][bucket][0].toInt<int>();
             for (int n = 0; n < nSize; n++) {
                 int nIndex = 0;
                 //s >> nIndex;
-                nIndex = rlp[8][1][n].toInt<int>();
+                nIndex = rlp[8][bucket][1][n].toInt<int>();
                 if (nIndex >= 0 && nIndex < nNew) {
                     CAddrInfo &info = mapInfo[nIndex];
                     int nUBucketPos = info.GetBucketPosition(nKey, true, bucket);

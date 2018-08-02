@@ -8,6 +8,8 @@
 #include <toscore/crypto/Hash.h>
 #include <deps/utilstrencodings.h>
 #include <deps/tinyformat.h>
+#include <deps/hash.h>
+#include <version.h>
 #include <memory.h>
 
 
@@ -49,14 +51,14 @@ bool CNetAddr::SetInternal(const std::string &name)
     if (name.empty()) {
         return false;
     }
-/*     unsigned char hash[32] = {};
+    unsigned char hash[32] = {};
     CSHA256().Write((const unsigned char*)name.data(), name.size()).Finalize(hash);
     memcpy(ip, g_internal_prefix, sizeof(g_internal_prefix));
-    memcpy(ip + sizeof(g_internal_prefix), hash, sizeof(ip) - sizeof(g_internal_prefix)); */
+    memcpy(ip + sizeof(g_internal_prefix), hash, sizeof(ip) - sizeof(g_internal_prefix)); 
 
-    h256 hash = dev::hash(bytesConstRef((const unsigned char*)name.data(),name.size()));
+/*     h256 hash = dev::hash(bytesConstRef((const unsigned char*)name.data(),name.size()));
     memcpy(ip, g_internal_prefix, sizeof(g_internal_prefix));
-    memcpy(ip + sizeof(g_internal_prefix), hash.data(), sizeof(ip) - sizeof(g_internal_prefix));
+    memcpy(ip + sizeof(g_internal_prefix), hash.data(), sizeof(ip) - sizeof(g_internal_prefix)); */
 
     return true;
 }
@@ -399,14 +401,14 @@ std::vector<unsigned char> CNetAddr::GetGroup() const
 
 uint64_t CNetAddr::GetHash() const
 {
-/*     uint256 hash = Hash(&ip[0], &ip[16]);
+    uint256 hash = Hash(&ip[0], &ip[16]);
     uint64_t nRet;
     memcpy(&nRet, &hash, sizeof(nRet));
-    return nRet; */
-    h256 hash = dev::hash(bytesConstRef(ip,16));
+    return nRet;
+/*     h256 hash = dev::hash(bytesConstRef(ip,16));
     uint64_t nRet;
     memcpy(&nRet, hash.data(), sizeof(nRet));
-    return nRet;
+    return nRet; */
 }
 
 // private extensions to enum Network, only returned by GetExtNetwork,
@@ -635,10 +637,10 @@ CSubNet::CSubNet(const CNetAddr &addr, int32_t mask)
     // Normalize network according to netmask
     for(int x=0; x<16; ++x)
         network.ip[x] &= netmask[x];
-    printf("CSubNet::CSubNet(const CNetAddr &addr, int32_t mask) | netmask : \n");
+/*     printf("CSubNet::CSubNet(const CNetAddr &addr, int32_t mask) | netmask : \n");
             for (int i = 0; i < 16; ++i)
                 printf("%d ", netmask[i]);
-    printf("\n");
+    printf("\n"); */
 }
 
 CSubNet::CSubNet(const CNetAddr &addr, const CNetAddr &mask)

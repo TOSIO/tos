@@ -191,7 +191,15 @@ public:
 	template <class T, size_t N> explicit operator std::array<T, N>() const { return toArray<T, N>(); }
 
 	/// Converts to bytearray. @returns the empty byte array if not a string.
-	bytes toBytes(int _flags = LaissezFaire) const { if (!isData()) { if (_flags & ThrowOnFail) BOOST_THROW_EXCEPTION(BadCast()); else return bytes(); } return bytes(payload().data(), payload().data() + length()); }
+	bytes toBytes(int _flags = LaissezFaire) const { 
+		if (!isData()) {
+			 if (_flags & ThrowOnFail) 
+			 	BOOST_THROW_EXCEPTION(BadCast()); 
+			 else 
+			 	return bytes(); 
+		} 
+		return bytes(payload().data(), payload().data() + length()); 
+	}
 	/// Converts to bytearray. @returns the empty byte array if not a string.
 	bytesConstRef toBytesConstRef(int _flags = LaissezFaire) const { if (!isData()) { if (_flags & ThrowOnFail) BOOST_THROW_EXCEPTION(BadCast()); else return bytesConstRef(); } return payload().cropped(0, length()); }
 	/// Converts to string. @returns the empty string if not a string.

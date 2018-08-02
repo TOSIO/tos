@@ -9,6 +9,11 @@ set(CMAKE_CXX_FLAGS "-BOOST_ALL_DYN_LINK")
 #FILE(GLOB SOURCE "./addrdb.cpp")      
 SET(SRC_LIST 
             ./netaddress_tests.cpp
+            ./addrman_tests.cpp
+            ./limitedmap_tests.cpp
+            ./netbase_tests.cpp
+            ./random_tests.cpp
+            ./uint256_tests.cpp
         )
 
 INCLUDE_DIRECTORIES("../../baseservice/transport/")

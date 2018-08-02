@@ -20,6 +20,8 @@
 #include <toscore/crypto/Hash.h>
 
 #include <utility>
+#include <deps/clientversion.h>
+//#include <chainparams_proxy.h>
 
 using namespace dev;
 
@@ -28,6 +30,11 @@ namespace tos {
 void Serialize(DataStream& stream,banmap_t& banSet)
 {
     bytes start;
+    start.emplace_back(0xf9);
+    start.emplace_back(0xbe);
+    start.emplace_back(0xb4);
+    start.emplace_back(0xd9);
+    
     stream.stream()->appendList(3);
     stream.stream()->append(start);
     stream.stream()->appendList(banSet.size());
@@ -43,7 +50,7 @@ void Serialize(DataStream& stream,banmap_t& banSet)
     stream.stream()->append(hash);
 }
 
-void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
+void UnSerialize(bytesConstRef& stream,banmap_t& banSet,int type, int version,bool fCheckSum = true)
 {
     RLP rlp(stream);
     if (!rlp.isList() || rlp.itemCount() != 3)
@@ -57,8 +64,10 @@ void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
         RLPs kv = item.toList();
         CSubNet key;
         CBanEntry value;
-        key.UnSerialize(kv[0].toBytes());
-        value.UnSerialize(kv[1].toBytes());
+        bytesConstRef keyRef = kv[0].data();
+        bytesConstRef valueRef = kv[1].data();
+        key.UnSerialize(keyRef,type,version);
+        value.UnSerialize(valueRef,type,version);
         banSet.insert(std::make_pair(key,value));
     }
     if (fCheckSum)
@@ -173,7 +182,7 @@ bool CBanDB::Write( banmap_t& banSet)
     //return SerializeFileDB("banlist", pathBanlist, banSet);
     try
     {
-        DataStream stream(0,0);
+        DataStream stream(SER_DISK,CLIENT_VERSION);
         tos::Serialize(stream,banSet);
         dev::writeFile(pathBanlist, stream.stream()->out(),true);
     } 
@@ -190,7 +199,8 @@ bool CBanDB::Read(banmap_t& banSet)
     try
     {
         bytes content = dev::contents(pathBanlist);
-        tos::UnSerialize(content,banSet);
+        bytesConstRef contentRef(content.data(),content.size());
+        tos::UnSerialize(contentRef,banSet,SER_DISK,CLIENT_VERSION);
     }
     catch (const std::exception& e) 
     {
@@ -210,7 +220,7 @@ bool CAddrDB::Write(CAddrMan& addr)
     //return SerializeFileDB("peers", pathAddr, addr);
     try
     {
-        DataStream stream(0,0);
+        DataStream stream(SER_DISK,CLIENT_VERSION);
         addr.Serialize(stream);
         dev::writeFile(pathAddr, stream.stream()->out(),true);
     } 
@@ -227,7 +237,8 @@ bool CAddrDB::Read(CAddrMan& addr)
     try
     {
         bytes content = dev::contents(pathAddr);
-        addr.UnSerialize(&content);
+        bytesConstRef contentRef(content.data(),content.size());
+        addr.UnSerialize(contentRef,SER_DISK,CLIENT_VERSION);
     }
     catch (const std::exception& e) 
     {

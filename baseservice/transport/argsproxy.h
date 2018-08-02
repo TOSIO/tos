@@ -3,8 +3,6 @@
 #include <vector>
 #include <string>
 
-
-
 namespace tos 
 {
     class ArgsManager;
@@ -74,4 +72,6 @@ public:
     private:
         ArgsManager* _args_manager;
     };
+
+    
 }

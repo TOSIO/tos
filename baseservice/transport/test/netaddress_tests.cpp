@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(netadress_serialize)
     netAddr.clear();
     
     bytes source = stream.stream()->out();
-    netAddr.UnSerialize(source);
+    netAddr.UnSerialize(source,0,0);
     //BOOST_CHECK_EQUAL((*netAddr.getIp()),"::FFFF:0:0/96");
 }
 

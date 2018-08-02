@@ -21,7 +21,8 @@
 #include <deps/sync.h>
 #include <deps/uint256.h>
 #include <deps/threadinterrupt.h>
-#include <toscore/crypto/Hash.h>
+//#include <toscore/crypto/Hash.h>
+#include <deps/hash.h>
 
 #include <atomic>
 #include <deque>
@@ -29,16 +30,18 @@
 #include <thread>
 #include <memory>
 #include <condition_variable>
+#include <argsproxy.h>
+
 
 #ifndef WIN32
 #include <arpa/inet.h>
 #endif
 
-namespace tos
+/* namespace tos
 {
     class ArgsProxy;
     class ChainParamsProxy;
-}
+} */
 
 using namespace tos;
 using namespace dev;
@@ -568,7 +571,8 @@ public:
 
 class CNetMessage {
 private:
-    mutable Hash256 hasher;
+    //mutable Hash256 hasher;
+    mutable CHash256 hasher;
     mutable uint256 data_hash;
 public:
     bool in_data;                   // parsing header (false) or data (true)
