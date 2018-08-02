@@ -38,5 +38,3 @@ class ArgsManager
 };
 
 }
-
-extern tos::ArgsManager g_args;

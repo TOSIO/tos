@@ -31,7 +31,6 @@ SET(SRC_LIST
             ./deps/hash.cpp
             ./deps/support/cleanse.cpp
             ./deps/support/lockedpool.cpp
-            ../../tos/args_manager.cpp
         )
 
 INCLUDE_DIRECTORIES("./")

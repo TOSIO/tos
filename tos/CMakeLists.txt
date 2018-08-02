@@ -1,7 +1,6 @@
 set(
     sources
     main.cpp
-    args_manager.cpp
 )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
