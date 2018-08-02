@@ -5,18 +5,18 @@
 
 json_spirit::Value_impl<json_spirit::Config_map<std::string> > getValue(boost::filesystem::path const &filePath)
 {
-    dev::Value_of_Map value;
-    std::string FileName = filePath.string();
-    std::ifstream is(FileName);
+    json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
+    std::string fileName = filePath.string();
+    std::ifstream is(fileName);
     json_spirit::read(is, value);
     return value;
 }
 
- dev::ptree getContentOfIni(boost::filesystem::path const &filePath)
+boost::property_tree::ptree getContentOfIni(boost::filesystem::path const &filePath)
  {
-     std::string FileName=filePath.string();
-     dev::ptree pt;
-     boost::property_tree::ini_parser::read_ini(FileName,pt);
+     std::string fileName=filePath.string();
+    boost::property_tree::ptree pt;
+     boost::property_tree::ini_parser::read_ini(fileName,pt);
      return pt;
  }
 
@@ -27,15 +27,15 @@ json_spirit::Value_impl<json_spirit::Config_map<std::string> > getValue(boost::f
  * */
 std::map<std::string, std::string> readJsonFile(boost::filesystem::path const &filePath)
 {
-    std::map<std::string, std::string> Json_To_Map;
-    dev::Value_of_Map value;
+    std::map<std::string, std::string> jsonToMap;
+    json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
     value=getValue(filePath);
-    std::map<std::string, dev::Value_of_Map>::iterator beg = value.get_obj().begin();
+    std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
     for (; beg != value.get_obj().end(); beg++)
     {
-        Json_To_Map.insert(std::make_pair(beg->first, beg->second.get_str()));
+        jsonToMap.insert(std::make_pair(beg->first, beg->second.get_str()));
     }
-    return Json_To_Map;
+    return jsonToMap;
 }
 
 //调用上面的函数
@@ -59,25 +59,25 @@ std::string readStringFromJsonFile(boost::filesystem::path const &filePath, std:
 std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::filesystem::path const &filePath, std::string key)
 {
 
-    std::list<std::map<std::string, std::string> > Json_To_List;
-    dev::Value_of_Map value;
+    std::list<std::map<std::string, std::string> > jsonToList;
+    json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
    value=getValue(filePath);
-    std::map<std::string, dev::Value_of_Map>::iterator beg = value.get_obj().begin();
+    std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
     for (; beg != value.get_obj().end(); beg++)
     {
         if (strcmp(beg->first.c_str(), key.c_str()) == 0)
         {
 
-                std::map<std::string,dev::Value_of_Map>::iterator iter= beg->second.get_obj().begin();
+                std::map<std::string,json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator iter= beg->second.get_obj().begin();
                  for(;iter!=beg->second.get_obj().end();iter++)
                  {
-                        std::map<std::string, std::string> Json_To_Map;
-                        Json_To_Map.insert(std::make_pair(iter->first,iter->second.get_str()));
-                        Json_To_List.push_back(Json_To_Map);
+                        std::map<std::string, std::string> jsonToMap;
+                        jsonToMap.insert(std::make_pair(iter->first,iter->second.get_str()));
+                        jsonToList.push_back(jsonToMap);
                  }
         }
     }
-    return Json_To_List;
+    return jsonToList;
 }
 
 /**
@@ -91,18 +91,18 @@ std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::files
  * */
 std::map<std::string, std::string> readConfFile(boost::filesystem::path const &filePath)
 {
-    std::map<std::string, std::string> Map_of_Conf;
+    std::map<std::string, std::string> mapOfConf;
 
-    dev::ptree pt=getContentOfIni(filePath);
+   boost::property_tree::ptree pt=getContentOfIni(filePath);
 
     for(auto& section :pt)
     {
         for(auto &key:section.second)
         {
-             Map_of_Conf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
+             mapOfConf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
         }
     }
-    return Map_of_Conf;
+    return mapOfConf;
 }
 
 //调用上面的函数
@@ -126,20 +126,20 @@ std::string readStringFromConfFile(boost::filesystem::path const &filePath, std:
  * */
 std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesystem::path const &filePath, std::string sectionName)
 {
-    std::map<std::string, std::string> Map_of_Conf;
-    std::list<std::map<std::string, std::string>> list_of_MapValue;
-    dev::ptree pt=getContentOfIni(filePath);
+     std::map<std::string, std::string> mapOfConf;
+    std::list<std::map<std::string, std::string>> listOfMapValue;
+   boost::property_tree::ptree pt=getContentOfIni(filePath);
     for(auto& section :pt)
     {
         if(strcmp(section.first.c_str(),sectionName.c_str())==0)
         {
             for(auto &key:section.second)
            {
-             Map_of_Conf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
+             mapOfConf.insert(std::make_pair(key.first,key.second.get_value<std::string>()));
            }
         }
 
     }
-    list_of_MapValue.push_back(Map_of_Conf);
-    return list_of_MapValue;
+    listOfMapValue.push_back(mapOfConf);
+    return listOfMapValue;
 }
