@@ -45,7 +45,8 @@ INCLUDE_DIRECTORIES("../../build/deps/include")
 #LINK_DIRECTORIES("/mnt/hgfs/vm-shared/secp256k1/lib/lib")  
 add_definitions(-std=c++11)
 add_definitions(-DHAVE_CONFIG_H)
-add_compile_options(-Wno-unused-parameter)
+add_compile_options(-Wno-unused-parameter -Wno-implicit-fallthrough)
+
 #link_libraries("libsecp256k1.a")
 
 
