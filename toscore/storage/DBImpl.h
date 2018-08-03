@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include <libdevcore/LevelDB.h>
-#include <libdevcore/db.h>
+#include <toscore/storage/LevelDB.h>
+#include <toscore/storage/db.h>
 
 namespace dev
 {
