@@ -59,10 +59,10 @@ enum class SemanticPassword
 	Master
 };
 
-// TODO: This one is specifically for Ethereum, but we can make it generic in due course.
+// TODO: This one is specifically for tos, but we can make it generic in due course.
 // TODO: hidden-partition style key-store.
 /**
- * @brief High-level manager of password-encrypted keys for Ethereum.
+ * @brief High-level manager of password-encrypted keys for tos.
  * Usage:
  *
  * Call exists() to check whether there is already a database. If so, get the master password from
@@ -149,7 +149,7 @@ private:
 	void write(std::string const& _pass, boost::filesystem::path const& _keysFile) const;	// TODO: all passwords should be a secure string.
 	void write(SecureFixedHash<16> const& _key, boost::filesystem::path const& _keysFile) const;
 
-	// Ethereum keys.
+	// tos keys.
 
 	/// Mapping key uuid -> address.
 	std::unordered_map<h128, Address> m_uuidLookup;
