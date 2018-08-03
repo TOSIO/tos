@@ -127,7 +127,7 @@ void VM::optimize()
                 val = (val << 8) | m_code[i];
             }
 
-        #if TVM_USE_CONSTANT_POOL
+        #if EVM_USE_CONSTANT_POOL
 
             // add value to constant pool and replace PUSHn with PUSHC
             // place offset in code as 2 bytes MSB-first
