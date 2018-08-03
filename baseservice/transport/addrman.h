@@ -483,7 +483,9 @@ public:
 
     void Serialize(DataStream& out)
     {
+        LOCK(cs);
         unsigned char nVersion = 1;
+        //unsigned int zeroHolder = 0;
         out.stream()->appendList(9);
         out.stream()->append(nVersion);
         out.stream()->append(32);
@@ -508,30 +510,48 @@ public:
         std::map<int, int> mapUnkIds;
         int nIds = 0;
 
-        out.stream()->appendList(nNew);
-        for ( auto& entry : mapInfo) {
-            mapUnkIds[entry.first] = nIds;
-            CAddrInfo &info = entry.second;
-            if (info.nRefCount) {
-                assert(nIds != nNew); // this means nNew was wrong, oh ow
-                //s << info;
-                info.Serialize(out);
-                nIds++;
+/*         if(nNew != 0)
+        { */
+            out.stream()->appendList(nNew);
+            for ( auto& entry : mapInfo) {
+                mapUnkIds[entry.first] = nIds;
+                CAddrInfo &info = entry.second;
+                if (info.nRefCount) {
+                    assert(nIds != nNew); // this means nNew was wrong, oh ow
+                    //s << info;
+                    info.Serialize(out);
+                    nIds++;
+                }
             }
-        }
+/*         }
+        else
+        {
+            out.stream()->append(zeroHolder);
+        } */
+
         printf("Trace | Addrman::Serialize(DataStream& out) nNew : %d, nIds : %d\n",nNew, nIds);
        
-        out.stream()->appendList(nTried);
         nIds = 0;
-        for ( auto& entry : mapInfo) {
-             CAddrInfo &info = entry.second;
-            if (info.fInTried) {
-                assert(nIds != nTried); // this means nTried was wrong, oh ow
-                //s << info;
-                info.Serialize(out);
-                nIds++;
+/*          if(nTried != 0)
+        { */
+            printf("Trace | Addrman::Serialize(DataStream& out) trace tried 0\n");
+            out.stream()->appendList(nTried);
+            
+            for ( auto& entry : mapInfo) {
+                CAddrInfo &info = entry.second;
+                if (info.fInTried) {
+                    assert(nIds != nTried); // this means nTried was wrong, oh ow
+                    //s << info;
+                    info.Serialize(out);
+                    nIds++;
+                }
             }
-        }
+   /*      }
+        else
+        {
+            printf("Trace | Addrman::Serialize(DataStream& out) trace tried 1\n");
+            out.stream()->append(zeroHolder);
+        }  */
         printf("Trace | Addrman::Serialize(DataStream& out) nTried : %d, nIds : %d\n",nTried, nIds);
 
         std::vector<int> encIndex;
@@ -542,10 +562,7 @@ public:
                 if (vvNew[bucket][i] != -1)
                     nSize++;
             }
-            out.stream()->appendList(2);
-            //s << nSize;
-            out.stream()->append(nSize);
-
+            
             for (int i = 0; i < ADDRMAN_BUCKET_SIZE; i++) {
                 if (vvNew[bucket][i] != -1) {
                     int nIndex = mapUnkIds[vvNew[bucket][i]];
@@ -554,16 +571,27 @@ public:
                     encIndex.emplace_back(nIndex);
                 }
             }
-            out.stream()->appendList(encIndex.size());
-             for (auto index : encIndex)
+            out.stream()->appendList(2);
+            //s << nSize;
+            out.stream()->append(nSize);
+            /* if (encIndex.size() > 0)
+            { */
+                out.stream()->appendList(encIndex.size());
+                for (auto index : encIndex)
+                {
+                    out.stream()->append(index);
+                } 
+            /* }
+            else
             {
-                out.stream()->append(index);
-            } 
+                 out.stream()->append(zeroHolder);
+            } */
         }
     }
 
     void UnSerialize(bytesConstRef in,int type, int version)
     {
+        LOCK(cs);
         unsigned char nVersion;
         RLP rlp(in);
         nVersion = rlp[0].toInt<unsigned char>();

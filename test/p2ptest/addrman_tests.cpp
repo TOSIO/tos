@@ -136,6 +136,8 @@ static CService ResolveService(std::string ip, int port = 0)
 
 //BOOST_FIXTURE_TEST_SUITE(addrman_tests, BasicTestingSetup)
 
+//BOOST_AUTO_TEST_SUITE(addrman_tests)
+
 BOOST_AUTO_TEST_CASE(addrman_serialize)
 {
     CAddrManTest addrman;
@@ -625,3 +627,10 @@ BOOST_AUTO_TEST_CASE(caddrinfo_get_new_bucket)
     printf("Trace | addrman_tests end\n");
 }
 //BOOST_AUTO_TEST_SUITE_END()
+/* BOOST_AUTO_TEST_SUITE_END()
+
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    return 0;
+} */

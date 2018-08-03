@@ -108,7 +108,7 @@ public:
     CAddrDB();
     bool Write(CAddrMan& addr);
     bool Read(CAddrMan& addr);
-    /* static bool Read(CAddrMan& addr, CDataStream& ssPeers); */
+    static bool Read(CAddrMan& addr, DataStream& ssPeers); 
 };
 
 /** Access to the banlist database (banlist.dat) */

@@ -14,6 +14,7 @@ SET(SRC_LIST
             ./netbase_tests.cpp
             ./random_tests.cpp
             ./uint256_tests.cpp
+            ./net_tests.cpp
         )
 
 INCLUDE_DIRECTORIES("../../baseservice/transport/")

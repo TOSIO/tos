@@ -31,6 +31,7 @@
 #include <memory>
 #include <condition_variable>
 #include <argsproxy.h>
+#include <chainparams_proxy.h>
 
 
 #ifndef WIN32
@@ -39,19 +40,33 @@
 
 /* namespace tos
 {
-    class ArgsProxy;
-    class ChainParamsProxy;
+    
 } */
 
-using namespace tos;
-using namespace dev;
+
 
 class CScheduler;
 class CNode;
 
+namespace tos
+{
+    class ArgsManager;
+    class ArgsProxy;
+
+    namespace P2P{
+        void setArgs(ArgsManager* manager);
+
+        std::shared_ptr<ArgsProxy> Args();
+        ChainParamsProxy& Params();
+    }
+    
+}
 namespace boost {
     class thread_group;
 } // namespace boost
+
+using namespace tos;
+using namespace dev;
 
 /** Time between pings automatically sent out for latency probing and keepalive (in seconds). */
 static const int PING_INTERVAL = 2 * 60;
@@ -167,7 +182,7 @@ public:
         nMaxAddnode = connOptions.nMaxAddnode;
         nMaxFeeler = connOptions.nMaxFeeler;
         nBestHeight = connOptions.nBestHeight;
-        //clientInterface = connOptions.uiInterface;
+        clientInterface = connOptions.uiInterface;
         m_msgproc = connOptions.m_msgproc;
         nSendBufferMaxSize = connOptions.nSendBufferMaxSize;
         nReceiveFloodSize = connOptions.nReceiveFloodSize;

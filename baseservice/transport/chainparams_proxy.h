@@ -12,6 +12,14 @@ namespace tos
     class ChainParamsProxy
     {
         public:
+        ChainParamsProxy()
+        {
+            _msgStart[0] = 0xf9;
+            _msgStart[0] = 0xbe;
+            _msgStart[0] = 0xb4;
+            _msgStart[0] = 0xd9;
+            _seeds.emplace_back("192.168.1.31");
+        }
 /*         const Consensus::Params& GetConsensus() const 
         { 
 
@@ -19,21 +27,23 @@ namespace tos
         } */
         const CMessageHeader::MessageStartChars& MessageStart() const 
         { 
-            static CMessageHeader::MessageStartChars start;
-            return start; 
+            return _msgStart; 
         }
         
-        int GetDefaultPort() const { return 0; }
+        int GetDefaultPort() const { return 9090; }
 
          const std::vector<std::string>& DNSSeeds() const 
          { 
-             static std::vector<std::string> vSeeds;
-             return vSeeds; 
+             return _seeds; 
         }
         const std::vector<SeedSpec6>& FixedSeeds() const 
         { 
-            static std::vector<SeedSpec6> vSeeds;
-            return vSeeds; 
+            return _fixedSeeds; 
         }
+
+        private:
+        CMessageHeader::MessageStartChars _msgStart;
+        std::vector<std::string> _seeds;
+        std::vector<SeedSpec6>   _fixedSeeds;
     };
 }

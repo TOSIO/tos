@@ -32,6 +32,12 @@ class ArgsManager
     }
    
 
+    std::vector<std::string> GetArgs(const std::string& strArg)
+    {
+        std::vector<std::string> ret;
+        return ret;
+    }
+
     private:
     boost::program_options::variables_map _vm;
     std::mutex _vm_lock;
