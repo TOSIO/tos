@@ -1,5 +1,5 @@
 /**
- * tvmc: Ethereum Client-VM Connector API
+ * tvmc: tos Client-VM Connector API
  *
  * @copyright
  * Copyright 2018 Pawel Bylica.
@@ -18,8 +18,8 @@
  *
  * ## Terms
  *
- * 1. EVM  -- an Ethereum Virtual Machine instance/implementation.
- * 2. Host -- an entity controlling the EVM. The Host requests code execution
+ * 1. EVM  -- an tos Virtual Machine instance/implementation.
+ * 2. Host -- an entity controlling the TVM. The Host requests code execution
  *            and responses to EVM queries by callback functions.
  *
  * @defgroup tvmc tvmc
@@ -57,7 +57,7 @@ struct tvmc_uint256be
     uint8_t bytes[32];
 };
 
-/** Big-endian 160-bit hash suitable for keeping an Ethereum address. */
+/** Big-endian 160-bit hash suitable for keeping an tos address. */
 struct tvmc_address
 {
     /** The 20 bytes of the hash. */
