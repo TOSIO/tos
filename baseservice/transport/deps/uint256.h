@@ -73,6 +73,18 @@ public:
         return &data[WIDTH];
     }
 
+	uint8_t& operator[](size_t _i) {
+         assert(data); 
+         assert(_i < WIDTH); 
+         return data[_i]; 
+    }
+	uint8_t const& operator[](size_t _i) const {
+         assert(data); 
+         assert(_i < WIDTH); 
+         return data[_i]; 
+    }
+
+    
     unsigned int size() const
     {
         return sizeof(data);

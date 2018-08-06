@@ -100,14 +100,22 @@ class CNetAddr
 
         void Serialize(DataStream& stream)
         {
+            /* printf("CNetAddr before encode : \n");
+            for (int i = 0; i < 16; ++i)
+                printf("%d ", ip[i]);
+            printf("scopeId : %d\n",scopeId); */
             stream.stream()->append(vector_ref<unsigned char>(ip,16));
         }
 
-        void UnSerialize(bytes& stream)
+        void UnSerialize(bytesConstRef stream,int type, int version)
         {
             RLP rlp(stream);
-            bytes bip = rlp.toBytes();
-            memcpy(ip,bip.data(),16);
+            vector_ref<uint8_t> ipRef(ip,16);
+            ipRef = rlp.toVectorRef<unsigned char>(ipRef);
+            /* printf("CNetAddr after encode : \n");
+            for (int i = 0; i < 16; ++i)
+                printf("%d ", ipRef[i]);
+            printf("scopeId : %d\n",scopeId); */
         }
 
         friend class CSubNet;
@@ -151,23 +159,36 @@ class CSubNet
 
         void Serialize(DataStream& stream)
         {
+            /* printf("\nCSubNet before encode : \n");
+            for (int i = 0; i < 16; ++i)
+                printf("%d ", netmask[i]);
+            printf("\nvalid : %d\n",valid);  */
+
             stream.stream()->appendList(3);
             network.Serialize(stream);
             stream.stream()->append(vector_ref<uint8_t>(netmask,16));
             stream.stream()->append(valid);
+
         }
 
-        void UnSerialize(const bytes& stream)
+        void UnSerialize(bytesConstRef& stream,int type, int version)
         {
             RLP rlp(stream);
             if (!rlp.isList() || rlp.itemCount() != 3)
             {
                 BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
             }
-            bytes bs = rlp[0].toBytes();
-            network.UnSerialize(bs);
-            bytes nm = rlp[1].toVector<uint8_t>();
-            valid = rlp[2].toInt<int>();
+            bytesConstRef bs = rlp[0].data();
+            network.UnSerialize(bs,type,version);
+
+            vector_ref<uint8_t> netMaskRef(netmask,16);
+            rlp[1].toVectorRef(netMaskRef);
+            valid = rlp[2].toInt<bool>();
+
+            /* printf("CSubNet After decode : \n");
+            for (int i = 0; i < 16; ++i)
+                printf("%d ", netmask[i]);
+            printf("valid : %d\n",valid); */
         }
 };
 
@@ -213,18 +234,20 @@ class CService : public CNetAddr
             unsigned short portN = htons(port);
             stream.stream()->appendList(2);
             stream.stream()->append(vector_ref<unsigned char>(ip,16));
-            *stream.stream()<<portN;
+            stream.stream()->append(portN);
         }
 
-        void UnSerialize(const bytes& stream)
+        void UnSerialize(bytesConstRef& stream,int type, int version)
         {
             RLP rlp(stream);
             if (!rlp.isList() || rlp.itemCount() != 2)
             {
                 BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
             }
-            bytes ip_ = rlp[1].toVector<unsigned char>();
-            port = rlp[2].toInt<int>();
+            vector_ref<unsigned char> ipRef(ip,16);
+            rlp[0].toVectorRef(ipRef);
+            unsigned short portN = rlp[1].toInt<unsigned short>();
+            port = ntohs(portN);
         }
 
 };

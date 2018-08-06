@@ -25,6 +25,7 @@
 #include <deps/tinyformat.h>
 #include <deps/util.h>
 #include <deps/threadtrace.h>
+#include <toscore/utils/args_manager.h>
 
 
 #include <thread>
@@ -97,20 +98,24 @@ std::string strSubVersion;
 
 limitedmap<uint256, int64_t> mapAlreadyAskedFor(MAX_INV_SZ);
 
+std::shared_ptr<ArgsProxy> g_argsProxy;
 
-std::shared_ptr<ArgsProxy> Args()
+void tos::P2P::setArgs(ArgsManager* manager)
 {
-    std::shared_ptr<ArgsProxy> argsProxy;
-    return argsProxy;
+    g_argsProxy.reset(new ArgsProxy(manager));
 }
 
-ChainParamsProxy& Params()
+std::shared_ptr<ArgsProxy> tos::P2P::Args()
+{
+    return g_argsProxy;
+}
+
+ChainParamsProxy& tos::P2P::Params()
 {
     static ChainParamsProxy proxy;
     return proxy;
 }
-
-
+using namespace tos::P2P;
 
 void CConnman::AddOneShot(const std::string& strDest)
 {
@@ -2834,8 +2839,8 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
     std::vector<unsigned char> serializedHeader;
     serializedHeader.reserve(CMessageHeader::HEADER_SIZE);
-    //uint256 hash = Hash(msg.data.data(), msg.data.data() + nMessageSize);
-    h256 hash = dev::hash(bytesConstRef(msg.data.data(),nMessageSize));
+    uint256 hash = Hash(msg.data.data(), msg.data.data() + nMessageSize);
+    //h256 hash = dev::hash(bytesConstRef(msg.data.data(),nMessageSize));
     CMessageHeader hdr(Params().MessageStart(), msg.command.c_str(), nMessageSize);
     memcpy(hdr.pchChecksum, hash.begin(), CMessageHeader::CHECKSUM_SIZE);
 

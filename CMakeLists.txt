@@ -111,17 +111,25 @@ add_subdirectory(toscore)
 add_subdirectory(baseservice/transport)
 
 add_subdirectory(tos)
+add_subdirectory(baseservice/account)
+add_subdirectory(baseservice/libethcore)
 
-#evm configure begin
-option(EVM_USE  "build libevm" ON )
-option(EVM_TEST "build ethvm test program" OFF )
-message("------------------------------------------------------------- evm begin")
-message("-- EVM_USE                                                   ${EVM_USE}")
-message("-- EVM_TEST                                                  ${EVM_TEST}")
-message("------------------------------------------------------------- evm end")
+add_subdirectory(sdag)
+add_subdirectory(toscrypto)
+
+#tvm configure begin
+option(TVM_USE  "build libevm" ON )
+option(TVM_TEST "build ethvm test program" ON )
+message("------------------------------------------------------------- tvm begin")
+message("-- TVM_USE                                                   ${TVM_USE}")
+message("-- TVM_TEST                                                  ${TVM_TEST}")
+message("------------------------------------------------------------- tvm end")
 message("CMAKE_STATIC_LIBRARY_PREFIX:${CMAKE_STATIC_LIBRARY_PREFIX}")
-if (EVM_USE)
-    add_subdirectory(contract)  
+if(TVM_USE)
+  add_subdirectory(contract) 
+  if(TVM_TEST)
+    enable_testing()
+  endif()		
 endif()
-#evm configure end
+#tvm configure end
 add_subdirectory(test)

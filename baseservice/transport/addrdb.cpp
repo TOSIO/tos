@@ -20,6 +20,8 @@
 #include <toscore/crypto/Hash.h>
 
 #include <utility>
+#include <deps/clientversion.h>
+//#include <chainparams_proxy.h>
 
 using namespace dev;
 
@@ -28,22 +30,32 @@ namespace tos {
 void Serialize(DataStream& stream,banmap_t& banSet)
 {
     bytes start;
-    stream.stream()->appendList(3);
-    stream.stream()->append(start);
-    stream.stream()->appendList(banSet.size());
+    start.emplace_back(0xf9);
+    start.emplace_back(0xbe);
+    start.emplace_back(0xb4);
+    start.emplace_back(0xd9);
+    
+    DataStream rlpstream(stream.getType(),stream.getVersion());
+    rlpstream.stream()->appendList(2);
+    rlpstream.stream()->append(start);
+    rlpstream.stream()->appendList(banSet.size());
     for (auto item : banSet)
     {
-        stream.stream()->appendList(2);
+        rlpstream.stream()->appendList(2);
         CSubNet net = item.first;
-        net.Serialize(stream);
-        item.second.Serialize(stream);
+        net.Serialize(rlpstream);
+        item.second.Serialize(rlpstream);
     }
-    bytes hashsource = stream.stream()->out();
+    bytes hashsource = rlpstream.stream()->out();
+
     h256 hash = dev::hash(&hashsource);
+
+    stream.stream()->appendList(2);
+    stream.stream()->append(hashsource);
     stream.stream()->append(hash);
 }
 
-void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
+/* void UnSerialize(bytesConstRef& stream,banmap_t& banSet,int type, int version,bool fCheckSum = true)
 {
     RLP rlp(stream);
     if (!rlp.isList() || rlp.itemCount() != 3)
@@ -57,8 +69,10 @@ void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
         RLPs kv = item.toList();
         CSubNet key;
         CBanEntry value;
-        key.UnSerialize(kv[0].toBytes());
-        value.UnSerialize(kv[1].toBytes());
+        bytesConstRef keyRef = kv[0].data();
+        bytesConstRef valueRef = kv[1].data();
+        key.UnSerialize(keyRef,type,version);
+        value.UnSerialize(valueRef,type,version);
         banSet.insert(std::make_pair(key,value));
     }
     if (fCheckSum)
@@ -72,7 +86,74 @@ void UnSerialize(const bytes& stream,banmap_t& banSet,bool fCheckSum = true)
              BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Checksum is inconsistent."));
         }
     }
+} */
+
+void UnSerializeInternal(bytesConstRef & stream, int type,int version,banmap_t& banSet)
+{
+    RLP rlp(stream);
+    for (auto item : rlp)
+    {
+        RLPs kv = item.toList();
+        CSubNet key;
+        CBanEntry value;
+        bytesConstRef keyRef = kv[0].data();
+        bytesConstRef valueRef = kv[1].data();
+        key.UnSerialize(keyRef,type,version);
+        value.UnSerialize(valueRef,type,version);
+        banSet.insert(std::make_pair(key,value));
+    }
 }
+
+void UnSerializeInternal(bytesConstRef & stream, int type,int version,CAddrMan& addrman)
+{
+    printf("Trace | void UnSerializeInternal(bytesConstRef & stream, int type,int version,CAddrMan& addrman) enter\n");
+    addrman.UnSerialize(stream,type,version);
+    printf("Trace | void UnSerializeInternal(bytesConstRef & stream, int type,int version,CAddrMan& addrman) leave\n");
+}
+
+template<typename T>
+void UnSerialize(DataStream& stream, T& data,bool fCheckSum = true)
+{
+    printf("Trace | template<typename T> void UnSerialize(DataStream& stream, T& data,bool fCheckSum = true) enter\n");
+    RLP rlp(stream.stream()->out());
+    if (!rlp.isList() || rlp.itemCount() != 2)
+    {
+        BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Unexpected data format."));
+    }
+
+    bytes content = rlp[0].toBytes();
+    RLP rlpContent(content);
+
+    bytes start = rlpContent[0].toBytes();
+/*     for (auto item : rlp[1])
+    {
+        RLPs kv = item.toList();
+        CSubNet key;
+        CBanEntry value;
+        bytesConstRef keyRef = kv[0].data();
+        bytesConstRef valueRef = kv[1].data();
+        key.UnSerialize(keyRef,type,version);
+        value.UnSerialize(valueRef,type,version);
+        banSet.insert(std::make_pair(key,value));
+    } */
+    bytesConstRef encStream = rlpContent[1].data();
+    UnSerializeInternal(encStream,stream.getType(),stream.getVersion(),data);
+
+    if (fCheckSum)
+    {
+        h256 decHash = rlp[1].toHash<h256>();
+        //bytesConstRef source = rlp[0].to();
+        //start.insert(start.end(),bans.begin(),bans.end());
+        h256 streamHash = dev::hash(&content);
+        if (decHash != streamHash)
+        {
+             BOOST_THROW_EXCEPTION(RLPException() << errinfo_comment("Checksum is inconsistent."));
+        } 
+    }
+
+    printf("Trace | template<typename T> void UnSerialize(DataStream& stream, T& data,bool fCheckSum = true) leave\n");
+}
+
 
 /* template <typename Stream, typename Data>
 bool SerializeDB(Stream& stream, const Data& data)
@@ -173,7 +254,7 @@ bool CBanDB::Write( banmap_t& banSet)
     //return SerializeFileDB("banlist", pathBanlist, banSet);
     try
     {
-        DataStream stream(0,0);
+        DataStream stream(SER_DISK,CLIENT_VERSION);
         tos::Serialize(stream,banSet);
         dev::writeFile(pathBanlist, stream.stream()->out(),true);
     } 
@@ -190,7 +271,8 @@ bool CBanDB::Read(banmap_t& banSet)
     try
     {
         bytes content = dev::contents(pathBanlist);
-        tos::UnSerialize(content,banSet);
+        bytesConstRef contentRef(content.data(),content.size());
+        tos::UnSerializeInternal(contentRef,SER_DISK,CLIENT_VERSION,banSet);
     }
     catch (const std::exception& e) 
     {
@@ -210,7 +292,7 @@ bool CAddrDB::Write(CAddrMan& addr)
     //return SerializeFileDB("peers", pathAddr, addr);
     try
     {
-        DataStream stream(0,0);
+        DataStream stream(SER_DISK,CLIENT_VERSION);
         addr.Serialize(stream);
         dev::writeFile(pathAddr, stream.stream()->out(),true);
     } 
@@ -227,7 +309,8 @@ bool CAddrDB::Read(CAddrMan& addr)
     try
     {
         bytes content = dev::contents(pathAddr);
-        addr.UnSerialize(&content);
+        bytesConstRef contentRef(content.data(),content.size());
+        addr.UnSerialize(contentRef,SER_DISK,CLIENT_VERSION);
     }
     catch (const std::exception& e) 
     {
@@ -237,12 +320,24 @@ bool CAddrDB::Read(CAddrMan& addr)
     return true;
 }
 
-/* bool CAddrDB::Read(CAddrMan& addr, CDataStream& ssPeers)
+ bool CAddrDB::Read(CAddrMan& addr, DataStream& ssPeers)
 {
-    bool ret = DeserializeDB(ssPeers, addr, false);
+/*     bool ret = DeserializeDB(ssPeers, addr, false);
     if (!ret) {
         // Ensure addrman is left in a clean state
         addr.Clear();
+    } */
+    try
+    {
+        printf("Trace |  bool CAddrDB::Read(CAddrMan& addr, DataStream& ssPeers) enter\n");
+        tos::UnSerialize(ssPeers,addr);
+        printf("Trace |  bool CAddrDB::Read(CAddrMan& addr, DataStream& ssPeers) leave\n");
     }
-    return ret;
-} */
+    catch (const std::exception& e) 
+    {
+        //return error("%s: Serialize or I/O error - %s", __func__, e.what());
+        addr.Clear();
+        return false;
+    }
+    return true;
+}

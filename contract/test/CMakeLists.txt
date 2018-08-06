@@ -1,0 +1,10 @@
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(SYSTEM  ${PROJECT_SOURCE_DIR}/toscore)
+include_directories(SYSTEM  ${PROJECT_SOURCE_DIR}/baseservice)
+add_subdirectory(libp2p)
+add_subdirectory(libethereum)
+add_subdirectory(libethashseal)
+add_subdirectory(examples)
+add_subdirectory(vmtest)
+add_subdirectory(tosvm)
+

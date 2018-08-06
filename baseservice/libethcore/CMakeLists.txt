@@ -1,0 +1,8 @@
+#include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/toscore")
+#include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/contract/test")
+#include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/baseservice")
+#include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/toscrypto")
+file(GLOB sources "*.cpp" "*.h")
+add_library(ethcore ${sources})
+target_include_directories(ethcore PRIVATE "${UTILS_INCLUDE_DIR}" SYSTEM "${CMAKE_SOURCE_DIR}/toscore"  "${CMAKE_SOURCE_DIR}/contract/test" "${CMAKE_SOURCE_DIR}/baseservice"  )
+target_link_libraries(ethcore PUBLIC toscrypto toscore  ethash::ethash Secp256k1)

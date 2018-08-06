@@ -1,18 +1,18 @@
 /*
- This file is part of cpp-ethereum.
+ This file is part of tos.
 
- cpp-ethereum is free software: you can redistribute it and/or modify
+ tos is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
 
- cpp-ethereum is distributed in the hope that it will be useful,
+ tos is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
+ along with tos.  If not, see <http://www.gnu.org/licenses/>.
  */
 /** @file KeyManager.h
  * @author Gav Wood <i@gavwood.com>
@@ -25,6 +25,7 @@
 #include <mutex>
 #include <toscore/utils/FileSystem.h>
 #include <toscore/common/CommonData.h>
+#include <toscrypto/Common.h>
 #include "SecretStore.h"
 
 #include <boost/filesystem.hpp>
@@ -58,10 +59,10 @@ enum class SemanticPassword
 	Master
 };
 
-// TODO: This one is specifically for Ethereum, but we can make it generic in due course.
+// TODO: This one is specifically for tos, but we can make it generic in due course.
 // TODO: hidden-partition style key-store.
 /**
- * @brief High-level manager of password-encrypted keys for Ethereum.
+ * @brief High-level manager of password-encrypted keys for tos.
  * Usage:
  *
  * Call exists() to check whether there is already a database. If so, get the master password from
@@ -148,7 +149,7 @@ private:
 	void write(std::string const& _pass, boost::filesystem::path const& _keysFile) const;	// TODO: all passwords should be a secure string.
 	void write(SecureFixedHash<16> const& _key, boost::filesystem::path const& _keysFile) const;
 
-	// Ethereum keys.
+	// tos keys.
 
 	/// Mapping key uuid -> address.
 	std::unordered_map<h128, Address> m_uuidLookup;

@@ -356,9 +356,55 @@ public:
 
     void Serialize(DataStream& stream)
     {
-
+        
+        int ver = stream.getVersion();
+        std::vector<unsigned int> fields;
+        if (stream.getType() & SER_DISK)
+        {   
+            //stream.stream()->append(ver);
+            fields.emplace_back(ver);
+        }
+        if ((stream.getType() & SER_DISK) ||
+            (ver >= CADDR_TIME_VERSION && !(stream.getType() & SER_GETHASH)))
+        {
+            //stream.stream()->append(nTime);
+            fields.emplace_back(nTime);
+        }
+        stream.stream()->appendList(fields.size() + 2);
+        for (auto field : fields)
+        {
+            stream.stream()->append(field);
+        }
+        uint64_t nServicesInt = nServices;
+        stream.stream()->append(bigint(nServicesInt));
+        nServices = (ServiceFlags)nServicesInt;
+        CService::Serialize(stream);
     }
     
+     void UnSerialize(bytesConstRef& stream,int type, int version)
+     {
+        Init();
+        int nVersion = version;
+        int index = 0;
+        RLP rlp(stream);
+        if (type & SER_DISK)
+        {
+            nVersion = rlp[index].toInt<unsigned int>();
+            ++index;
+        }
+            
+        if ((type& SER_DISK) ||
+            (nVersion >= CADDR_TIME_VERSION && !(type & SER_GETHASH)))
+        {
+            nTime = rlp[index].toInt<unsigned int>();
+            ++index;
+        }
+        uint64_t nServicesInt = rlp[index++].toInt<uint64_t>();
+        nServices = (ServiceFlags)nServicesInt;
+        //bytes decSvc = rlp[index].toBytes();
+        bytesConstRef scvRef = rlp[index].data();
+        CService::UnSerialize(scvRef, type, version);
+     }
     // TODO: make private (improves encapsulation)
 public:
     ServiceFlags nServices;

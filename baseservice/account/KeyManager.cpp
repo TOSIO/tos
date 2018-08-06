@@ -1,18 +1,18 @@
 /*
-	This file is part of cpp-ethereum.
+	This file is part of tos.
 
-	cpp-ethereum is free software: you can redistribute it and/or modify
+	tos is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	cpp-ethereum is distributed in the hope that it will be useful,
+	tos is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with cpp-ethereum.  If not, see <http://www.gnu.org/licenses/>.
+	along with tos.  If not, see <http://www.gnu.org/licenses/>.
 */
 /** @file KeyManager.cpp
  * @author Gav Wood <i@gavwood.com>
@@ -23,11 +23,12 @@
 #include <thread>
 #include <mutex>
 #include <boost/filesystem.hpp>
-#include <json_spirit/JsonSpiritHeaders.h>
+#include <jsonspirit/JsonSpiritHeaders.h>
 #include <toscore/log/Log.h>
 #include <toscore/concurrent/Guards.h>
 #include <toscore/utils/RLP.h>
 #include <toscore/crypto/SHA3.h>
+#include <toscrypto/Common.h>
 using namespace std;
 using namespace dev;
 using namespace eth;

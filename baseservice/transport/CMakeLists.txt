@@ -19,16 +19,18 @@ SET(SRC_LIST
             ./deps/threadinterrupt.cpp
             ./deps/threadtrace.cpp
             ./deps/utilstrencodings.cpp
-            ./deps/uint256.cpp
+            ./deps/arith_uint256.cpp
             ./deps/utiltime.cpp
             ./deps/random.cpp
             ./deps/scheduler.cpp
             ./deps/util.cpp
             ./deps/crypto/chacha20.cpp
             ./deps/crypto/sha512.cpp
+            ./deps/crypto/sha256.cpp
+            ./deps/crypto/sha256_sse4.cpp
+            ./deps/hash.cpp
             ./deps/support/cleanse.cpp
             ./deps/support/lockedpool.cpp
-            ../../tos/args_manager.cpp
         )
 
 INCLUDE_DIRECTORIES("./")
@@ -42,7 +44,8 @@ INCLUDE_DIRECTORIES("../../build/deps/include")
 #LINK_DIRECTORIES("/mnt/hgfs/vm-shared/secp256k1/lib/lib")  
 add_definitions(-std=c++11)
 add_definitions(-DHAVE_CONFIG_H)
-add_compile_options(-Wno-unused-parameter)
+add_compile_options(-Wno-unused-parameter -Wno-implicit-fallthrough)
+
 #link_libraries("libsecp256k1.a")
 
 

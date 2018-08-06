@@ -27,6 +27,14 @@
 
 using namespace dev;
 
+enum
+{
+    // primary actions
+    SER_NETWORK         = (1 << 0),
+    SER_DISK            = (1 << 1),
+    SER_GETHASH         = (1 << 2),
+};
+
 template<typename Stream>
 class OverrideStream
 {
@@ -452,6 +460,22 @@ class DataStream
     public:
     explicit DataStream(int type,int version):_type(type),_version(version),_rlpstream(new RLPStream){}
 
+    DataStream(const DataStream& other)
+    {
+        _rlpstream = other._rlpstream;
+        _type = other._type;
+        _version = other._version;
+    }
+    
+    DataStream& operator =(const DataStream& other)
+    {
+        if (this == &other)
+            return *this;
+            
+        _rlpstream = other._rlpstream;
+        _type = other._type;
+        _version = other._version;
+    }
     std::shared_ptr<RLPStream> stream()
     {
         return _rlpstream;

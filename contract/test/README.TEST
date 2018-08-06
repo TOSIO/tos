@@ -1,0 +1,18 @@
+capi test:
+cd build/contract/test/examples
+./example-capi
+
+dll call test:
+cd build/contract/test/vmtest/vmtester
+./tvmc-vmtester --vm ../../examples/examplevm/libtvmc-examplevm-so.so
+
+tvm create contract test:
+cd build/contract/test/tosvm
+./tosvm create.bin test
+
+tvm call message test:(get method)
+cd build/contract/test/tosvm
+./tosvm --input 6d4ce63c test
+
+
+
