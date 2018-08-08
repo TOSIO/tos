@@ -13,6 +13,8 @@
 #include <txmempool.h>
 #include <util.h>
 
+
+
 static constexpr double INF_FEERATE = 1e99;
 
 std::string StringForFeeEstimateHorizon(FeeEstimateHorizon horizon) {
@@ -41,10 +43,12 @@ std::string StringForFeeReason(FeeReason reason) {
         {FeeReason::REQUIRED, "Minimum Required Fee"},
         {FeeReason::MAXTXFEE, "MaxTxFee limit"}
     };
+    
+    
+    
     auto reason_string = fee_reason_strings.find(reason);
 
     if (reason_string == fee_reason_strings.end()) return "Unknown";
-
     return reason_string->second;
 }
 
