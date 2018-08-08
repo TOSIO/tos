@@ -11,6 +11,7 @@
 
 #include <string.h>
 
+
 constexpr static inline uint32_t rotl32(uint32_t v, int c) { return (v << c) | (v >> (32 - c)); }
 
 #define QUARTERROUND(a,b,c,d) \
