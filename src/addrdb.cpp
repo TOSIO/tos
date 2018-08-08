@@ -22,6 +22,8 @@ CBanDB::CBanDB()
     pathBanlist = GetDataDir() / "banlist.dat";
 }
 
+
+
 bool CBanDB::Write(const banmap_t& banSet)
 {
     // Generate random temporary filename
