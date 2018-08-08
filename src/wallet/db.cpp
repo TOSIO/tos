@@ -178,6 +178,7 @@ bool CDBEnv::Open(bool retry)
             try {
                 fs::rename(pathLogDir, pathDatabaseBak);
                 LogPrintf("Moved old %s to %s. Retrying.\n", pathLogDir.string(), pathDatabaseBak.string());
+                LogPrintf("Moved %s to %s. Retrying.\n", pathLogDir.string(), pathDatabaseBak.string());
             } catch (const fs::filesystem_error&) {
                 // failure is ok (well, not really, but it's not worse than what we started with)
             }
