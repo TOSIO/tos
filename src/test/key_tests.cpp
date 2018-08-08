@@ -112,11 +112,6 @@ BOOST_AUTO_TEST_CASE(key_test1)
 
         std::vector<unsigned char> csign1, csign2, csign1C, csign2C;
 
-        BOOST_CHECK(key1.SignCompact (hashMsg, csign1));
-        BOOST_CHECK(key2.SignCompact (hashMsg, csign2));
-        BOOST_CHECK(key1C.SignCompact(hashMsg, csign1C));
-        BOOST_CHECK(key2C.SignCompact(hashMsg, csign2C));
-
         CPubKey rkey1, rkey2, rkey1C, rkey2C;
 
         BOOST_CHECK(rkey1.RecoverCompact (hashMsg, csign1));
