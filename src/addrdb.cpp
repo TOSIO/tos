@@ -54,6 +54,10 @@ bool CBanDB::Write(const banmap_t& banSet)
     FileCommit(fileout.Get());
     fileout.fclose();
 
+    
+    
+    
+    
     // replace existing banlist.dat, if any, with new banlist.dat.XXXX
     if (!RenameOver(pathTmp, pathBanlist))
         return error("%s: Rename-into-place failed", __func__);
