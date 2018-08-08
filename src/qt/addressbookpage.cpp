@@ -304,9 +304,7 @@ void AddressBookPage::on_exportButton_clicked()
 
     if (filename.isNull())
         return;
-
     CSVModelWriter writer(filename);
-
     // name, column, role
     writer.setModel(proxyModel);
     writer.addColumn("Label", AddressTableModel::Label, Qt::EditRole);
@@ -317,7 +315,6 @@ void AddressBookPage::on_exportButton_clicked()
             tr("There was an error trying to save the address list to %1. Please try again.").arg(filename));
     }
 }
-
 void AddressBookPage::contextualMenu(const QPoint &point)
 {
     QModelIndex index = ui->tableView->indexAt(point);
