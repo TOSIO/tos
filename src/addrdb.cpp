@@ -36,7 +36,6 @@ bool CBanDB::Write(const banmap_t& banSet)
     ssBanlist << FLATDATA(Params().MessageStart());
     ssBanlist << banSet;
     uint256 hash = Hash(ssBanlist.begin(), ssBanlist.end());
-    ssBanlist << hash;
 
     // open temp output file, and associate with CAutoFile
     boost::filesystem::path pathTmp = GetDataDir() / tmpfn;
