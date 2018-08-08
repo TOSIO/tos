@@ -100,10 +100,11 @@ std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend)
     str.reserve(zeroes + (b58.end() - it));
     str.assign(zeroes, '1');
     while (it != b58.end())
+        
         str += pszBase58[*(it++)];
+    
     return str;
 }
-
 std::string EncodeBase58(const std::vector<unsigned char>& vch)
 {
     return EncodeBase58(vch.data(), vch.data() + vch.size());
