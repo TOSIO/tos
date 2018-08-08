@@ -129,6 +129,7 @@ void CBloomFilter::reset(const unsigned int nNewTweak)
 bool CBloomFilter::IsWithinSizeConstraints() const
 {
     return vData.size() <= MAX_BLOOM_FILTER_SIZE && nHashFuncs <= MAX_HASH_FUNCS;
+    
 }
 
 bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
@@ -170,6 +171,8 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
                     if (Solver(txout.scriptPubKey, type, vSolutions) &&
                             (type == TX_PUBKEY || type == TX_MULTISIG))
                         insert(COutPoint(hash, i));
+                    
+                    
                 }
                 break;
             }
@@ -210,6 +213,8 @@ void CBloomFilter::UpdateEmptyFull()
         full &= vData[i] == 0xff;
         empty &= vData[i] == 0;
     }
+    
+    
     isFull = full;
     isEmpty = empty;
 }
@@ -246,6 +251,8 @@ static inline uint32_t RollingBloomHash(unsigned int nHashNum, uint32_t nTweak, 
     return MurmurHash3(nHashNum * 0xFBA4C795 + nTweak, vDataToHash);
 }
 
+
+
 void CRollingBloomFilter::insert(const std::vector<unsigned char>& vKey)
 {
     if (nEntriesThisGeneration == nEntriesPerGeneration) {
@@ -280,6 +287,7 @@ void CRollingBloomFilter::insert(const uint256& hash)
 {
     std::vector<unsigned char> vData(hash.begin(), hash.end());
     insert(vData);
+    
 }
 
 bool CRollingBloomFilter::contains(const std::vector<unsigned char>& vKey) const
