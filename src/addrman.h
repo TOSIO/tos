@@ -156,7 +156,6 @@ public:
 
 //! how old addresses can maximally be
 #define ADDRMAN_HORIZON_DAYS 30
-
 //! after how many failed attempts we give up on a new node
 #define ADDRMAN_RETRIES 3
 
@@ -211,7 +210,6 @@ private:
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
-
     //! Source of random numbers for randomization in inner loops
     FastRandomContext insecure_rand;
 
@@ -293,6 +291,7 @@ public:
      * We don't use ADD_SERIALIZE_METHODS since the serialization and deserialization code has
      * very little in common.
      */
+    
     template<typename Stream>
     void Serialize(Stream &s) const
     {
