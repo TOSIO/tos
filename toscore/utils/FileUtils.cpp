@@ -3,7 +3,7 @@
 #include <fstream>
 
 
-json_spirit::Value_impl<json_spirit::Config_map<std::string> > getValue(boost::filesystem::path const &filePath)
+json_spirit::Value_impl<json_spirit::Config_map<std::string> > dev::getValue(boost::filesystem::path const &filePath)
 {
     json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
     std::string fileName = filePath.string();
@@ -12,7 +12,7 @@ json_spirit::Value_impl<json_spirit::Config_map<std::string> > getValue(boost::f
     return value;
 }
 
-boost::property_tree::ptree getContentOfIni(boost::filesystem::path const &filePath)
+boost::property_tree::ptree dev::getContentOfIni(boost::filesystem::path const &filePath)
  {
      std::string fileName=filePath.string();
     boost::property_tree::ptree pt;
@@ -25,11 +25,11 @@ boost::property_tree::ptree getContentOfIni(boost::filesystem::path const &fileP
  *     {"name":"admin","sex":"nan"}
  *     读不一样的类型的json文件会出错。错在get_obj(),get_str()上
  * */
-std::map<std::string, std::string> readJsonFile(boost::filesystem::path const &filePath)
+std::map<std::string, std::string> dev::readJsonFile(boost::filesystem::path const &filePath)
 {
     std::map<std::string, std::string> jsonToMap;
     json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
-    value=getValue(filePath);
+    value=dev::getValue(filePath);
     std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
     for (; beg != value.get_obj().end(); beg++)
     {
@@ -39,10 +39,10 @@ std::map<std::string, std::string> readJsonFile(boost::filesystem::path const &f
 }
 
 //调用上面的函数
-std::string readStringFromJsonFile(boost::filesystem::path const &filePath, std::string key)
+std::string dev::readStringFromJsonFile(boost::filesystem::path const &filePath, std::string key)
 {
-    std::map<std::string, std::string>::iterator iter = readJsonFile(filePath).find(key);
-    if (iter != readJsonFile(filePath).end())
+    std::map<std::string, std::string>::iterator iter = dev::readJsonFile(filePath).find(key);
+    if (iter != dev::readJsonFile(filePath).end())
     {
         return iter->second;
     }
@@ -56,12 +56,12 @@ std::string readStringFromJsonFile(boost::filesystem::path const &filePath, std:
                                              "x": { "Description": "Dcription",  "Code2": "022", "Decrip2tion": "Descrip2tion"  }}
  *
  * */
-std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::filesystem::path const &filePath, std::string key)
+std::list<std::map<std::string, std::string> > dev::readListFromJsonFile(boost::filesystem::path const &filePath, std::string key)
 {
 
     std::list<std::map<std::string, std::string> > jsonToList;
     json_spirit::Value_impl<json_spirit::Config_map<std::string> > value;
-   value=getValue(filePath);
+   value=dev::getValue(filePath);
     std::map<std::string, json_spirit::Value_impl<json_spirit::Config_map<std::string> >>::iterator beg = value.get_obj().begin();
     for (; beg != value.get_obj().end(); beg++)
     {
@@ -89,11 +89,11 @@ std::list<std::map<std::string, std::string> > readListFromJsonFile(boost::files
  *       section.first=Section1
  *
  * */
-std::map<std::string, std::string> readConfFile(boost::filesystem::path const &filePath)
+std::map<std::string, std::string> dev::readConfFile(boost::filesystem::path const &filePath)
 {
     std::map<std::string, std::string> mapOfConf;
 
-   boost::property_tree::ptree pt=getContentOfIni(filePath);
+   boost::property_tree::ptree pt=dev::getContentOfIni(filePath);
 
     for(auto& section :pt)
     {
@@ -106,10 +106,10 @@ std::map<std::string, std::string> readConfFile(boost::filesystem::path const &f
 }
 
 //调用上面的函数
-std::string readStringFromConfFile(boost::filesystem::path const &filePath, std::string key)
+std::string dev::readStringFromConfFile(boost::filesystem::path const &filePath, std::string key)
 {
-    std::map<std::string, std::string>::iterator iter = readConfFile(filePath).find(key);
-    if (iter != readConfFile(filePath).end())
+    std::map<std::string, std::string>::iterator iter = dev::readConfFile(filePath).find(key);
+    if (iter != dev::readConfFile(filePath).end())
     {
         return iter->second;
     }
@@ -124,11 +124,11 @@ std::string readStringFromConfFile(boost::filesystem::path const &filePath, std:
  *
  *       section.first=Section1
  * */
-std::list<std::map<std::string, std::string>> readListFromConfFile(boost::filesystem::path const &filePath, std::string sectionName)
+std::list<std::map<std::string, std::string>> dev::readListFromConfFile(boost::filesystem::path const &filePath, std::string sectionName)
 {
      std::map<std::string, std::string> mapOfConf;
     std::list<std::map<std::string, std::string>> listOfMapValue;
-   boost::property_tree::ptree pt=getContentOfIni(filePath);
+   boost::property_tree::ptree pt=dev::getContentOfIni(filePath);
     for(auto& section :pt)
     {
         if(strcmp(section.first.c_str(),sectionName.c_str())==0)
