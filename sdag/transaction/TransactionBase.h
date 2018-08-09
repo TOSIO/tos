@@ -10,6 +10,11 @@ namespace sdag
 
 class TransactionBase
 {
+
+
+
+
+    
 protected:
     /// Type of transaction.
     enum Type

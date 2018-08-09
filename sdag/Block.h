@@ -4,7 +4,7 @@
 #include <toscore/common/Address.h>
 #include <boost/optional.hpp>
 #include "BlockHeader.h"
-
+#include "Transaction.h"
 namespace dev
 {
 namespace sdag
@@ -25,7 +25,7 @@ struct OutputStruct
 struct BlockLinkStruct
 {
     h256 blockHash; /// link block hash
-    u256 gas;
+    u256 gasUsed;
     Block *block;
 };
 
