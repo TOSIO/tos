@@ -29,6 +29,8 @@ public:
      */
     std::string GetArg(const std::string& strArg, const std::string& strDefault) const;
 
+    std::vector<std::string> GetArgs(const std::string& strArg) const;
+    
     /**
      * Return integer argument or default value
      *
