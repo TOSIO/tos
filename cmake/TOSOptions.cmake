@@ -12,7 +12,7 @@ macro(configure_project)
     option(EVM_OPTIMIZE "Enable VM optimizations (can distort tracing)" ON)
     option(FATDB "Enable fat state database" ON)
     # option(PARANOID "Enable additional checks when validating transactions (deprecated)" OFF)
-    option(MINIUPNPC "Build with UPnP support" ON)
+    option(MINIUPNPC "Build with UPnP support" OFF)
     # option(FASTCTEST "Enable fast ctest" OFF)
 
     if(MINIUPNPC)

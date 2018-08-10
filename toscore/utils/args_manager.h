@@ -31,11 +31,15 @@ class ArgsManager
         return default_t;
     }
    
-
-    std::vector<std::string> GetArgs(const std::string& strArg)
+    template<class T>
+    std::vector<T> GetArgs(const std::string& strArg)
     {
-        std::vector<std::string> ret;
-        return ret;
+        std::lock_guard<decltype(_vm_lock)> guard{_vm_lock};
+        if(_vm.count(strArg))
+        {
+            return _vm[strArg].as<std::vector<T>>();
+        }
+        return std::vector<T>();
     }
 
     private:
