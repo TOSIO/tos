@@ -25,8 +25,9 @@
 #include <mutex>
 #include <toscore/utils/FileSystem.h>
 #include <toscore/common/CommonData.h>
-#include <toscrypto/Common.h>
-#include "SecretStore.h"
+//#include <toscrypto/Common.h>
+#include <toscrypto/SecretStore.h>
+//#include "SecretStore.h"
 
 #include <boost/filesystem.hpp>
 
@@ -126,7 +127,7 @@ public:
 	void kill(h128 const& _id) { kill(address(_id)); }
 	void kill(Address const& _a);
 
-	static boost::filesystem::path defaultPath() { return getDataDir("ethereum") / boost::filesystem::path("keys.info"); }
+	static boost::filesystem::path defaultPath() { return getDataDir("TOS") / boost::filesystem::path("keys.info"); }
 
 	/// Extracts the secret key from the presale wallet.
 	static KeyPair presaleSecret(std::string const& _json, std::function<std::string(bool)> const& _password);
