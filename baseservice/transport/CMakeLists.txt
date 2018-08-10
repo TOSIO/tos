@@ -10,6 +10,7 @@ SET(SRC_LIST
             ./addrdb.cpp
             ./net.cpp
             ./argsproxy.cpp
+            ./chainparams_proxy.cpp
             ./protocol.cpp
             ./timedata.cpp
             ./ui_interface.cpp

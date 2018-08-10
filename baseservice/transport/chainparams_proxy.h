@@ -1,5 +1,6 @@
 #pragma once
 #include "protocol.h"
+#include <memory>
 
 struct SeedSpec6 {
     uint8_t addr[16];
@@ -18,9 +19,9 @@ namespace tos
             _msgStart[0] = 0xbe;
             _msgStart[0] = 0xb4;
             _msgStart[0] = 0xd9;
-            _seeds.emplace_back("192.168.1.31");
+            //_seeds.emplace_back("192.168.1.31");
         }
-/*         const Consensus::Params& GetConsensus() const 
+    /*     const Consensus::Params& GetConsensus() const 
         { 
 
             return consensus; 
@@ -32,10 +33,8 @@ namespace tos
         
         int GetDefaultPort() const { return 9090; }
 
-         const std::vector<std::string>& DNSSeeds() const 
-         { 
-             return _seeds; 
-        }
+        const std::vector<std::string>& DNSSeeds() const;
+
         const std::vector<SeedSpec6>& FixedSeeds() const 
         { 
             return _fixedSeeds; 
@@ -47,3 +46,20 @@ namespace tos
         std::vector<SeedSpec6>   _fixedSeeds;
     };
 }
+
+namespace tos
+{
+    class ArgsManager;
+    class ArgsProxy;
+
+    namespace P2P{
+        void setArgs(ArgsManager* manager);
+
+        std::shared_ptr<ArgsProxy> Args();
+        ChainParamsProxy& Params();
+    }
+    
+}
+
+extern std::shared_ptr<tos::ArgsProxy> g_argsProxy;
+

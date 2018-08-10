@@ -31,6 +31,12 @@ std::string ArgsProxy::GetArg(const std::string& strArg, const std::string& strD
 {
     return _args_manager->GetArg(strArg,strDefault);
 }
+
+std::vector<std::string> ArgsProxy::GetArgs(const std::string& strArg) const
+{
+    return _args_manager->GetArgs<std::string>(strArg);
+}
+
 /**
  * Return integer argument or default value
  *
