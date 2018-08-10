@@ -2,10 +2,14 @@ project(sdag)
 file(GLOB sources "*.cpp")
 file(GLOB headers "*.h")
 
+file(GLOB sources1 "transaction/*.cpp")
+file(GLOB headers1 "transaction/*.h")
 
 add_definitions(-std=c++11)
 
-add_library(sdag ${sources} ${headers})
+add_library(sdag ${sources} ${headers} ${sources1} ${headers1})
+# SET(SRC_LIST ${sources} ${headers})
+# aux_source_directory(. SRC_LIST)
 
 include_directories("../toscore")
 

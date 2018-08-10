@@ -144,8 +144,12 @@ int main(int argc, char *argv[]) {
         return 1;  // Incompatible ABI version.
 
 //    uint8_t const code[] = "Place some EVM bytecode here";
-	  uint8_t const code[] = "30600052596000f3";
-    const size_t code_size = sizeof(code)-1;
+//	  uint8_t const code[] = "30600052596000f3";
+//	  uint8_t const code[] = "30600052596000f3";
+//	  uint8_t const code[] = "600160005401600055";
+//    const size_t code_size = sizeof(code)-1;
+    uint8_t *code=NULL;
+    size_t code_size=0;
     struct tvmc_uint256be code_hash = {.bytes = {1, 2, 3,}};
     uint8_t const input[] = "Hello World!";
     struct tvmc_uint256be value = {{1, 0,}};
@@ -156,6 +160,30 @@ int main(int argc, char *argv[]) {
 
     struct tvmc_message msg = {addr, addr, value, input, sizeof(input),
                               code_hash, gas, 0};
+    if (argc<2)
+    {
+      printf("usage:%s [1-4]  \n",argv[0]);
+      return 0;
+    }
+
+    switch (atoi(argv[1]))
+    {
+      case 0: printf("usage:%s [1-4]  \n",argv[0]);
+              return 0;
+      case 1: code =(uint8_t *) "";
+              code_size=strlen((char *)code);
+              break;
+      case 2: code =(uint8_t *) "30600052596000f3";
+              code_size=strlen((char *)code);
+              break;
+      case 3: code =(uint8_t *) "600160005401600055";
+              code_size=strlen((char *)code);
+              break;
+      case 4: code =(uint8_t *) "6001600054016000551";
+              code_size=strlen((char *)code);
+      default:
+            break;
+    }
 
     struct tvmc_result result =
         jit->execute(jit, &ctx, TVMC_HOMESTEAD, &msg, code, code_size);
