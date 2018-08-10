@@ -58,6 +58,14 @@ unsigned const _lineWidth = 160;
 void setupLog();
 void setupP2P();
 void setupSdag();
+
+/* template<class T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
+{
+    copy(v.begin(), v.end(), std::ostream_iterator<T>(os, " "));
+    return os;
+}
+ */
 int main(int argc, char const *argv[])
 {
     //init log
@@ -74,8 +82,8 @@ int main(int argc, char const *argv[])
 /*     std::vector<std::string> binds;
     std::vector<std::string> whiteBinds;
     std::vector<std::string> whitelist;
-    std::vector<std::string> seedNode;
-    std::vector<std::string> connects; */
+    std::vector<std::string> seedNode;*/
+    std::vector<std::string> connects; 
 
     po::options_description clientNetworking("CLIENT NETWORKING", _lineWidth);
     auto addNetworkingOption = clientNetworking.add_options();
@@ -92,9 +100,17 @@ int main(int argc, char const *argv[])
     addNetworkingOption("listen", po::value<unsigned short>()->value_name("<port>"),
         "Listen on the given port for incoming connections (default: 80909)");
 
-    addNetworkingOption("connect", po::value<std::string>()->value_name("<host>(:<port>)"),
+    /* addNetworkingOption("connect", po::value< std::vector<std::string> >(&connects)->multitoken(), //"<host>(:<port>)"
+        "Connect to the given remote host (default: none)"); */
+
+/*     addNetworkingOption("forcednsseed", po::value<bool>()->value_name("<port>"),
+        "Listen on the given port for incoming connections (default: 80909)"); */
+
+    addNetworkingOption("connect,C", po::value<std::vector<std::string> >(), //"<host>(:<port>)"
         "Connect to the given remote host (default: none)");
 
+    addNetworkingOption("seeds,S", po::value<std::vector<std::string> >(), //"<host>(:<port>)"
+        "Connect to the given DNS seed (default: none)");
 
     addNetworkingOption("port", po::value<short>()->value_name("<port>"),
         "Connect to the given remote port (default: 30303)");
@@ -167,7 +183,7 @@ void setupP2P()
     connOptions.m_msgproc = &g_nodeMessageHandler;
     connOptions.nSendBufferMaxSize = 1000*g_args.GetArg("-maxsendbuffer", DEFAULT_MAXSENDBUFFER);
     connOptions.nReceiveFloodSize = 1000*g_args.GetArg("-maxreceivebuffer", DEFAULT_MAXRECEIVEBUFFER);
-    connOptions.m_added_nodes = g_args.GetArgs("-addnode");
+    connOptions.m_added_nodes = g_args.GetArgs<std::string>("-addnode");
 
     connOptions.nMaxOutboundTimeframe = nMaxOutboundTimeframe;
     connOptions.nMaxOutboundLimit = nMaxOutboundLimit;
@@ -195,7 +211,7 @@ void setupP2P()
          connOptions.vBinds.push_back(addrBind);
     }
    
-    for (const std::string& strBind : g_args.GetArgs("-whitebind")) {
+    for (const std::string& strBind : g_args.GetArgs<std::string>("whitebind")) {
         CService addrBind;
         if (!Lookup(strBind.c_str(), addrBind, 0, false)) {
             printf("Trace | Lookup whitebind failed.\n");
@@ -210,7 +226,7 @@ void setupP2P()
         connOptions.vWhiteBinds.push_back(addrBind);
     }
 
-    for (const auto& net : g_args.GetArgs("-whitelist")) {
+    for (const auto& net : g_args.GetArgs<std::string>("whitelist")) {
         CSubNet subnet;
         LookupSubNet(net.c_str(), subnet);
         if (!subnet.IsValid())
@@ -223,16 +239,16 @@ void setupP2P()
         connOptions.vWhitelistedRange.push_back(subnet);
     }
 
-    connOptions.vSeedNodes = g_args.GetArgs("-seednode");
+    connOptions.vSeedNodes = g_args.GetArgs<std::string>("seednode");
 
     // Initiate outbound connections unless connect=0
-    connOptions.m_use_addrman_outgoing = !g_args.IsArgSet("-connect");
+    connOptions.m_use_addrman_outgoing = !g_args.IsArgSet("connect");
     if (!connOptions.m_use_addrman_outgoing) {
-        const auto connect = g_args.GetArg<std::string>("connect","");
-        /* if (connect.size() != 1 || connect[0] != "0") {
+        auto connect = g_args.GetArgs<std::string>("connect");
+         if (connect.size() != 1 || connect[0] != "0") {
             connOptions.m_specified_outgoing = connect;
-        } */
-        connOptions.m_specified_outgoing.emplace_back(connect);
+        } 
+        //connOptions.m_specified_outgoing.emplace_back(connect);
     }
 
     if (!connman.Start(scheduler, connOptions)) {

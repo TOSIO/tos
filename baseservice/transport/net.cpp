@@ -1614,7 +1614,7 @@ void CConnman::ThreadDNSAddressSeed()
     //  creating fewer identifying DNS requests, reduces trust by giving seeds
     //  less influence on the network topology, and reduces traffic to the seeds.
     if ((addrman.size() > 0) &&
-        (!Args()->GetBoolArg("-forcednsseed", DEFAULT_FORCEDNSSEED))) {
+        (!Args()->GetBoolArg("forcednsseed", DEFAULT_FORCEDNSSEED))) {
         if (!interruptNet.sleep_for(std::chrono::seconds(11)))
             return;
 
@@ -1633,27 +1633,31 @@ void CConnman::ThreadDNSAddressSeed()
     int found = 0;
 
     LogPrintf("Loading addresses from DNS seeds (could take a while)\n");
-
+    
     for (const std::string &seed : vSeeds) {
         if (interruptNet) {
             return;
         }
+        LogPrintf("Try to seeding %s...\n",seed.c_str());
         if (HaveNameProxy()) {
             AddOneShot(seed);
         } else {
             std::vector<CNetAddr> vIPs;
             std::vector<CAddress> vAdd;
             ServiceFlags requiredServiceBits = GetDesirableServiceFlags(NODE_NONE);
-            std::string host = strprintf("x%x.%s", requiredServiceBits, seed);
+            //std::string host = strprintf("x%x.%s", requiredServiceBits, seed);
+            std::string host = seed;
             CNetAddr resolveSource;
             if (!resolveSource.SetInternal(host)) {
                 continue;
             }
             unsigned int nMaxIPs = 256; // Limits number of IPs learned from a DNS seed
+            LogPrintf("Try to seeding %s...\n",host.c_str());
             if (LookupHost(host.c_str(), vIPs, nMaxIPs, true))
             {
                 for (const CNetAddr& ip : vIPs)
                 {
+                    LogPrintf("After seeding, fetch node : %s\n",ip.ToString().c_str());
                     int nOneDay = 24*3600;
                     CAddress addr = CAddress(CService(ip, Params().GetDefaultPort()), requiredServiceBits);
                     addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
