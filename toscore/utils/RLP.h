@@ -191,14 +191,14 @@ public:
 	template <class T, size_t N> explicit operator std::array<T, N>() const { return toArray<T, N>(); }
 
 	/// Converts to bytearray. @returns the empty byte array if not a string.
-	bytes toBytes(int _flags = LaissezFaire) const { 
+	bytes toBytes(int _flags = LaissezFaire) const {
 		if (!isData()) {
-			 if (_flags & ThrowOnFail) 
-			 	BOOST_THROW_EXCEPTION(BadCast()); 
-			 else 
-			 	return bytes(); 
-		} 
-		return bytes(payload().data(), payload().data() + length()); 
+			 if (_flags & ThrowOnFail)
+			 	BOOST_THROW_EXCEPTION(BadCast());
+			 else
+			 	return bytes();
+		}
+		return bytes(payload().data(), payload().data() + length());
 	}
 	/// Converts to bytearray. @returns the empty byte array if not a string.
 	bytesConstRef toBytesConstRef(int _flags = LaissezFaire) const { if (!isData()) { if (_flags & ThrowOnFail) BOOST_THROW_EXCEPTION(BadCast()); else return bytesConstRef(); } return payload().cropped(0, length()); }
@@ -441,9 +441,9 @@ public:
 	template <class _T> RLPStream& appendVector(std::vector<_T> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
 	template <class _T> RLPStream& append(vector_ref<_T> const& _s)
 	{
-		appendList(_s.size()); 
-		for (auto const& i: _s) 
-			append(i); 
+		appendList(_s.size());
+		for (auto const& i: _s)
+			append(i);
 		return *this;
 	}
 	template <class _T, size_t S> RLPStream& append(std::array<_T, S> const& _s) { appendList(_s.size()); for (auto const& i: _s) append(i); return *this; }
