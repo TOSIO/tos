@@ -22,11 +22,12 @@ project(tos)
 # include_directories(${Boost_INCLUDE_DIRS})
 # LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 include_directories("../toscore")
+include_directories("../sdag")
 include_directories("../baseservice/transport")
 include_directories("../baseservice/transport/deps")
 
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(tos PUBLIC toscore transport ${Boost_LIBRARIES} Boost::system Boost::filesystem  Boost::log Boost::thread Boost::program_options)
+target_link_libraries(tos PUBLIC toscore sdag transport ${Boost_LIBRARIES} Boost::system Boost::filesystem  Boost::log Boost::thread Boost::program_options)
 
 
 

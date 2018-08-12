@@ -8,7 +8,13 @@ PROJECT(crypto_test)
 
 # FILE(GLOB SOURCE "../../toscore/crypto/Base64.cpp")
 SET(SRC_LIST
-            ./HashAndBaseTest.cpp
+            ./ReadJsonTest.cpp
+            ./ArgManagerTest.cpp
+            ./Concurrent_queue_Test.cpp
+            ./FileSystem.cpp
+            ./JsonUtilTest.cpp
+            ./RangeMaskTest.cpp
+            ./RLPTest.cpp
         )
 
 #INCLUDE_DIRECTORIES("../../baseservice/transport/")

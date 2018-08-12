@@ -16,6 +16,9 @@
 
 #include <boost/program_options.hpp>
 
+#include <sdag/BlockHeader.h>
+
+
 class NodeMessageHandler : public NetEventsInterface
 {
 public:
@@ -54,6 +57,7 @@ NodeMessageHandler g_nodeMessageHandler;
 unsigned const _lineWidth = 160;
 void setupLog();
 void setupP2P();
+void setupSdag();
 
 /* template<class T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
@@ -67,7 +71,7 @@ int main(int argc, char const *argv[])
     //init log
     setupLog();
 
-    
+    setupSdag();
 
     cnote << "************start toschain*********";
     po::options_description defaultMode("TOS CLIENT MODE (default)", _lineWidth);
@@ -250,5 +254,18 @@ void setupP2P()
     if (!connman.Start(scheduler, connOptions)) {
         return ;
     }
+}
+
+
+void setupSdag()
+{
+
+dev::sdag::BlockHeader blockHeader(1, 100, 1000);
+RLPStream stream = blockHeader.encodeWithRLP();
+cnote << "sdag header rlp " << stream.out();
+
+dev::sdag::BlockHeader blockHeader1(stream);
+
+
 }
 
