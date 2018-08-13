@@ -42,3 +42,15 @@ std::string CFeeRate::ToString() const
     return strprintf("%d.%08d %s/kB", nSatoshisPerK / COIN, nSatoshisPerK % COIN, CURRENCY_UNIT);
     
 }
+
+std::string CFeeRate::ToString2() const
+{
+    return strprintf("%d.%08d %s/kB", nSatoshisPerK / COIN, nSatoshisPerK % COIN, CURRENCY_UNIT);
+    
+}
+
+std::string CFeeRate::ToString3() const
+{
+    return strprintf("%d.%08d %s/kB", nSatoshisPerK / COIN, nSatoshisPerK % COIN, CURRENCY_UNIT);
+    
+}
