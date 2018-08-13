@@ -27,6 +27,11 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
     int nThreshold = Threshold(params);
     int64_t nTimeStart = BeginTime(params);
     int64_t nTimeTimeout = EndTime(params);
+    
+     int nP = Period(params);
+    int nT = Threshold(params);
+    int64_t nTs = BeginTime(params);
+    int64_t nTt = EndTime(params);
 
     // Check if this deployment is always active.
     if (nTimeStart == Consensus::BIP9Deployment::ALWAYS_ACTIVE) {
