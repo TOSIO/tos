@@ -19,6 +19,8 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 {
     LogPrintf("LOCKCONTENTION: %s\n", pszName);
     LogPrintf("Locker: %s:%d\n", pszFile, nLine);
+    LogPrintf("%s\n", pszName);
+    LogPrintf("Locker: %s", pszFile);
 }
 #endif /* DEBUG_LOCKCONTENTION */
 
