@@ -91,10 +91,4 @@ std::string FormatISO8601DateTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
 }
 
-std::string FormatISO8601Date(int64_t nTime) {
-    return DateTimeStrFormat("%Y-%m-%d", nTime);
-}
-
-std::string FormatISO8601Time(int64_t nTime) {
-    return DateTimeStrFormat("%H:%M:%SZ", nTime);
 }
