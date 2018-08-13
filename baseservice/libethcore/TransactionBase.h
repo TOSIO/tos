@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <toscrypto/Common.h>
+#include <libethcore/Common.h>
 #include <toscrypto/Common.h>
 #include <toscore/utils/RLP.h>
 #include <toscore/crypto/SHA3.h>
