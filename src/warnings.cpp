@@ -107,3 +107,15 @@ void SetTosfLargeWorkInvalidChainFound(bool flag)
     fLargeWorkInvalidChainFound = flag;
 }
 
+bool GetTosfLargeWorkForkFound2()
+{
+    LOCK(cs_warnings);
+    return fLargeWorkForkFound;
+}
+
+void SetTosfLargeWorkInvalidChainFound2(bool flag)
+{
+    LOCK(cs_warnings);
+    fLargeWorkInvalidChainFound = flag;
+}
+
