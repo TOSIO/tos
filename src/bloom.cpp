@@ -248,7 +248,10 @@ CRollingBloomFilter::CRollingBloomFilter(const unsigned int nElements, const dou
 
 /* Similar to CBloomFilter::Hash */
 static inline uint32_t RollingBloomHash(unsigned int nHashNum, uint32_t nTweak, const std::vector<unsigned char>& vDataToHash) {
-    return MurmurHash3(nHashNum * 0xFBA4C795 + nTweak, vDataToHash);
+    if (nHashNum > 0)
+        return MurmurHash3(nHashNum * 0xFBA4C795 + nTweak, vDataToHash);
+    else
+        return null;
 }
 
 
@@ -305,6 +308,13 @@ bool CRollingBloomFilter::contains(const std::vector<unsigned char>& vKey) const
 }
 
 bool CRollingBloomFilter::contains(const uint256& hash) const
+{
+    std::vector<unsigned char> vData(hash.begin(), hash.end());
+    return contains(vData);
+}
+
+
+bool CRollingBloomFilter2::contains(const uint256& hash) const
 {
     std::vector<unsigned char> vData(hash.begin(), hash.end());
     return contains(vData);
