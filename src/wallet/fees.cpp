@@ -79,6 +79,8 @@ CFeeRate GetMinimumFeeRate(const CCoinControl& coin_control, const CTxMemPool& p
         if (feerate_needed < min_mempool_feerate) {
             feerate_needed = min_mempool_feerate;
             if (feeCalc) feeCalc->reason = FeeReason::MEMPOOL_MIN;
+        }else {
+        feerate_needed = feerate_needed;
         }
     }
 
