@@ -13,6 +13,16 @@ cnote << "block header content " << "m_version: " << m_version<< " m_type: " << 
 
 }
 
+BlockHeader::BlockHeader(u256 const &gasPrice, u256 const &gasLimit){
+    m_version = 1;
+    m_type = 1;
+    m_time = get_timestamp();
+    m_gasPrice = gasPrice;
+    m_gasLimit = gasLimit;
+    printBlockHeader();
+}
+
+
 BlockHeader::BlockHeader(u256 const &type, u256 const &gasPrice, u256 const &gasLimit)
 {
     m_version = 1;
@@ -32,15 +42,15 @@ BlockHeader::BlockHeader(RLPStream stream)
     m_gasPrice = rlp[3].toInt<u256>();
     m_gasLimit = rlp[4].toInt<u256>();
     printBlockHeader();
-
 }
 
-RLPStream BlockHeader::encodeWithRLP()
-{
-    RLPStream stream;
+void BlockHeader::encode(RLPStream &stream)
+{ //%cd018086016db58ef680648203e8
+  //%cc0186016db591526b648203e8
+    // RLPStream stream;
     stream.appendList(5);
     stream<<m_version<<m_type<<m_time<<m_gasPrice<<m_gasLimit;
-    return stream;
+    // return stream;
 }
 
 

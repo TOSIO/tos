@@ -4,7 +4,10 @@
 #include <toscore/common/Address.h>
 #include <boost/optional.hpp>
 #include "BlockHeader.h"
-#include "Transaction.h"
+#include <toscrypto/Common.h>
+#include <toscore/utils/RLP.h>
+#include <toscore/crypto/SHA3.h>
+// #include "Transaction.h"
 namespace dev
 {
 namespace sdag
@@ -21,35 +24,40 @@ struct OutputStruct
     Address addr;
     u256 amount;
 };
-
+// class Block;
 struct BlockLinkStruct
 {
     h256 blockHash; /// link block hash
     u256 gasUsed;
-    Block *block;
+    // Block block;
 };
 
 class Block
 {
   public:
-    BlockHeader blockHeader;
-    std::vector<OutputStruct> outputs;
-    std::vector<BlockLinkStruct> links;
+    BlockHeader m_blockHeader;
 
-    bytes playload;
-    boost::optional<SignatureStruct> vrs;
-    u256 nonce;
+    
+    std::vector<OutputStruct> m_outputs;
+    std::vector<BlockLinkStruct> m_links;
 
-    Address sender;
+    bytes m_playload;
+    
 
+
+    boost::optional<SignatureStruct> m_vrs;
+    u256 m_nonce;
     /// Constructs a null transaction.
-    Block(){};
+    // Block();
 
-    void sign(Secret const &_priv); ///< Sign the block.
+
+    
+
+    Address m_sender;
 
     h256 getHash();
 
-    void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature, bool _forEip155hash = false) const;
+    void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
 
     /// @returns the RLP serialisation of this transaction.
     bytes rlp(IncludeSignature _sig = WithSignature) const
@@ -58,6 +66,20 @@ class Block
         streamRLP(s, _sig);
         return s.out();
     }
+    h256 sha3(IncludeSignature _sig = WithSignature) const;
+    void sign(Secret const &_priv); ///< Sign the block.
+
+
+    void encode();
+
+    void decode(RLPStream &rlp);
+
+
+private:
+    mutable h256 m_hash;
+    
+
+
 };
 } // namespace sdag
 } // namespace dev

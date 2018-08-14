@@ -260,12 +260,17 @@ void setupP2P()
 void setupSdag()
 {
 
-dev::sdag::BlockHeader blockHeader(1, 100, 1000);
-RLPStream stream = blockHeader.encodeWithRLP();
-cnote << "sdag header rlp " << stream.out();
+dev::sdag::BlockHeader blockHeader(10, 100, 1000);
+RLPStream stream ;
+blockHeader.encode(stream);
+cnote << "sdag header rlp " << toHex(stream.out());
+dev::sdag::BlockHeader blockHeader11(100, 1000);
+RLPStream stream1 ; 
+blockHeader11.encode(stream1);
+cnote << "sdag new header rlp " << toHex(stream1.out());
 
 dev::sdag::BlockHeader blockHeader1(stream);
-
+dev::sdag::BlockHeader blockHeader2(stream1);
 
 }
 
