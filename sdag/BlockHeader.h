@@ -14,7 +14,7 @@ class BlockHeader
 {
 
 public:
-
+    BlockHeader();
     BlockHeader(u256 const &gasPrice, u256 const &gasLimit);
 
     BlockHeader(u256 const &type, u256 const &gasPrice, u256 const &gasLimit);

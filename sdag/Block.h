@@ -45,6 +45,8 @@ struct BlockLinkStruct
 class Block
 {
   public:
+    Block(bytesConstRef byts);
+    
     BlockHeader m_blockHeader;
 
     
@@ -53,8 +55,6 @@ class Block
 
     bytes m_playload;
     
-
-
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
@@ -78,16 +78,16 @@ class Block
     void sign(Secret const &_priv); ///< Sign the block.
 
 
-    void encode();
+    bytes encode();
 
-    void decode(RLPStream &rlpStream);
-
+    void decode(bytesConstRef byts);
+    void decodeBlockWithoutRSV(bytes bytes);
 
 private:
     mutable h256 m_hash;
-    
 
 
+static bool isZeroSignature(u256 const& _r, u256 const& _s) { return !_r && !_s; }
 };
 
 using BlockRef = std::shared_ptr<Block>;

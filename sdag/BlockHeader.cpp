@@ -13,6 +13,12 @@ cnote << "block header content " << "m_version: " << m_version<< " m_type: " << 
 
 }
 
+
+BlockHeader::BlockHeader()
+{
+
+}
+
 BlockHeader::BlockHeader(u256 const &gasPrice, u256 const &gasLimit){
     m_version = 1;
     m_type = 1;

@@ -1,8 +1,17 @@
 #include "Block.h"
+#include <toscore/log/Log.h>
 // #include "BlockHeader.h"
 
 using namespace dev;
 using namespace dev::sdag;
+
+
+Block::Block(bytesConstRef byts)
+{
+
+	// encode(byts);
+
+}
 
 void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 {
@@ -62,7 +71,7 @@ h256 Block::sha3(IncludeSignature _sig) const
 	return ret;
 }
 
-void Block ::encode()
+bytes Block ::encode()
 {
 	RLPStream bStream;
 	streamRLP(bStream);
@@ -71,15 +80,37 @@ void Block ::encode()
 	_s.appendRaw(bStream.out());
 	_s << m_vrs->v;
 	_s << (u256)m_vrs->r << (u256)m_vrs->s;
+
 	_s << m_nonce;
+	return _s.out();
 }
 
-void Block ::decode(RLPStream &rlpStream)
+void Block ::decodeBlockWithoutRSV(bytes bs)
+{
+}
+
+void Block ::decode(bytesConstRef byts)
 {
 
-	RLP rlp(rlpStream.out());
+	RLP rlp(byts);
 	if (!rlp.isList())
 	{
-		// cerr << "NOT INVILATE DATA";
+		cerror << "NOT INVILATE DATA";
+		return;
 	}
+
+	bytes bs = rlp[0].toBytes();
+
+	decodeBlockWithoutRSV(bs);
+
+	int const v = rlp[1].toInt<int>();
+	h256 const r = rlp[2].toInt<u256>();
+	h256 const s = rlp[3].toInt<u256>();
+
+	// if (isZeroSignature(r, s))
+	// {
+	m_vrs = SignatureStruct{r, s, static_cast<byte>(v)};
+	// }
+
+	m_nonce = rlp[4].toInt<u256>();
 }
