@@ -81,5 +81,8 @@ private:
 
 
 };
+
+using BlockRef = std::shared_ptr<Block>;
+
 } // namespace sdag
 } // namespace dev
