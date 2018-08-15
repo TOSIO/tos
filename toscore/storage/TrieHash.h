@@ -31,7 +31,6 @@ namespace dev
 bytes rlp256(BytesMap const& _s);
 h256 hash256(BytesMap const& _s);
 
-h256 orderedTrieRoot(std::vector<bytes> const& _data);
 
 template <class T, class U> inline h256 trieRootOver(unsigned _itemCount, T const& _getKey, U const& _getValue)
 {
