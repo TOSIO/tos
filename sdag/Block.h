@@ -47,11 +47,7 @@ class Block
 
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
-    /// Constructs a null transaction.
-    // Block();
 
-
-    
 
     Address m_sender;
 
@@ -72,7 +68,7 @@ class Block
 
     void encode();
 
-    void decode(RLPStream &rlp);
+    void decode(RLPStream &rlpStream);
 
 
 private:
