@@ -35,7 +35,7 @@ BlockHeader::BlockHeader(u256 const &type, u256 const &gasPrice, u256 const &gas
 
 BlockHeader::BlockHeader(RLPStream stream)
 {
-    RLP const rlp(stream.out());
+    RLP rlp(stream.out());
     m_version = rlp[0].toInt<u256>();
     m_type = rlp[1].toInt<u256>();
     m_time = rlp[2].toInt<u256>();
