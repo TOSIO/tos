@@ -11,6 +11,7 @@ add_library(sdag ${sources} ${headers} ${sources1} ${headers1})
 # SET(SRC_LIST ${sources} ${headers})
 # aux_source_directory(. SRC_LIST)
 
+include_directories("./")
 include_directories("../toscore")
 
 include_directories("../toscrypto")
