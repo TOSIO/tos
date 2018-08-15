@@ -19,6 +19,16 @@ enum IncludeSignature
     WithSignature = 1,    ///< Do include a signature.
 };
 
+enum BlockStatus
+{
+    BS_MAIN         = 0x01, //main block confirmed
+	BS_MAIN_CHAIN   = 0x02, //main block not confirmed
+	BS_APPLIED      = 0x04, //被主块确认同时未产生冲突
+	BS_MAIN_REF     = 0x08, //被主块确认
+	BS_REF          = 0x10, //被验证
+	BS_OURS         = 0x20  
+}
+
 struct OutputStruct
 {
     Address addr;
@@ -48,6 +58,8 @@ class Block
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
+
+    BlockStatus status;
 
     Address m_sender;
 
