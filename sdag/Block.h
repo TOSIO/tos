@@ -27,7 +27,7 @@ enum BlockStatus
 	BS_MAIN_REF     = 0x08, //被主块确认
 	BS_REF          = 0x10, //被验证
 	BS_OURS         = 0x20  
-}
+};
 
 struct OutputStruct
 {

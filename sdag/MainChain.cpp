@@ -2,12 +2,12 @@
 
 using namespace dev::sdag;
 
-MainChain::addBlock(Block &block)
+void MainChain::addBlock(Block &block)
 {
     
 }
 
-MainChain::check() 
+void MainChain::check() 
 {
 
 }
