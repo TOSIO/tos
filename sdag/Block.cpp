@@ -6,6 +6,19 @@ using namespace dev;
 using namespace dev::sdag;
 
 
+Block::Block()
+{
+
+}
+
+Block(bytes byts)
+{
+
+
+	
+}
+
+
 Block::Block(bytesConstRef byts)
 {
 
@@ -16,8 +29,8 @@ Block::Block(bytesConstRef byts)
 void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 {
 	RLPStream headerStream;
-	((BlockHeader)m_blockHeader).encode(headerStream);
-	_s.appendList(6);
+	((BlockHeader)m_blocbyteskHeader).encode(headerStream);
+	_s.appendList(4);
 	_s.appendRaw(headerStream.out());
 
 	RLPStream outputsStream;
@@ -25,47 +38,52 @@ void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 	for (unsigned int i = 0; i < m_outputs.size(); i++)
 	{
 		OutputStruct output = m_outputs[i];
-		outputsStream << output.addr << output.amount;
-		outputsStream.appendRaw(outputsStream.out());
-		outputsStream.clear();
+		RLPStream outputS;
+		outputS.appendList(2);
+		outputS << output.addr << output.amount;
+		outputsStream.appendRaw(outputS.out());
+		cnote << i << " output:" << toHex(outputS.out());
+		outputS.clear();
 	}
 	_s.appendRaw(outputsStream.out());
-
+	cnote << "outputsStream:" << toHex(outputsStream.out());
 	RLPStream linksStream;
 	linksStream.appendList(m_links.size());
 	for (unsigned int i = 0; i < m_links.size(); i++)
 	{
 		BlockLinkStruct link = m_links[i];
-
+		RLPStream linkS;
+		linkS.appendList(2);
 		// RLPStream linkBlockStream;
 		// link.block.streamRLP(linkBlockStream);
 		// linksStream.appendRaw(linkBlockStream.out());
-		linksStream << link.blockHash << link.gasUsed;
-		linksStream.appendRaw(linksStream.out());
-		linksStream.clear();
+		linkS << link.blockHash << link.gasUsed;
+		linksStream.appendRaw(linkS.out());
+		cnote << i << " linkS:" << toHex(linkS.out());
+		linkS.clear();
 	}
+	cnote << "linksStream:" << toHex(linksStream.out());
 	_s.appendRaw(linksStream.out());
+	_s << m_payload;
 
-	_s << m_playload;
+	cnote << "Block::streamRLP:" << toHex(_s.out());
 }
 
-void Block::sign(Secret const &_priv)
+void Block::sign(Secret const &_priv, RLPStream &_s)
 {
-	auto sig = dev::sign(_priv, sha3(WithoutSignature));
+
+	cnote << " Block::sign" << _priv;
+	auto sig = dev::sign(_priv, sha3(_s, WithSignature));
 	SignatureStruct sigStruct = *(SignatureStruct const *)&sig;
 	if (sigStruct.isValid())
 		m_vrs = sigStruct;
 }
 
-h256 Block::sha3(IncludeSignature _sig) const
+h256 Block::sha3( RLPStream &_s, IncludeSignature _sig) const
 {
 	if (_sig == WithSignature && m_hash)
 		return m_hash;
-
-	RLPStream s;
-	streamRLP(s, _sig);
-
-	auto ret = dev::sha3(s.out());
+	auto ret = dev::sha3(_s.out());
 	if (_sig == WithSignature)
 		m_hash = ret;
 	return ret;
@@ -80,13 +98,23 @@ bytes Block ::encode()
 	_s.appendRaw(bStream.out());
 	_s << m_vrs->v;
 	_s << (u256)m_vrs->r << (u256)m_vrs->s;
-
 	_s << m_nonce;
 	return _s.out();
 }
 
 void Block ::decodeBlockWithoutRSV(bytes bs)
 {
+	// BlockHeader tHeader(bs[0]);
+	// m_blockHeader = tHeader;
+	// RLP outPuts(bs[1]);
+	// RLP links(bs[2]);
+
+
+	// RLP payLoad(bs[3]);
+
+	// m_payload = payLoad
+
+
 }
 
 void Block ::decode(bytesConstRef byts)

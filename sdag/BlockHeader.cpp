@@ -50,6 +50,20 @@ BlockHeader::BlockHeader(RLPStream stream)
     printBlockHeader();
 }
 
+BlockHeader::BlockHeader(bytes bs)
+{
+
+    RLP const rlp(bs);
+    m_version = rlp[0].toInt<u256>();
+    m_type = rlp[1].toInt<u256>();
+    m_time = rlp[2].toInt<u256>();
+    m_gasPrice = rlp[3].toInt<u256>();
+    m_gasLimit = rlp[4].toInt<u256>();
+    printBlockHeader();
+
+}
+
+
 void BlockHeader::encode(RLPStream &stream)
 { //%cd018086016db58ef680648203e8
   //%cc0186016db591526b648203e8
