@@ -17,6 +17,8 @@ public:
   void write(Block &block);
   void write(std::vector<Block *> &blocks);
 
+  bool exists(db::Slice slice);
+  
   std::string read(db::Slice slice);
 
 protected:
@@ -25,5 +27,6 @@ protected:
 private:
   std::unique_ptr<db::DatabaseFace> m_blocksDB;
 };
+ using BlockStorageRef = std::shared_ptr<BlockStorage>;
 } // namespace sdag
 } // namespace dev

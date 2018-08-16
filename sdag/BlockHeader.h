@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <toscore/common/Common.h>
 #include <toscore/common/Address.h>

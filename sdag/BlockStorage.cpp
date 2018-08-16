@@ -77,3 +77,9 @@ std::string BlockStorage::read(db::Slice slice)
 {
     return m_blocksDB->lookup(slice);
 }
+
+bool BlockStorage::exists(db::Slice slice)
+{
+    return m_blocksDB->exists(slice);
+}
+

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <string>
 #include <toscore/common/Common.h>
@@ -19,14 +21,25 @@ enum IncludeSignature
     WithSignature = 1,    ///< Do include a signature.
 };
 
+enum BlockType
+{
+    BT_MAIN         = 0x01,
+    BT_TRANSACTION  = 0x02
+};
+
 enum BlockStatus
 {
-    BS_MAIN         = 0x01, //main block confirmed
+/*     BS_MAIN         = 0x01, //main block confirmed
 	BS_MAIN_CHAIN   = 0x02, //main block not confirmed
 	BS_APPLIED      = 0x04, //被主块确认同时未产生冲突
 	BS_MAIN_REF     = 0x08, //被主块确认
 	BS_REF          = 0x10, //被验证
-	BS_OURS         = 0x20  
+	BS_OURS         = 0x20   */
+
+    BS_NONE       = 0x00, //未被引用
+    BS_REF        = 0x01, //已被引用(验证)
+    BS_CONFIRM    = 0x02, //已确认(已被验证且被确认)
+    BS_APPLIED    = 0x04  //已应用(已被验证且被确认、无冲突)
 };
 
 struct OutputStruct
@@ -61,11 +74,15 @@ class Block
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
-
+    BlockType   type;
     BlockStatus status;
 
     Address m_sender;
 
+    // the block is either main block or transaction block
+    //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
+    BlockType getType(){return type;}
+   
     h256 getHash();
 
     void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
