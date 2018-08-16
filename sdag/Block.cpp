@@ -11,11 +11,11 @@ Block::Block()
 
 }
 
-Block(bytes byts)
+Block::Block(bytes byts)
 {
 
 
-	
+
 }
 
 
@@ -29,7 +29,7 @@ Block::Block(bytesConstRef byts)
 void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 {
 	RLPStream headerStream;
-	((BlockHeader)m_blocbyteskHeader).encode(headerStream);
+	((BlockHeader)m_blockHeader).encode(headerStream);
 	_s.appendList(4);
 	_s.appendRaw(headerStream.out());
 
