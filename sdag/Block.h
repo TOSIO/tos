@@ -45,6 +45,9 @@ struct BlockLinkStruct
 class Block
 {
   public:
+    Block();
+
+    Block(bytes byts);
     Block(bytesConstRef byts);
     
     BlockHeader m_blockHeader;
@@ -53,7 +56,7 @@ class Block
     std::vector<OutputStruct> m_outputs;
     std::vector<BlockLinkStruct> m_links;
 
-    bytes m_playload;
+    bytes m_payload;
     
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
@@ -67,25 +70,25 @@ class Block
 
     void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
 
-    /// @returns the RLP serialisation of this transaction.
-    bytes rlp(IncludeSignature _sig = WithSignature) const
-    {
-        RLPStream s;
-        streamRLP(s, _sig);
-        return s.out();
-    }
-    h256 sha3(IncludeSignature _sig = WithSignature) const;
-    void sign(Secret const &_priv); ///< Sign the block.
+    // /// @returns the RLP serialisation of this transaction.
+    // bytes rlp(IncludeSignature _sig = WithSignature) const
+    // {
+    //     RLPStream s;
+    //     streamRLP(s, _sig);
+    //     return s.out();
+    // }
+    h256 sha3(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
+    void sign(Secret const &_priv, RLPStream &_s); ///< Sign the block.
 
 
     bytes encode();
 
     void decode(bytesConstRef byts);
     void decodeBlockWithoutRSV(bytes bytes);
-
+// RLPStream m_rlp;
 private:
     mutable h256 m_hash;
-
+    
 
 static bool isZeroSignature(u256 const& _r, u256 const& _s) { return !_r && !_s; }
 };

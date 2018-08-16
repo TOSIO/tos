@@ -84,6 +84,7 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xcomplex": "cpp",
-        "xxatomic": "cpp"
+        "xxatomic": "cpp",
+        "codecvt": "cpp"
     }
 }
