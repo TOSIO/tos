@@ -267,14 +267,14 @@ void testBlock()
     std::vector<BlockLinkStruct> linksVector;
     for (int i = 0; i < 5; i++)
     {
-        const Address add = MaxAddress;
+        Address add = MaxAddress;
         OutputStruct out = {add, 100};
         opVector.push_back(out);
     }
 
     for (int i = 0; i < 5; i++)
     {
-        const h256 test = h256("0x0000000000000000000000000000000000000000000000000000000000000001");
+        h256 test = h256("0x0000000000000000000000000000000000000000000000000000000000000001");
         BlockLinkStruct link = {test, 10};
         linksVector.push_back(link);
     }
@@ -312,6 +312,10 @@ void testBlock()
     bytes bs = block.encode();
     cnote << "encode \n"
           << bs << "\n" << toHex(bs);
+cnote << "encode \n"
+          << RLP(bs);
+    Block encodeBlock(bs);
+
 
 
 

@@ -100,8 +100,8 @@ class Block
 
     bytes encode();
 
-    void decode(bytesConstRef byts);
-    void decodeBlockWithoutRSV(bytes bytes);
+    void decode(bytes byts);
+    void decodeBlockWithoutRSV(RLP rlp);
 // RLPStream m_rlp;
 private:
     mutable h256 m_hash;
