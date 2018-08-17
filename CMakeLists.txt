@@ -118,8 +118,8 @@ add_subdirectory(sdag)
 add_subdirectory(toscrypto)
 
 #tvm configure begin
-option(TVM_USE  "build libevm" ON )
-option(TVM_TEST "build ethvm test program" ON )
+option(TVM_USE  "build libevm" OFF )
+option(TVM_TEST "build ethvm test program" OFF )
 message("------------------------------------------------------------- tvm begin")
 message("-- TVM_USE                                                   ${TVM_USE}")
 message("-- TVM_TEST                                                  ${TVM_TEST}")

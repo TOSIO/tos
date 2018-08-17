@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <toscore/common/Common.h>
 #include <toscore/common/Address.h>
@@ -12,25 +13,25 @@ namespace sdag
 class BlockHeader
 {
 
-public:
+  public:
+    BlockHeader();
+    BlockHeader(u256 const &gasPrice, u256 const &gasLimit);
 
     BlockHeader(u256 const &type, u256 const &gasPrice, u256 const &gasLimit);
 
     BlockHeader(RLPStream stream);
+    BlockHeader(bytes bs);
+    void encode(RLPStream &stream);
 
-    RLPStream encodeWithRLP();
-    
-
-
-private:
+  private:
     u256 m_version;
     u256 m_type; //
     u256 m_time; //current time
     u256 m_gasPrice;
     u256 m_gasLimit;
 
-void printBlockHeader();
+    void printBlockHeader();
 };
 
 } // namespace sdag
-} // namespace DEV
+} // namespace dev
