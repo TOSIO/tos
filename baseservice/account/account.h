@@ -39,6 +39,10 @@ using namespace dev;
 using namespace dev::eth;
 using namespace boost::algorithm;
 
+namespace baseservice
+{
+namespace account
+{
 class BadArgument: public Exception {};
 
 class account
@@ -119,3 +123,5 @@ private:
 	string m_kdf = "scrypt";
 	map<string, string> m_kdfParams;
 };
+}
+}
