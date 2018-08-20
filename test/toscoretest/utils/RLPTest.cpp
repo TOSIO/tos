@@ -17,6 +17,13 @@ using namespace dev;
 using std::cout;
 using std::string;
 
+class Test
+{
+    public:
+    string sub;
+    string sub2;
+};
+
 class TestRLP
 {
     // dev::bytes rlpEncode();
@@ -24,10 +31,21 @@ class TestRLP
     dev::bytes rlpEncode()
     {
 
+        Test t;
+        t.sub = "3333";
+        t.sub2 = "4444";
+        dev::RLPStream stream1;
+stream1.appendList(2);
+// stream1 << t;
+stream1.append(t.sub).append(t.sub2);
+
         dev::RLPStream root;
         dev::RLPStream stream;
 
-        root.appendList(3);
+        root.appendList(4);
+
+root.appendRaw(stream1.out());
+
         stream.appendList(2) << "hello"
                              << "world";
         root.appendRaw(stream.out());
@@ -48,6 +66,12 @@ class TestRLP
         string hex = dev::toHex(output);
         cnote << "encode hex : " << hex.c_str();
 
+        // stream1.appendList(4);
+        // streaml.appendList(2);
+        // stream1<<t.sub<<t.sub2;
+        // stream1.appendList(2);
+        // stream1<<"xxx"<<"chee";
+        // stream1.appendList(2);
         return output;
     }
 
@@ -55,9 +79,9 @@ class TestRLP
     {
 
         dev::RLP rlp(output);
-        cnote << "trace1";
-
-        string str1 = rlp[0][0].toString();
+        cnote << "trace1  " << rlp[0][0].toString().c_str();
+// rlp[0][0].toString();
+        string str1 = rlp[1][0].toString();
         string str2 = rlp[2][1].toString();
         cnote << "str[0][0]: " << str1.c_str() << "  str2[2][1]: " << str2.c_str();
     }

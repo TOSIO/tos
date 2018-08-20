@@ -19,6 +19,8 @@ using namespace dev;
   class HashAndBaseTest
   {
     public:
+
+    
     void testHashWrite()
     {
       dev::Hash256 h;

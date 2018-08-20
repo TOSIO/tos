@@ -13,12 +13,12 @@
 #include <scheduler.h>
 #include <thread>
 //  #include <boost/program_options/options_description.hpp>
-
+#include <toscore/common/Address.h>
 #include <boost/program_options.hpp>
 
-#include <sdag/BlockHeader.h>
-
-
+// #include <sdag/BlockHeader.h>
+#include <sdag/Block.h>
+using namespace dev::sdag;
 class NodeMessageHandler : public NetEventsInterface
 {
 public:
@@ -256,16 +256,96 @@ void setupP2P()
     }
 }
 
-
-void setupSdag()
+void testBlock()
 {
 
-dev::sdag::BlockHeader blockHeader(1, 100, 1000);
-RLPStream stream = blockHeader.encodeWithRLP();
-cnote << "sdag header rlp " << stream.out();
+    BlockHeader blockHeader(100, 1000);
+    Block block;
+    block.m_blockHeader = blockHeader;
+    block.m_nonce = 100;
+    std::vector<OutputStruct> opVector;
+    std::vector<BlockLinkStruct> linksVector;
+    for (int i = 0; i < 5; i++)
+    {
+        Address add = MaxAddress;
+        OutputStruct out = {add, 100};
+        opVector.push_back(out);
+    }
 
-dev::sdag::BlockHeader blockHeader1(stream);
+    for (int i = 0; i < 5; i++)
+    {
+        h256 test = h256("0x0000000000000000000000000000000000000000000000000000000000000001");
+        BlockLinkStruct link = {test, 10};
+        linksVector.push_back(link);
+    }
+
+    block.m_outputs = opVector;
+    block.m_links = linksVector;
+    block.m_payload = bytes(5, 1);
+    RLPStream _s;
+    block.streamRLP(_s);
+    // cnote << "Secret string is" << toHex(_s.out());
+//     RLP rlp(_s.out());
+// // h256(_s.out()).toString();
+
+// cnote << "tos rlp : \n" << rlp;
+
+// // RLPStream stream;
+// // stream.appendList(2);
+// // stream << "123" << "123";
+
+// // RLP rlpETH(stream.out());
+// // cnote << "eth rlp : \n" << rlpETH;
+// // cnote << "eth rlp toHash<h256> \n"
+// //           << rlpETH.toHash<h256>();
+
+// const std::string  str = toHex(_s.out());
+//     cnote << "******\n" << str  << "\n" << h256(str) << "\n" << h256(_s.out());
+//     cnote << "rlp.toHash<h256>() \n"
+//           << rlp.toHash<h256>();
+
+
+    // Secret sec = Secret(rlp.toHash<h256>());
+
+    Secret sec("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
+    block.sign(sec, _s);
+    bytes bs = block.encode();
+    cnote << "encode \n"
+          << bs << "\n" << toHex(bs);
+cnote << "encode \n"
+          << RLP(bs);
+    Block encodeBlock(bs);
+
+
+
+
+
+    RLP contentRLP(bs);
+    cnote << "decode \n" << contentRLP;
 
 
 }
+
+void setupSdag()
+{
+    testBlock();
+
+
+
+// dev::sdag::BlockHeader blockHeader(10, 100, 1000);
+// RLPStream stream ;
+// blockHeader.encode(stream);
+// cnote << "sdag header rlp " << toHex(stream.out());
+// dev::sdag::BlockHeader blockHeader11(100, 1000);
+// RLPStream stream1 ; 
+// blockHeader11.encode(stream1);
+// cnote << "sdag new header rlp " << toHex(stream1.out());
+
+// dev::sdag::BlockHeader blockHeader1(stream);
+// dev::sdag::BlockHeader blockHeader2(stream1);
+
+}
+
+
+
 
