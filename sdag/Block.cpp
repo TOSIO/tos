@@ -5,25 +5,20 @@
 using namespace dev;
 using namespace dev::sdag;
 
-
 Block::Block()
 {
-
 }
 
 Block::Block(bytes byts)
 {
 
-
-
+	decode(byts);
 }
-
 
 Block::Block(bytesConstRef byts)
 {
 
 	// encode(byts);
-
 }
 
 void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
@@ -79,7 +74,7 @@ void Block::sign(Secret const &_priv, RLPStream &_s)
 		m_vrs = sigStruct;
 }
 
-h256 Block::sha3( RLPStream &_s, IncludeSignature _sig) const
+h256 Block::sha3(RLPStream &_s, IncludeSignature _sig) const
 {
 	if (_sig == WithSignature && m_hash)
 		return m_hash;
@@ -102,22 +97,62 @@ bytes Block ::encode()
 	return _s.out();
 }
 
-void Block ::decodeBlockWithoutRSV(bytes bs)
+void Block ::decodeBlockWithoutRSV(RLP rlp)
 {
-	// BlockHeader tHeader(bs[0]);
-	// m_blockHeader = tHeader;
-	// RLP outPuts(bs[1]);
-	// RLP links(bs[2]);
+	BlockHeader tHeader(rlp[0]);
+	m_blockHeader = tHeader;
 
+	RLP outputs = rlp[1];
+	cnote << "****outputs:" << outputs;
+	if (outputs.isList())
+	{
+		cnote << "outputs.itemCount" << outputs[0].itemCount();
+		for (size_t i = 0; i < outputs.itemCount(); i++)
+		{
+			RLP output = outputs[i];
 
-	// RLP payLoad(bs[3]);
+			cnote << "outputs " + i << output;
+			if (output.isList())
+			{
+				Address add = output[0].toHash<h160>();
+				u256 amount = output[1].toInt<u256>();
+				cnote << "output " << add << " + " << amount;
+				OutputStruct out = {add, amount};
+				m_outputs.push_back(out);
+			}
+		}
+	}
 
-	// m_payload = payLoad
+	RLP links = rlp[2];
+	cnote << "****links:" << links;
+	if (links.isList())
+	{
+		cnote << "links.itemCount" << links[0].itemCount();
+		for (size_t i = 0; i < links.itemCount(); i++)
+		{
+			RLP link = links[i];
+			if (link.isList())
+			{
+				h256 blockHash = link[0].toHash<h256>();
+				u256 gasUsed = link[1].toInt<u256>();
+				cnote << "link " << blockHash << " + " << gasUsed;
 
+				BlockLinkStruct link = {blockHash, gasUsed};
+				m_links.push_back(link);
+			}
+		}
+	}
+	m_payload = rlp[3].toBytes();
 
+	cnote << "m_outputs\n"
+		  << m_outputs.size() << "\n"
+		  << "m_links\n"
+		  << m_links.size() << "\n"
+		  << "m_payload\n"
+		  << m_payload;
 }
 
-void Block ::decode(bytesConstRef byts)
+void Block ::decode(bytes byts)
 {
 
 	RLP rlp(byts);
@@ -126,10 +161,11 @@ void Block ::decode(bytesConstRef byts)
 		cerror << "NOT INVILATE DATA";
 		return;
 	}
+	cnote << "decode \n"
+		  << rlp[0];
+	// bytes bs = rlp[0];
 
-	bytes bs = rlp[0].toBytes();
-
-	decodeBlockWithoutRSV(bs);
+	decodeBlockWithoutRSV(rlp[0]);
 
 	int const v = rlp[1].toInt<int>();
 	h256 const r = rlp[2].toInt<u256>();
@@ -139,6 +175,7 @@ void Block ::decode(bytesConstRef byts)
 	// {
 	m_vrs = SignatureStruct{r, s, static_cast<byte>(v)};
 	// }
-
+cnote << "decode RSV \n"
+		  << r << "   " << s << "  " << v;
 	m_nonce = rlp[4].toInt<u256>();
 }

@@ -1,4 +1,5 @@
 #include "account.h"
+using namespace baseservice::account;
 
 KeyPair account::makeKey() const
 {

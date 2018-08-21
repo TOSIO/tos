@@ -50,10 +50,10 @@ BlockHeader::BlockHeader(RLPStream stream)
     printBlockHeader();
 }
 
-BlockHeader::BlockHeader(bytes bs)
+BlockHeader::BlockHeader(RLP rlp)
 {
 
-    RLP const rlp(bs);
+    // RLP const rlp(bs);
     m_version = rlp[0].toInt<u256>();
     m_type = rlp[1].toInt<u256>();
     m_time = rlp[2].toInt<u256>();
