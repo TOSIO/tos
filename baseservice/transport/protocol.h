@@ -53,10 +53,16 @@ public:
         READWRITE(FLATDATA(pchChecksum));
     } */
 
-    void Serialize(RLPStream& stream)
+    void Serialize(DataStream& stream)
     {
 
     }
+
+     void UnSerialize(bytesConstRef in,int type, int version)
+     {
+
+     }
+     
     char pchMessageStart[MESSAGE_START_SIZE];
     char pchCommand[COMMAND_SIZE];
     uint32_t nMessageSize;
