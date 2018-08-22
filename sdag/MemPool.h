@@ -1,9 +1,10 @@
 #pragma once
 #include <Block.h>
 #include <BlockStorage.h>
+#include <toscore/concurrent/Guards.h>
+
 #include <memory>
 #include <map>
-#include <mutex>
 
 namespace dev
 {
@@ -20,14 +21,13 @@ class BlockMemPool
     void add(BlockRef block);
     
     BlockRef get(h256 hash);
+    
+    bool isOrphan(h256 hash);
 
   private:
-  
-
     BlockMap m_blocks;
     BlockMap m_orphanBlocks;
-    std::mutex _lock;
-
+    boost::shared_mutex m_lock;
 
     BlockStorageRef m_blockStorage;
 

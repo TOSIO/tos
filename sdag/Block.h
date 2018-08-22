@@ -24,7 +24,8 @@ enum IncludeSignature
 enum BlockType
 {
     BT_MAIN         = 0x01,
-    BT_TRANSACTION  = 0x02
+    BT_MINER        = 0x02,
+    BT_TRANSACTION  = 0x03
 };
 
 enum BlockStatus
@@ -100,8 +101,8 @@ class Block
 
     bytes encode();
 
-    void decode(bytesConstRef byts);
-    void decodeBlockWithoutRSV(bytes bytes);
+    void decode(bytes byts);
+    void decodeBlockWithoutRSV(RLP rlp);
 // RLPStream m_rlp;
 private:
     mutable h256 m_hash;

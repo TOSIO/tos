@@ -3,47 +3,46 @@
 
 using namespace dev::sdag;
 
+bool BlockMemPool::isOrphan(h256 hash)
+{
+    ReadGuard rguard(m_lock);
+    if (m_orphanBlocks.find(hash) != m_orphanBlocks.end() // the block's direct link is in orphan set.
+        || m_blocks.find(hash) == m_blocks.end()          // the block's direct link is not in non-orphan set.
+        || !m_blockStorage->exists(dev::toSlice(hash)))
+    {
+        return true;
+    }
+    return false;
+}
+
 void BlockMemPool::add(BlockRef block)
 {
-    Guard guard(_lock);
-
+    if (!block.get())
+    {
+        return;
+    }
+    
+    UpgradableGuard rguard(m_lock);
     for (auto blk : block->m_links)
     {
-        if (m_orphanBlocks.find(blk.blockHash) != m_orphanBlocks.end() // the block's direct link is in orphan set.
-            || m_blocks.find(blk.blockHash) == m_blocks.end()          // the block's direct link is not in non-orphan set.
-            || !m_blockStorage->exists(dev::toSlice(blk.blockHash)))
+        if (isOrphan(blk.blockHash))
         {
-            // the block's ancestor are orphan block
+            // the block's ancestors are orphan block
+            UpgradeGuard wguard(rguard);
             m_orphanBlocks.insert(make_pair(block->getHash(), block));
             // request ancestor block....
             return;
         }
     }
-
-    /* if (block->status & BS_MAIN 
-        || block->status & BS_APPLIED
-        || block->status & BS_MAIN_REF)
-    {
-       _confirmBlocks[block->getHash()] = block;
-    }
-    else if (block->status & BS_MAIN_CHAIN 
-        || block->status & BS_REF)
-    {
-        _unconfirmBlocks[block->getHash()] = block;
-    }
-    else
-    {
-        for (auto blk : block->m_links)
-        {
-            //if ()
-        }
-    } */
+    
+    UpgradeGuard wguard(rguard);
     m_blocks[block->getHash()] = block;
+    m_blockStorage->write(*block);
 }
 
 BlockRef BlockMemPool::get(h256 hash)
 {
-    Guard guard(_lock);
+    UpgradableGuard rguard(m_lock);
     BlockMapIterator itr = m_blocks.find(hash);
 
     if (itr != m_blocks.end())
@@ -65,6 +64,7 @@ BlockRef BlockMemPool::get(h256 hash)
         else
         {
             BlockRef ret(new Block(bytesConstRef((unsigned char *)enc.data(), enc.size())));
+            UpgradeGuard wguard(rguard);
             m_blocks[hash] = ret;
             return ret;
         }

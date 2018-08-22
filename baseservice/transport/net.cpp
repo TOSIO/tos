@@ -2841,8 +2841,8 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     size_t nTotalSize = nMessageSize + CMessageHeader::HEADER_SIZE;
     LogPrint(BCLog::NET, "sending %s (%d bytes) peer=%d\n",  SanitizeString(msg.command.c_str()), nMessageSize, pnode->GetId());
 
-    std::vector<unsigned char> serializedHeader;
-    serializedHeader.reserve(CMessageHeader::HEADER_SIZE);
+    //std::vector<unsigned char> serializedHeader;
+    //serializedHeader.reserve(CMessageHeader::HEADER_SIZE);
     uint256 hash = Hash(msg.data.data(), msg.data.data() + nMessageSize);
     //h256 hash = dev::hash(bytesConstRef(msg.data.data(),nMessageSize));
     CMessageHeader hdr(Params().MessageStart(), msg.command.c_str(), nMessageSize);
@@ -2850,10 +2850,10 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
 
     //CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, serializedHeader, 0, hdr};
-    RLPStream stream;
+    DataStream stream(SER_NETWORK,INIT_PROTO_VERSION);
     hdr.Serialize(stream);
-    bytes enc = stream.out();
-    serializedHeader.insert(serializedHeader.end(),  enc.begin(),enc.begin() + CMessageHeader::HEADER_SIZE);
+    bytes serializedHeader = stream.stream()->out();
+    //serializedHeader.insert(serializedHeader.end(),  enc.begin(),enc.begin() + CMessageHeader::HEADER_SIZE);
     
     size_t nBytesSent = 0;
     {
