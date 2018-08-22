@@ -97,8 +97,8 @@ class Block
     /// Synonym for safeSender().
     Address from() { return safeSender(); }
 
-    u256 getGasPrice(){};
-    u256 getGasLimit(){};
+    // u256 getGasPrice(){};
+    // u256 getGasLimit(){};
 
     
   private:
