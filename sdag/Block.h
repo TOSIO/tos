@@ -60,7 +60,7 @@ class Block
 {
   public:
     Block();
-
+    
     Block(bytes byts);
     Block(bytesConstRef byts);
 
@@ -74,15 +74,17 @@ class Block
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
-    BlockType type;
-    BlockStatus status;
+    BlockType   m_type;
+    BlockStatus m_status;
 
     Address m_sender;
 
     // the block is either main block or transaction block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
-    BlockType getType() { return type; }
-
+    BlockType getType(){return m_type;}
+    
+    int64_t getTime(){return m_blockHeader.m_time;}
+    
     h256 getHash();
 
     void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;

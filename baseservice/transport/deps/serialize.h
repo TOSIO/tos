@@ -528,6 +528,12 @@ template<typename Stream, typename T> void Serialize(Stream& os, const std::uniq
 template<typename Stream, typename T> void Unserialize(Stream& os, std::unique_ptr<const T>& p);
 
 
+//std::array
+template<typename Stream,typename T,unsigned N>
+void Serialize(Stream& os, const std::array<T,N>& array);
+
+template<typename Stream,typename T,unsigned N>
+void Unserialize(Stream& os, std::array<T,N>& array);
 
 /**
  * If none of the specialized versions above matched, default to calling member function.
@@ -705,6 +711,29 @@ inline void Unserialize(Stream& is, std::vector<T, A>& v)
 }
 
 
+//std::array
+template<typename Stream,typename T,unsigned N>
+void Serialize(Stream& os, const std::array<T,N>& array)
+{
+    //WriteCompactSize(os, N);
+    for (typename std::array<T, N>::const_iterator itr = array.begin(); itr != array.end(); ++itr)
+        ::Serialize(os, (*itr));
+}
+
+template<typename Stream,typename T,unsigned N>
+void Unserialize(Stream& is, std::array<T,N>& array)
+{
+    array.clear();
+    //unsigned int nSize = ReadCompactSize(is);
+    unsigned int i = 0;
+    while (i < N)
+    {
+        unsigned int blk = std::min(N - i, (unsigned int)(1 + 4999999 / sizeof(T)));
+        array.resize(i + blk);
+        is.read((char*)&array[i], blk * sizeof(T));
+        i += blk;
+    }
+}
 
 /**
  * pair

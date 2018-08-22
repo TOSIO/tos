@@ -11,6 +11,7 @@ SET(SRC_LIST
             ./net.cpp
             ./argsproxy.cpp
             ./chainparams_proxy.cpp
+            ./nodemsg_handler.cpp
             ./protocol.cpp
             ./timedata.cpp
             ./ui_interface.cpp
@@ -32,6 +33,7 @@ SET(SRC_LIST
             ./deps/hash.cpp
             ./deps/support/cleanse.cpp
             ./deps/support/lockedpool.cpp
+            ./deps/bloomfilter.cpp
         )
 
 INCLUDE_DIRECTORIES("./")

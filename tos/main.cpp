@@ -10,6 +10,7 @@
 #include <toscore/utils/args_manager.h>
 #include <baseservice/transport/net.h>
 #include <baseservice/transport/netbase.h>
+#include <baseservice/transport/nodemsg_handler.h>
 #include <scheduler.h>
 #include <thread>
 //  #include <boost/program_options/options_description.hpp>
@@ -19,7 +20,7 @@
 // #include <sdag/BlockHeader.h>
 #include <sdag/Block.h>
 using namespace dev::sdag;
-class NodeMessageHandler : public NetEventsInterface
+/* class NodeMessageHandler : public NetEventsInterface
 {
 public:
     virtual bool ProcessMessages(CNode* pnode, std::atomic<bool>& interrupt) override
@@ -43,8 +44,8 @@ public:
         return ;
     }
 
-};
-
+}; */
+ 
 
 namespace po = boost::program_options;
 using dev::LoggingOptions;
