@@ -87,13 +87,6 @@ class Block
 
     void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
 
-    // /// @returns the RLP serialisation of this transaction.
-    // bytes rlp(IncludeSignature _sig = WithSignature) const
-    // {
-    //     RLPStream s;
-    //     streamRLP(s, _sig);
-    //     return s.out();
-    // }
     h256 sha3(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
     void sign(Secret const &_priv, RLPStream &_s); ///< Sign the block.
 
@@ -102,10 +95,10 @@ class Block
 
     void decode(bytes byts);
     void decodeBlockWithoutRSV(RLP rlp);
-// RLPStream m_rlp;
+// 
 private:
     mutable h256 m_hash;
-    
+    bytes m_rlpData;
 
 static bool isZeroSignature(u256 const& _r, u256 const& _s) { return !_r && !_s; }
 };

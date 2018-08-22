@@ -284,46 +284,24 @@ void testBlock()
     block.m_payload = bytes(5, 1);
     RLPStream _s;
     block.streamRLP(_s);
-    // cnote << "Secret string is" << toHex(_s.out());
-//     RLP rlp(_s.out());
-// // h256(_s.out()).toString();
+//     Secret sec(_s.out());
 
-// cnote << "tos rlp : \n" << rlp;
-
-// // RLPStream stream;
-// // stream.appendList(2);
-// // stream << "123" << "123";
-
-// // RLP rlpETH(stream.out());
-// // cnote << "eth rlp : \n" << rlpETH;
-// // cnote << "eth rlp toHash<h256> \n"
-// //           << rlpETH.toHash<h256>();
-
-// const std::string  str = toHex(_s.out());
-//     cnote << "******\n" << str  << "\n" << h256(str) << "\n" << h256(_s.out());
-//     cnote << "rlp.toHash<h256>() \n"
-//           << rlp.toHash<h256>();
-
-
-    // Secret sec = Secret(rlp.toHash<h256>());
-
-    Secret sec("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
-    block.sign(sec, _s);
+// cnote << "Secret  " << sec;
+    Secret sec1("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
+    cnote << "Secret **  " << sec1;
+    block.sign(sec1, _s);
     bytes bs = block.encode();
     cnote << "encode \n"
-          << bs << "\n" << toHex(bs);
-cnote << "encode \n"
-          << RLP(bs);
+          << toHex(bs);
+    // cnote << "encode \n"
+    //       << RLP(bs);
     Block encodeBlock(bs);
+    // RLP contentRLP(bs);
+    // cnote << "decode \n" << contentRLP;
 
+    cnote << "block getHash \n" << block.getHash().hex();
 
-
-
-
-    RLP contentRLP(bs);
-    cnote << "decode \n" << contentRLP;
-
-
+    cnote << "encodeBlock getHash \n" << encodeBlock.getHash().hex();
 }
 
 void setupSdag()
