@@ -26,7 +26,7 @@ class BlockHeader
   private:
     u256 m_version;
     u256 m_type; //
-    u256 m_time; //current time
+    int64_t m_time; //current time
     u256 m_gasPrice;
     u256 m_gasLimit;
 

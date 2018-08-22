@@ -23,24 +23,24 @@ enum IncludeSignature
 
 enum BlockType
 {
-    BT_MAIN         = 0x01,
-    BT_MINER        = 0x02,
-    BT_TRANSACTION  = 0x03
+    BT_MAIN = 0x01,
+    BT_MINER = 0x02,
+    BT_TRANSACTION = 0x03
 };
 
 enum BlockStatus
 {
-/*     BS_MAIN         = 0x01, //main block confirmed
+    /*     BS_MAIN         = 0x01, //main block confirmed
 	BS_MAIN_CHAIN   = 0x02, //main block not confirmed
 	BS_APPLIED      = 0x04, //被主块确认同时未产生冲突
 	BS_MAIN_REF     = 0x08, //被主块确认
 	BS_REF          = 0x10, //被验证
 	BS_OURS         = 0x20   */
 
-    BS_NONE       = 0x00, //未被引用
-    BS_REF        = 0x01, //已被引用(验证)
-    BS_CONFIRM    = 0x02, //已确认(已被验证且被确认)
-    BS_APPLIED    = 0x04  //已应用(已被验证且被确认、无冲突)
+    BS_NONE = 0x00,    //未被引用
+    BS_REF = 0x01,     //已被引用(验证)
+    BS_CONFIRM = 0x02, //已确认(已被验证且被确认)
+    BS_APPLIED = 0x04  //已应用(已被验证且被确认、无冲突)
 };
 
 struct OutputStruct
@@ -63,45 +63,43 @@ class Block
 
     Block(bytes byts);
     Block(bytesConstRef byts);
-    
+
     BlockHeader m_blockHeader;
 
-    
     std::vector<OutputStruct> m_outputs;
     std::vector<BlockLinkStruct> m_links;
 
     bytes m_payload;
-    
+
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
-    BlockType   type;
+    BlockType type;
     BlockStatus status;
 
     Address m_sender;
 
     // the block is either main block or transaction block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
-    BlockType getType(){return type;}
-   
+    BlockType getType() { return type; }
+
     h256 getHash();
 
     void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
 
-    h256 sha3(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
     void sign(Secret const &_priv, RLPStream &_s); ///< Sign the block.
 
-
-    bytes encode();
+    bytes encode(); //block rlp value
 
     void decode(bytes byts);
-    void decodeBlockWithoutRSV(RLP rlp);
-// 
-private:
+    
+  private:
+    
     mutable h256 m_hash;
     bytes m_rlpData;
-
-static bool isZeroSignature(u256 const& _r, u256 const& _s) { return !_r && !_s; }
+    void decodeBlockWithoutRSV(RLP rlp);
+    h256 sha3(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
+    static bool isZeroSignature(u256 const &_r, u256 const &_s) { return !_r && !_s; }
 };
 
 using BlockRef = std::shared_ptr<Block>;

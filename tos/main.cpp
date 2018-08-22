@@ -284,43 +284,24 @@ void testBlock()
     block.m_payload = bytes(5, 1);
     RLPStream _s;
     block.streamRLP(_s);
-//     Secret sec(_s.out());
 
-// cnote << "Secret  " << sec;
     Secret sec1("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
-    cnote << "Secret **  " << sec1;
     block.sign(sec1, _s);
     bytes bs = block.encode();
-    cnote << "encode \n"
-          << toHex(bs);
-    // cnote << "encode \n"
-    //       << RLP(bs);
-    Block encodeBlock(bs);
+
+    //decode rlp to block
+    Block decodeBlock(bs);
     // RLP contentRLP(bs);
     // cnote << "decode \n" << contentRLP;
 
-    cnote << "block getHash \n" << block.getHash().hex();
+    // cnote << "block getHash \n" << block.getHash().hex();
 
-    cnote << "encodeBlock getHash \n" << encodeBlock.getHash().hex();
+    // cnote << "encodeBlock getHash \n" << encodeBlock.getHash().hex();
 }
 
 void setupSdag()
 {
     testBlock();
-
-
-
-// dev::sdag::BlockHeader blockHeader(10, 100, 1000);
-// RLPStream stream ;
-// blockHeader.encode(stream);
-// cnote << "sdag header rlp " << toHex(stream.out());
-// dev::sdag::BlockHeader blockHeader11(100, 1000);
-// RLPStream stream1 ; 
-// blockHeader11.encode(stream1);
-// cnote << "sdag new header rlp " << toHex(stream1.out());
-
-// dev::sdag::BlockHeader blockHeader1(stream);
-// dev::sdag::BlockHeader blockHeader2(stream1);
 
 }
 

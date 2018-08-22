@@ -44,7 +44,7 @@ BlockHeader::BlockHeader(RLPStream stream)
     RLP rlp(stream.out());
     m_version = rlp[0].toInt<u256>();
     m_type = rlp[1].toInt<u256>();
-    m_time = rlp[2].toInt<u256>();
+    m_time = rlp[2].toPositiveInt64();
     m_gasPrice = rlp[3].toInt<u256>();
     m_gasLimit = rlp[4].toInt<u256>();
     printBlockHeader();
@@ -56,7 +56,7 @@ BlockHeader::BlockHeader(RLP rlp)
     // RLP const rlp(bs);
     m_version = rlp[0].toInt<u256>();
     m_type = rlp[1].toInt<u256>();
-    m_time = rlp[2].toInt<u256>();
+    m_time = rlp[2].toPositiveInt64();
     m_gasPrice = rlp[3].toInt<u256>();
     m_gasLimit = rlp[4].toInt<u256>();
     printBlockHeader();
@@ -69,7 +69,7 @@ void BlockHeader::encode(RLPStream &stream)
   //%cc0186016db591526b648203e8
     // RLPStream stream;
     stream.appendList(5);
-    stream<<m_version<<m_type<<m_time<<m_gasPrice<<m_gasLimit;
+    stream<<m_version<<m_type<<bigint(m_time)<<m_gasPrice<<m_gasLimit;
     // return stream;
 }
 
