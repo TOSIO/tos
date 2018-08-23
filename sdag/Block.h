@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string>
+
 #include <toscore/common/Common.h>
 #include <toscore/common/Address.h>
 #include <boost/optional.hpp>
@@ -9,11 +10,13 @@
 #include <toscrypto/Common.h>
 #include <toscore/utils/RLP.h>
 #include <toscore/crypto/SHA3.h>
+#include "POW.h"
 // #include "Transaction.h"
 namespace dev
 {
 namespace sdag
 {
+
 
 enum IncludeSignature
 {
@@ -55,6 +58,8 @@ struct BlockLinkStruct
     u256 gasUsed;
     // Block block;
 };
+class Block;
+using BlockRef = std::shared_ptr<Block>;
 
 class Block
 {
@@ -74,8 +79,12 @@ class Block
     boost::optional<SignatureStruct> m_vrs;
     u256 m_nonce;
 
+
+    //local var
     BlockType   m_type;
     BlockStatus m_status;
+    sdag_diff_t m_sumDifficulty;
+    BlockRef    refMainBlock;
 
     // the block is either main block or transaction block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
@@ -120,8 +129,6 @@ class Block
 
     Address const &sender();
 };
-
-using BlockRef = std::shared_ptr<Block>;
 
 } // namespace sdag
 } // namespace dev
