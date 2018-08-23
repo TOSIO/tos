@@ -298,7 +298,7 @@ void testBlock()
 
     cnote << "encodeBlock getHash \n" << decodeBlock.getHash().hex();
 
-    cnote << "encodeBlock get address \n" << decodeBlock.from().hex();
+    cnote << "encodeBlock get address \n" << decodeBlock.from().hex()   << " *****  " << decodeBlock.getGasPrice();
 
 
 }
