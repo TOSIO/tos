@@ -77,8 +77,6 @@ class Block
     BlockType   m_type;
     BlockStatus m_status;
 
-    Address m_sender;
-
     // the block is either main block or transaction block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
     BlockType getType(){return m_type;}
@@ -87,21 +85,40 @@ class Block
     
     h256 getHash();
 
-    void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
+    void streamRLP(RLPStream &_s, IncludeSignature _sig = WithSignature);
 
-    void sign(Secret const &_priv, RLPStream &_s); ///< Sign the block.
+    void sign(Secret const &_priv); ///< Sign the block.
 
     bytes encode(); //block rlp value
 
     void decode(bytes byts);
-    
+
+    /// Synonym for safeSender().
+    Address from() { return safeSender(); }
+
+    u256 getGasPrice() { return m_blockHeader.getGasPrice(); }
+    u256 getGasLimit() { return m_blockHeader.getGasLimit(); }
+
   private:
-    
+    mutable Address m_sender;
+    RLPStream m_unSignStream;
     mutable h256 m_hash;
     bytes m_rlpData;
     void decodeBlockWithoutRSV(RLP rlp);
-    h256 sha3(RLPStream &_s, IncludeSignature _sig = WithSignature) const;
+    h256 sha3(IncludeSignature _sig = WithSignature);
+
     static bool isZeroSignature(u256 const &_r, u256 const &_s) { return !_r && !_s; }
+    /// @returns true if the transaction was signed
+    bool hasSignature() const { return m_vrs.is_initialized(); }
+
+    /// @returns true if the transaction was signed with zero signature
+    bool hasZeroSignature() const { return m_vrs && isZeroSignature(m_vrs->r, m_vrs->s); }
+
+    RLPStream getStreamWithoutRSV();
+
+    Address const &safeSender();
+
+    Address const &sender();
 };
 
 using BlockRef = std::shared_ptr<Block>;

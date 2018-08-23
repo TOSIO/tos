@@ -21,12 +21,18 @@ Block::Block(bytesConstRef byts)
 	// encode(byts);
 }
 
-void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
+void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) 
 {
+	_s = getStreamWithoutRSV();
+}
+
+RLPStream Block::getStreamWithoutRSV()
+{
+	m_unSignStream.clear();
 	RLPStream headerStream;
 	((BlockHeader)m_blockHeader).encode(headerStream);
-	_s.appendList(4);
-	_s.appendRaw(headerStream.out());
+	m_unSignStream.appendList(4);
+	m_unSignStream.appendRaw(headerStream.out());
 
 	RLPStream outputsStream;
 	outputsStream.appendList(m_outputs.size());
@@ -39,7 +45,7 @@ void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 		outputsStream.appendRaw(outputS.out());
 		outputS.clear();
 	}
-	_s.appendRaw(outputsStream.out());
+	m_unSignStream.appendRaw(outputsStream.out());
 	RLPStream linksStream;
 	linksStream.appendList(m_links.size());
 	for (unsigned int i = 0; i < m_links.size(); i++)
@@ -47,21 +53,20 @@ void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) const
 		BlockLinkStruct link = m_links[i];
 		RLPStream linkS;
 		linkS.appendList(2);
-		// RLPStream linkBlockStream;
-		// link.block.streamRLP(linkBlockStream);
-		// linksStream.appendRaw(linkBlockStream.out());
+
 		linkS << link.blockHash << link.gasUsed;
 		linksStream.appendRaw(linkS.out());
 		linkS.clear();
 	}
-	_s.appendRaw(linksStream.out());
-	_s << m_payload;
+	m_unSignStream.appendRaw(linksStream.out());
+	m_unSignStream << m_payload;
+	return m_unSignStream;
 }
 
-void Block::sign(Secret const &_priv, RLPStream &_s)
+void Block::sign(Secret const &_priv)
 {
-	cnote <<  "block  Secret ****   " << _priv;
- 	auto sig = dev::sign(_priv, sha3(_s, WithSignature));
+	cnote << "block  Secret ****   " << _priv;
+	auto sig = dev::sign(_priv, sha3(WithSignature));
 
 	cnote << "block  ****  " << sig.hex();
 
@@ -69,15 +74,15 @@ void Block::sign(Secret const &_priv, RLPStream &_s)
 	if (sigStruct.isValid())
 		m_vrs = sigStruct;
 
-	cnote << m_vrs->v << "   " << (u256)m_vrs->r  << "  " << (u256)m_vrs->s;
+	cnote << m_vrs->v << "   " << (u256)m_vrs->r << "  " << (u256)m_vrs->s;
 }
 
-h256 Block::sha3(RLPStream &_s, IncludeSignature _sig) const
+h256 Block::sha3(IncludeSignature _sig) 
 {
 	// if (_sig == WithSignature && m_hash)
 	// 	return m_hash;
-	cnote << "block  ^^^^^  " <<_s.out();
-	auto ret = dev::sha3(_s.out());
+	cnote << "block  ^^^^^  " << m_unSignStream.out();
+	auto ret = dev::sha3(m_unSignStream.out());
 	// if (_sig == WithSignature)
 	// 	m_hash = ret;
 	return ret;
@@ -97,21 +102,21 @@ bytes Block ::encode()
 	return m_rlpData;
 }
 
+h256 Block ::getHash()
+{
+	if (!m_hash)
+	{
 
- h256 Block ::getHash()
- {
-	 if(!m_hash){
-
-		 if(m_rlpData.empty()){
+		if (m_rlpData.empty())
+		{
 			encode();
-		 }
-		m_hash =  dev::sha3(m_rlpData);
+		}
+		m_hash = dev::sha3(m_rlpData);
 
 		cnote << "m_rlpData hash value " << m_hash.hex();
-	 }
-	 return m_hash;
- }
-
+	}
+	return m_hash;
+}
 
 void Block ::decodeBlockWithoutRSV(RLP rlp)
 {
@@ -152,8 +157,6 @@ void Block ::decodeBlockWithoutRSV(RLP rlp)
 		}
 	}
 	m_payload = rlp[3].toBytes();
-
-
 }
 
 void Block ::decode(bytes byts)
@@ -174,4 +177,40 @@ void Block ::decode(bytes byts)
 	m_vrs = SignatureStruct{r, s, static_cast<byte>(v)};
 
 	m_nonce = rlp[4].toInt<u256>();
+}
+
+Address const &Block::safeSender()
+{
+	try
+	{
+		return sender();
+	}
+	catch (...)
+	{
+		return ZeroAddress;
+	}
+}
+
+Address const &Block::sender()
+{
+	if (!m_sender)
+	{
+		if (hasZeroSignature())
+			m_sender = MaxAddress;
+		else
+		{
+			if (!m_vrs){
+				cnote << "BOOST_THROW_EXCEPTION block IsUnsigned";
+			}
+				//  BOOST_THROW_EXCEPTION(TransactionIsUnsigned());
+
+			auto p = recover(*m_vrs, sha3(WithSignature));
+			if (!p){
+				cnote << "BOOST_THROW_EXCEPTION block InvalidSignature";
+			}
+				// BOOST_THROW_EXCEPTION(InvalidSignature());
+			m_sender = right160(dev::sha3(bytesConstRef(p.data(), sizeof(p))));
+		}
+	}
+	return m_sender;
 }

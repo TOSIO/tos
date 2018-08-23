@@ -287,7 +287,7 @@ void testBlock()
     block.streamRLP(_s);
 
     Secret sec1("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
-    block.sign(sec1, _s);
+    block.sign(sec1);
     bytes bs = block.encode();
 
     //decode rlp to block
@@ -297,7 +297,11 @@ void testBlock()
 
     // cnote << "block getHash \n" << block.getHash().hex();
 
-    // cnote << "encodeBlock getHash \n" << encodeBlock.getHash().hex();
+    cnote << "encodeBlock getHash \n" << decodeBlock.getHash().hex();
+
+    cnote << "encodeBlock get address \n" << decodeBlock.from().hex()   << " *****  " << decodeBlock.getGasPrice();
+
+
 }
 
 void setupSdag()
