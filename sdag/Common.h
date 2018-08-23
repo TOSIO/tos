@@ -8,6 +8,6 @@ namespace dev
 namespace sdag
 { 
 
-u256 get_timestamp();
+int64_t get_timestamp();
 } // namespace sdag
 } // namespace dev
