@@ -1,5 +1,8 @@
+#pragma once
 #include <toscore/common/Common.h>
 #include <toscore/crypto/FixedHash.h>
+using namespace dev; 
+
 
 using sdag_diff_t = u128;
 
