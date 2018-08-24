@@ -26,9 +26,9 @@ enum IncludeSignature
 
 enum BlockType
 {
+    BT_MINER = 0x00,
     BT_MAIN = 0x01,
-    BT_MINER = 0x02,
-    BT_TRANSACTION = 0x03
+    BT_TRANSACTION = 0x02
 };
 
 enum BlockStatus
@@ -90,7 +90,7 @@ class Block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }
     BlockType getType(){return m_type;}
     
-    int64_t getTime(){return m_blockHeader.m_time;}
+    // int64_t getTime(){return m_blockHeader.m_time;}
     
     h256 getHash();
 
@@ -107,7 +107,7 @@ class Block
 
     u256 getGasPrice() { return m_blockHeader.getGasPrice(); }
     u256 getGasLimit() { return m_blockHeader.getGasLimit(); }
-
+    int64_t getTime() { return m_blockHeader.getTime(); }
   private:
     mutable Address m_sender;
     RLPStream m_unSignStream;
@@ -128,6 +128,9 @@ class Block
     Address const &safeSender();
 
     Address const &sender();
+
+    bool isLinksVilidate();
+
 };
 
 } // namespace sdag
