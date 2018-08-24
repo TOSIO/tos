@@ -13,3 +13,8 @@ inline sdag_diff_t calculateWork(h256 hash)
     res >>= 32;
     return max / res;
 }
+
+inline uint sdagHeight()
+{
+    return 0;
+}

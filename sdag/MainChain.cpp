@@ -75,21 +75,28 @@ void MainChain::addMinerBlock(Block &block)
 
 void MainChain::recursionCheck(Block &block,Block &confirmBlock)
 {
-    if(block.status==BS_REF||//如果区块未被确认或者
+    if(block.status&BS_REF||//如果区块未被确认或者
         (//确认它的主块现在成了挖矿区块
-            (block.status==BS_CONFIRM||block.status==BS_APPLIED)&&
-            block.refMainBlock->type==BT_MINER
+            (block.status&BS_CONFIRM||block.status&BS_APPLIED)&&getBlockFromPool(block.refMainBlock)&&
+            getBlockFromPool(block.refMainBlock)->type==BT_MINER
         )
     )
     {
-        cnote<<"recursionCheck confirming"<<"block hash:"<<block.getHash();
-        block.status = BS_CONFIRM;
-        block.refMainBlock.reset(&confirmBlock);
-        //addToMPT();
-
         for(auto blockLinkStruct:block.m_links)
         {
             recursionCheck(*getBlockFromPool(blockLinkStruct.blockHash),block.type==BT_MAIN?block:confirmBlock);
+        }
+
+        cnote<<"recursionCheck confirming"<<"block hash:"<<block.getHash();
+        block.status = BS_CONFIRM;
+        block.refMainBlock = confirmBlock.getHash();
+
+        //addToMPT();
+        //sdagHeight();
+
+        if(block.type==BT_MAIN)
+        {
+            //addCommit();
         }
     }
     else if(block.status==BS_NONE)
@@ -104,9 +111,11 @@ void MainChain::recursionCheck(Block &block,Block &confirmBlock)
 void MainChain::check()
 {
     BlockRef pCurrentBlock = pre_main_chain;
+    BlockRef pBeforBlock = pre_main_chain;
     for(int i = 0;i<CONFIRM_NEED_VERIFY_BLOCK_NUM;++i)
     {
+        pBeforBlock = pCurrentBlock;
         pCurrentBlock = getMaxDifficultyBlock(*pCurrentBlock);
     }
-    recursionCheck(*pCurrentBlock,*pre_main_chain);
+    recursionCheck(*pCurrentBlock,*pBeforBlock);
 }

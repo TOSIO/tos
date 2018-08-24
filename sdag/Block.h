@@ -84,7 +84,7 @@ class Block
     BlockType   type;
     BlockStatus status;
     sdag_diff_t m_sumDifficulty;
-    BlockRef    refMainBlock;
+    h256        refMainBlock;
 
     // the block is either main block or transaction block
     //bool isMain(){ return m_outputs.emppty() && m_playload.empty(); }

@@ -116,6 +116,7 @@ add_subdirectory(baseservice/libethcore)
 
 add_subdirectory(sdag)
 add_subdirectory(toscrypto)
+#add_subdirectory(baseservice/state)
 
 #tvm configure begin
 option(TVM_USE  "build libevm" OFF )
