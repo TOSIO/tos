@@ -10,6 +10,7 @@
 #include <toscore/utils/args_manager.h>
 #include <baseservice/transport/net.h>
 #include <baseservice/transport/netbase.h>
+#include <baseservice/transport/nodemsg_handler.h>
 #include <scheduler.h>
 #include <thread>
 //  #include <boost/program_options/options_description.hpp>
@@ -19,7 +20,7 @@
 // #include <sdag/BlockHeader.h>
 #include <sdag/Block.h>
 using namespace dev::sdag;
-class NodeMessageHandler : public NetEventsInterface
+/* class NodeMessageHandler : public NetEventsInterface
 {
 public:
     virtual bool ProcessMessages(CNode* pnode, std::atomic<bool>& interrupt) override
@@ -43,8 +44,8 @@ public:
         return ;
     }
 
-};
-
+}; */
+ 
 
 namespace po = boost::program_options;
 using dev::LoggingOptions;
@@ -284,44 +285,21 @@ void testBlock()
     block.m_payload = bytes(5, 1);
     RLPStream _s;
     block.streamRLP(_s);
-    // cnote << "Secret string is" << toHex(_s.out());
-//     RLP rlp(_s.out());
-// // h256(_s.out()).toString();
 
-// cnote << "tos rlp : \n" << rlp;
-
-// // RLPStream stream;
-// // stream.appendList(2);
-// // stream << "123" << "123";
-
-// // RLP rlpETH(stream.out());
-// // cnote << "eth rlp : \n" << rlpETH;
-// // cnote << "eth rlp toHash<h256> \n"
-// //           << rlpETH.toHash<h256>();
-
-// const std::string  str = toHex(_s.out());
-//     cnote << "******\n" << str  << "\n" << h256(str) << "\n" << h256(_s.out());
-//     cnote << "rlp.toHash<h256>() \n"
-//           << rlp.toHash<h256>();
-
-
-    // Secret sec = Secret(rlp.toHash<h256>());
-
-    Secret sec("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
-    block.sign(sec, _s);
+    Secret sec1("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291");
+    block.sign(sec1);
     bytes bs = block.encode();
-    cnote << "encode \n"
-          << bs << "\n" << toHex(bs);
-cnote << "encode \n"
-          << RLP(bs);
-    Block encodeBlock(bs);
 
+    //decode rlp to block
+    Block decodeBlock(bs);
+    // RLP contentRLP(bs);
+    // cnote << "decode \n" << contentRLP;
 
+    // cnote << "block getHash \n" << block.getHash().hex();
 
+    cnote << "encodeBlock getHash \n" << decodeBlock.getHash().hex();
 
-
-    RLP contentRLP(bs);
-    cnote << "decode \n" << contentRLP;
+    cnote << "encodeBlock get address \n" << decodeBlock.from().hex()   << " *****  " << decodeBlock.getGasPrice();
 
 
 }
@@ -329,20 +307,6 @@ cnote << "encode \n"
 void setupSdag()
 {
     testBlock();
-
-
-
-// dev::sdag::BlockHeader blockHeader(10, 100, 1000);
-// RLPStream stream ;
-// blockHeader.encode(stream);
-// cnote << "sdag header rlp " << toHex(stream.out());
-// dev::sdag::BlockHeader blockHeader11(100, 1000);
-// RLPStream stream1 ; 
-// blockHeader11.encode(stream1);
-// cnote << "sdag new header rlp " << toHex(stream1.out());
-
-// dev::sdag::BlockHeader blockHeader1(stream);
-// dev::sdag::BlockHeader blockHeader2(stream1);
 
 }
 

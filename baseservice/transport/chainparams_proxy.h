@@ -1,5 +1,6 @@
 #pragma once
 #include "protocol.h"
+#include <deps/consensus/params.h>
 #include <memory>
 
 struct SeedSpec6 {
@@ -21,11 +22,11 @@ namespace tos
             _msgStart[0] = 0xd9;
             //_seeds.emplace_back("192.168.1.31");
         }
-    /*     const Consensus::Params& GetConsensus() const 
+        const Consensus::Params& GetConsensus() const 
         { 
-
-            return consensus; 
-        } */
+            static Consensus::Params params;
+            return params; 
+        }
         const CMessageHeader::MessageStartChars& MessageStart() const 
         { 
             return _msgStart; 

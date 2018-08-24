@@ -21,6 +21,8 @@
 #include <deps/sync.h>
 #include <deps/uint256.h>
 #include <deps/threadinterrupt.h>
+#include <deps/bloomfilter.h>
+
 //#include <toscore/crypto/Hash.h>
 #include <deps/hash.h>
 
@@ -475,7 +477,9 @@ private:
     //ArgsProxy* _argsProxy;
     //ChainParamsProxy* _paramsProxy;
 };
-extern std::unique_ptr<CConnman> g_connman;
+//extern std::unique_ptr<CConnman> g_connman;
+using CConnmanRef = std::shared_ptr<CConnman>;
+
 void Discover(boost::thread_group& threadGroup);
 void MapPort(bool fUseUPnP);
 unsigned short GetListenPort();
@@ -707,7 +711,7 @@ public:
 
     // flood relay
     std::vector<CAddress> vAddrToSend;
-    //CRollingBloomFilter addrKnown;
+    CRollingBloomFilter addrKnown;
     bool fGetAddr;
     std::set<uint256> setKnown;
     int64_t nNextAddrSend;

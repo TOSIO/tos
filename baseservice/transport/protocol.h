@@ -42,18 +42,18 @@ public:
     std::string GetCommand() const;
     bool IsValid(const MessageStartChars& messageStart) const;
 
-    //ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS;
 
-/*     template <typename Stream, typename Operation>
+    template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
         READWRITE(FLATDATA(pchMessageStart));
         READWRITE(FLATDATA(pchCommand));
         READWRITE(nMessageSize);
         READWRITE(FLATDATA(pchChecksum));
-    } */
+    }
 
-    void Serialize(DataStream& stream)
+/*     void Serialize(DataStream& stream)
     {
 
     }
@@ -61,8 +61,8 @@ public:
      void UnSerialize(bytesConstRef in,int type, int version)
      {
 
-     }
-     
+     } */
+
     char pchMessageStart[MESSAGE_START_SIZE];
     char pchCommand[COMMAND_SIZE];
     uint32_t nMessageSize;
