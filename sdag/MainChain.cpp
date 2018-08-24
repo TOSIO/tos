@@ -51,7 +51,7 @@ void MainChain::addMinerBlock(Block &block)
         {
             //已分叉
             BlockRef forkBegin(&block);
-            while(forkBegin->type != BT_MAIN)
+            while(forkBegin->m_type != BT_MAIN)
             {
                 forkBegin = getMaxDifficultyBlock(*forkBegin);
             }
@@ -59,47 +59,47 @@ void MainChain::addMinerBlock(Block &block)
             BlockRef p2(pre_main_chain);
             while(p1!=forkBegin)
             {
-                p1->type = BT_MAIN;
+                p1->m_type = BT_MAIN;
                 p1 = getMaxDifficultyBlock(*p1);
             }
             while(p2!=forkBegin)
             {
-                p2->type = BT_MINER;
+                p2->m_type = BT_MINER;
                 p1 = getMaxDifficultyBlock(*p2);
             }
         }
-        block.type = BT_MAIN;
+        block.m_type = BT_MAIN;
         pre_main_chain.reset(&block);
     }
 }
 
 void MainChain::recursionCheck(Block &block,Block &confirmBlock)
 {
-    if(block.status&BS_REF||//如果区块未被确认或者
+    if(block.m_status&BS_REF||//如果区块未被确认或者
         (//确认它的主块现在成了挖矿区块
-            (block.status&BS_CONFIRM||block.status&BS_APPLIED)&&getBlockFromPool(block.refMainBlock)&&
-            getBlockFromPool(block.refMainBlock)->type==BT_MINER
+            (block.m_status&BS_CONFIRM||block.m_status&BS_APPLIED)&&getBlockFromPool(block.m_refMainBlock)&&
+            getBlockFromPool(block.m_refMainBlock)->m_type==BT_MINER
         )
     )
     {
         for(auto blockLinkStruct:block.m_links)
         {
-            recursionCheck(*getBlockFromPool(blockLinkStruct.blockHash),block.type==BT_MAIN?block:confirmBlock);
+            recursionCheck(*getBlockFromPool(blockLinkStruct.blockHash),block.m_type==BT_MAIN?block:confirmBlock);
         }
 
         cnote<<"recursionCheck confirming"<<"block hash:"<<block.getHash();
-        block.status = BS_CONFIRM;
-        block.refMainBlock = confirmBlock.getHash();
+        block.m_status = BS_CONFIRM;
+        block.m_refMainBlock = confirmBlock.getHash();
 
         //addToMPT();
         //sdagHeight();
 
-        if(block.type==BT_MAIN)
+        if(block.m_type==BT_MAIN)
         {
             //addCommit();
         }
     }
-    else if(block.status==BS_NONE)
+    else if(block.m_status==BS_NONE)
     {
         cerror<<"error:recursionCheck block status==BS_NONE"<<"block hash:"<<block.getHash();
     }

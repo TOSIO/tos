@@ -214,3 +214,26 @@ Address const &Block::sender()
 	}
 	return m_sender;
 }
+
+
+
+bool Block::isLinksVilidate()
+{
+
+	int64_t blockTime = getTime();
+
+	for (unsigned int i = 0; i < m_links.size(); i++)
+	{
+		BlockLinkStruct link = m_links[i];
+		h256 blockHash = link.blockHash;
+		cnote << blockHash << blockTime;
+		// Block
+
+
+	}
+	
+
+
+	return true;
+}
+
