@@ -25,6 +25,8 @@ class BlockHeader
 
     u256 getGasPrice(){ return m_gasPrice; }
     u256 getGasLimit(){ return m_gasLimit; }
+    int64_t getTime(){ return m_time; }
+    
   private:
     u256 m_version;
     u256 m_type; //

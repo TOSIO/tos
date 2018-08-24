@@ -10,7 +10,9 @@ class MainChain {
     MainChain(BlockMemPool* pool):m_pool(pool){}
     void check();
     void addMinerBlock(Block &b);
-
+    
+    //return the last main block of the current active main chain
+    BlockRef tip(){ return pre_main_chain; }
 
 
     private:
