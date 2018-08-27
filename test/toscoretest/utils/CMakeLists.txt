@@ -1,6 +1,7 @@
-PROJECT(crypto_test)
+PROJECT(utils_test)
 # set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 
 # set(Boost_USE_STATIC_LIBS ON)
 # set(Boost_USE_MULTITHREADED ON)
@@ -9,12 +10,12 @@ PROJECT(crypto_test)
 # FILE(GLOB SOURCE "../../toscore/crypto/Base64.cpp")
 SET(SRC_LIST
             ./ReadJsonTest.cpp
-            ./ArgManagerTest.cpp
-            ./Concurrent_queue_Test.cpp
-            ./FileSystem.cpp
-            ./JsonUtilTest.cpp
-            ./RangeMaskTest.cpp
-            ./RLPTest.cpp
+            # ./ArgManagerTest.cpp
+            # ./Concurrent_queue_Test.cpp
+            # ./FileSystemTest.cpp
+            # ./JsonUtilTest.cpp
+            # # RangeMaskTest.cpp
+            # ./RLPTest.cpp
         )
 
 #INCLUDE_DIRECTORIES("../../baseservice/transport/")
@@ -36,9 +37,9 @@ INCLUDE_DIRECTORIES("../../toscore")
 add_compile_options(-Wno-unused-parameter)
 #link_libraries("libsecp256k1.a")
 
-ADD_EXECUTABLE(crypto_test ${SRC_LIST} )
+ADD_EXECUTABLE(utiltest ${SRC_LIST} )
 # include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(crypto_test PUBLIC toscore Boost::system Boost::filesystem  Boost::log  Boost::unit_test_framework Boost::program_options Secp256k1)
+target_link_libraries(utiltest PUBLIC toscore Boost::system Boost::filesystem  Boost::log  Boost::unit_test_framework Boost::program_options Secp256k1 )
 
-# set_target_properties(crypto_test PROPERTIES LINKER_LANGUAGE CXX)
+# set_target_properties(utils_test PROPERTIES LINKER_LANGUAGE CXX)
 
