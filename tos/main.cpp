@@ -205,7 +205,7 @@ void setupP2P()
         printf("Trace | main setupP2P bind : %s\n",bind.c_str());
         CService addrBind;
         if (!Lookup(bind.c_str(), addrBind, GetListenPort(), false)) {
-            printf("Trace | Lookup bind failed.\n");
+              printf("Trace | Lookup bind failed.\n");
             return ;
             //return InitError(ResolveErrMsg("bind", strBind));
         }
