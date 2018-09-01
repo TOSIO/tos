@@ -1,4 +1,3 @@
-#define BOOST_TEST_MODULE maintest
 
 #include <stdio.h>
 #include <string>
@@ -95,9 +94,8 @@ root.appendRaw(stream1.out());
     }
 };
 
-BOOST_FIXTURE_TEST_SUITE(RlpTests, TestHelperFixture)
 
-BOOST_FIXTURE_TEST_CASE(runRlpTest, TestHelperFixture)
+BOOST_AUTO_TEST_CASE(runRlpTest)
 {
     TestRLP test;
     test.runRlpTest();
@@ -105,4 +103,3 @@ BOOST_FIXTURE_TEST_CASE(runRlpTest, TestHelperFixture)
 
 
 
-BOOST_AUTO_TEST_SUITE_END()

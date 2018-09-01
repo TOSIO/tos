@@ -21,7 +21,7 @@ Block::Block(bytesConstRef byts)
 	// encode(byts);
 }
 
-void Block::streamRLP(RLPStream &_s, IncludeSignature _sig) 
+void Block::streamRLP(RLPStream &_s, IncludeSignature _sig)
 {
 	_s = getStreamWithoutRSV();
 }
@@ -77,7 +77,7 @@ void Block::sign(Secret const &_priv)
 	cnote << m_vrs->v << "   " << (u256)m_vrs->r << "  " << (u256)m_vrs->s;
 }
 
-h256 Block::sha3(IncludeSignature _sig) 
+h256 Block::sha3(IncludeSignature _sig)
 {
 	// if (_sig == WithSignature && m_hash)
 	// 	return m_hash;
@@ -167,7 +167,7 @@ void Block ::decode(bytes byts)
 	{
 		cerror << "NOT INVILATE DATA";
 		return;
-	}
+	}m_vrs
 	decodeBlockWithoutRSV(rlp[0]);
 
 	int const v = rlp[1].toInt<int>();
@@ -208,7 +208,7 @@ Address const &Block::sender()
 			if (!p){
 				cnote << "BOOST_THROW_EXCEPTION block InvalidSignature";
 			}
-				// BOOST_THROW_EXCEPTION(InvalidSignature());
+				// BOOST_THROW_EXCEPTION(InvalidSignature());m_vrs
 			m_sender = right160(dev::sha3(bytesConstRef(p.data(), sizeof(p))));
 		}
 	}
@@ -222,18 +222,17 @@ bool Block::isLinksVilidate()
 
 	int64_t blockTime = getTime();
 
+   if(m_links.empty())
+   {
+	   return false;
+   }
 	for (unsigned int i = 0; i < m_links.size(); i++)
 	{
 		BlockLinkStruct link = m_links[i];
 		h256 blockHash = link.blockHash;
 		cnote << blockHash << blockTime;
 		// Block
-
-
 	}
-	
-
-
 	return true;
 }
 
