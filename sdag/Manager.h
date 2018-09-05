@@ -14,7 +14,8 @@ namespace sdag
 class Manager
 {
   public:
-  creatTransaction();
+  BlockRef creatTransaction();
+  addBlock(BlockRef tmpblock);
 };
 
 } // namespace sdag
