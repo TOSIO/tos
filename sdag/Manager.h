@@ -13,9 +13,8 @@ namespace sdag
 {
 class Manager
 {
-
   public:
-
+  creatTransaction();
 };
 
 } // namespace sdag
