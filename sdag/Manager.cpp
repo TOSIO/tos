@@ -15,3 +15,7 @@ void Manager::addBlock(BlockRef block)
 BlockRef Manager::creatTransaction() 
 {
 }
+
+bool Manager::verfyBlock(BlockRef block)
+{
+}
