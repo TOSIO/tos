@@ -15,13 +15,7 @@
 #if !defined(HAVE_THREAD_LOCAL)
 static_assert(false, "thread_local is not supported");
 #endif
-void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
-{
-    LogPrintf("LOCKCONTENTION: %s\n", pszName);
-    LogPrintf("Locker: %s:%d\n", pszFile, nLine);
-    LogPrintf("%s\n", pszName);
-    LogPrintf("Locker: %s", pszFile);
-}
+
 #endif /* DEBUG_LOCKCONTENTION */
 
 #ifdef DEBUG_LOCKORDER
