@@ -54,7 +54,7 @@ CFeeRate GetMinimumFeeRate(const CCoinControl& coin_control, const CTxMemPool& p
     }
     else if (!coin_control.m_confirm_target && ::payTxFee != CFeeRate(0)) { // 3. TODO: remove magic value of 0 for global payTxFee
         feerate_needed = ::payTxFee;
-        if (feeCalc) feeCalc->reason = FeeReason::PAYTXFEE;
+        
     }
     else { // 2. or 4.
         // We will use smart fee estimation
@@ -69,7 +69,7 @@ CFeeRate GetMinimumFeeRate(const CCoinControl& coin_control, const CTxMemPool& p
         if (feerate_needed == CFeeRate(0)) {
             // if we don't have enough data for estimateSmartFee, then use fallbackFee
             feerate_needed = CWallet::fallbackFee;
-            if (feeCalc) feeCalc->reason = FeeReason::FALLBACK;
+            
 
             // directly return if fallback fee is disabled (feerate 0 == disabled)
             if (CWallet::fallbackFee == CFeeRate(0)) return feerate_needed;
