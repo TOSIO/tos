@@ -23,19 +23,7 @@ const unsigned char R1Array[] =
     "\x22\x81\xaa\xb5\x33\xf0\x08\x32\xd5\x56\xb1\xf9\xea\xe5\x1d\x7d";
 const char R1ArrayHex[] = "7D1DE5EAF9B156D53208F033B5AA8122D2d2355d5e12292b121156cfdb4a529c";
 const uint256 R1L = uint256(std::vector<unsigned char>(R1Array,R1Array+32));
-const uint160 R1S = uint160(std::vector<unsigned char>(R1Array,R1Array+20));
-
-const unsigned char R2Array[] =
-    "\x70\x32\x1d\x7c\x47\xa5\x6b\x40\x26\x7e\x0a\xc3\xa6\x9c\xb6\xbf"
-    "\x13\x30\x47\xa3\x19\x2d\xda\x71\x49\x13\x72\xf0\xb4\xca\x81\xd7";
-const uint256 R2L = uint256(std::vector<unsigned char>(R2Array,R2Array+32));
-const uint160 R2S = uint160(std::vector<unsigned char>(R2Array,R2Array+20));
-
-const unsigned char ZeroArray[] =
-    "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-    "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
-const uint256 ZeroL = uint256(std::vector<unsigned char>(ZeroArray,ZeroArray+32));
-const uint160 ZeroS = uint160(std::vector<unsigned char>(ZeroArray,ZeroArray+20));
+const uint160 R1S = uint160(std::vector<unsigned char>(R1Array,R1Array+20))
 
 const unsigned char OneArray[] =
     "\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
