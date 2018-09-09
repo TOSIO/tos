@@ -10,8 +10,8 @@ namespace fs = boost::filesystem;
 
 boost::filesystem::path dev::test::getTestPath()
 {
-    // if (!Options::get().testpath.empty())
-    //     return Options::get().testpath;
+    if (!Options::get().testpath.empty())
+        return Options::get().testpath;
 
     string testPath;
     const char* ptestPath = getenv("ETHEREUM_TEST_PATH");
