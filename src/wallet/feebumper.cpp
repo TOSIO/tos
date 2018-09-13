@@ -233,9 +233,9 @@ Result CommitTransaction(CWallet* wallet, const uint256& txid, CMutableTransacti
 
     // make sure the transaction still has no descendants and hasn't been mined in the meantime
     Result result = PreconditionChecks(wallet, oldWtx, errors);
-    if (result != Result::OK) {
-        return result;
-    }
+//     if (result != Result::OK) {
+//         return result;
+//     }
 
     // commit/broadcast the tx
     CTransactionRef tx = MakeTransactionRef(std::move(mtx));
