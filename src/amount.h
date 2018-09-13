@@ -59,6 +59,12 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(nSatoshisPerK);
     }
+    
+    CAmount GetFeePerK() const { return GetFee(1000); }
+    friend bool operator<(const CFeeRate& a, const CFeeRate& b) { return a.nSatoshisPerK < b.nSatoshisPerK; }
+    friend bool operator>(const CFeeRate& a, const CFeeRate& b) { return a.nSatoshisPerK > b.nSatoshisPerK; }
+    friend bool operator==(const CFeeRate& a, const CFeeRate& b) { return a.nSatoshisPerK == b.nSatoshisPerK; }
+    CFeeRate& operator+=(const CFeeRate& a) { nSatoshisPerK += a.nSatoshisPerK; return *this; }
 };
 
 #endif //  BITCOIN_AMOUNT_H
