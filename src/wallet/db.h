@@ -94,6 +94,7 @@ CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename
  **/
 class CWalletDBWrapper
 {
+    
     friend class CDB;
 public:
     /** Create dummy DB handle */
@@ -174,6 +175,7 @@ protected:
     bool fFlushOnClose;
     CDBEnv *env;
 
+    
 public:
     explicit CDB(CWalletDBWrapper& dbw, const char* pszMode = "r+", bool fFlushOnCloseIn=true);
     ~CDB() { Close(); }
