@@ -22,6 +22,7 @@
 static feebumper::Result PreconditionChecks(const CWallet* wallet, const CWalletTx& wtx, std::vector<std::string>& errors)
 {
     if (wallet->HasWalletSpend(wtx.GetHash())) {
+        errors.clear();
         errors.push_back("Transaction has descendants in the wallet");
         return feebumper::Result::INVALID_PARAMETER;
     }
