@@ -127,13 +127,9 @@ public:
 struct CBlockLocator
 {
     std::vector<uint256> vHave;
-
     CBlockLocator() {}
-
     explicit CBlockLocator(const std::vector<uint256>& vHaveIn) : vHave(vHaveIn) {}
-
     ADD_SERIALIZE_METHODS;
-
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         int nVersion = s.GetVersion();
