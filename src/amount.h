@@ -9,7 +9,7 @@
 #include "serialize.h"
 #include <stdlib.h>
 #include <string>
-
+ 
 /** Amount in satoshis (Can be negative) */
 typedef int64_t CAmount;
 static const CAmount COIN = 100000000;
