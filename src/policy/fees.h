@@ -5,7 +5,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef TOSCHAIN_POLICYESTIMATOR_H
 #define TOSCHAIN_POLICYESTIMATOR_H
-
+   
 #include <amount.h>
 #include <policy/feerate.h>
 #include <uint256.h>
