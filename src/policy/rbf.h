@@ -7,7 +7,7 @@
 #define TOSCHAIN_POLICY_RBF_H
 
 #include <txmempool.h>
-
+   
 static const uint32_t MAX_BIP125_RBF_SEQUENCE = 0xfffffffd;
 
 enum RBFTransactionState {
