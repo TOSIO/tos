@@ -6,7 +6,7 @@
 
 #ifndef TOSCHAIN_POLICY_FEERATE_H
 #define TOSCHAIN_POLICY_FEERATE_H
-
+   
 #include <amount.h>
 #include <serialize.h>
 
