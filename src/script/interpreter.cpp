@@ -50,6 +50,7 @@ bool CastToBool(const valtype& vch)
     return false;
 }
 
+
 /**
  * Script is a stack machine (like Forth) that evaluates a predicate
  * returning a bool indicating valid or not.  There are no loops.
