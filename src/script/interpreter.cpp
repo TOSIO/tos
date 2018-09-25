@@ -21,6 +21,7 @@ inline bool set_success(ScriptError* ret)
 {
     if (ret)
         *ret = SCRIPT_ERR_OK;
+    
     return true;
 }
 
@@ -42,6 +43,7 @@ bool CastToBool(const valtype& vch)
             // Can be negative zero
             if (i == vch.size()-1 && vch[i] == 0x80)
                 return false;
+            
             return true;
         }
     }
