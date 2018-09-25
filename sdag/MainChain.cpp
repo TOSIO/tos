@@ -35,7 +35,9 @@ BlockRef MainChain::getMaxDifficultyBlock(Block &block)
 {
     return m_pool->get(block.m_links[0].blockHash);
 }
+
 #endif
+
 BlockRef MainChain::getBlockFromPool(h256 &hash)
 {
     return m_pool->get(hash);
@@ -117,5 +119,6 @@ void MainChain::check()
         pBeforBlock = pCurrentBlock;
         pCurrentBlock = getMaxDifficultyBlock(*pCurrentBlock);
     }
+    
     recursionCheck(*pCurrentBlock,*pBeforBlock);
 }
