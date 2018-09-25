@@ -207,6 +207,11 @@ inline boost::log::formatting_ostream& operator<<(
     _strm << constValue;
     return _strm;
 }
+    
+BOOST_LOG_INLINE_GLOBAL_LOGGER_CTOR_ARGS(g_debugLogger,
+    boost::log::sources::severity_channel_logger_mt<>,
+    (boost::log::keywords::severity = VerbosityDebug)(boost::log::keywords::channel = "debug"))
+#define cdebug LOG(dev::g_debugLogger::get())    
 
 inline boost::log::formatting_ostream& operator<<(
     boost::log::formatting_ostream& _strm, h256 const& _value)
