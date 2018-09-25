@@ -7,6 +7,7 @@ using namespace dev::sdag;
 
 Block::Block()
 {
+	
 }
 
 Block::Block(bytes byts)
