@@ -45,6 +45,7 @@ RLPStream Block::getStreamWithoutRSV()
 		outputsStream.appendRaw(outputS.out());
 		outputS.clear();
 	}
+	
 	m_unSignStream.appendRaw(outputsStream.out());
 	RLPStream linksStream;
 	linksStream.appendList(m_links.size());
