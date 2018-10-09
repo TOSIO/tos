@@ -96,6 +96,7 @@ bool GenerateAuthCookie(std::string *cookie_out)
     }
     file << cookie;
     file.close();
+    
 
     fs::path filepath = GetAuthCookieFile(false);
     if (!RenameOver(filepath_tmp, filepath)) {
