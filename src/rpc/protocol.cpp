@@ -73,6 +73,7 @@ static fs::path GetAuthCookieFile(bool temp=false)
     if (temp) {
         arg += ".tmp";
     }
+    
     return AbsPathForConfigVal(fs::path(arg));
 }
 
