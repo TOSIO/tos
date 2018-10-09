@@ -108,6 +108,7 @@ public:
         // - varint: key length
         // - byte[]: key
         // The formula below assumes the key is less than 16kB.
+        
         size_estimate += 2 + (slKey.size() > 127) + slKey.size();
         ssKey.clear();
     }
