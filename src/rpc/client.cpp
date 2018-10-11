@@ -217,6 +217,7 @@ UniValue RPCConvertNamedValues(const std::string &strMethod, const std::vector<s
 {
     UniValue params(UniValue::VOBJ);
 
+    
     for (const std::string &s: strParams) {
         size_t pos = s.find('=');
         if (pos == std::string::npos) {
