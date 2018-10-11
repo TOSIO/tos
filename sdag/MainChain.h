@@ -25,7 +25,6 @@ class MainChain {
 
     BlockMemPool* m_pool;
 
-
 };
 }
 }
