@@ -126,6 +126,7 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
     g_connman->GetNodeStats(vstats);
 
     UniValue ret(UniValue::VARR);
+    
 
     for (const CNodeStats& stats : vstats) {
         UniValue obj(UniValue::VOBJ);
@@ -222,6 +223,7 @@ UniValue addnode(const JSONRPCRequest& request)
     {
         CAddress addr;
         g_connman->OpenNetworkConnection(addr, false, nullptr, strNode.c_str(), false, false, true);
+        
         return NullUniValue;
     }
 
