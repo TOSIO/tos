@@ -53,7 +53,6 @@ void BlockStorage::write(Block& block)
     std::unique_ptr<db::WriteBatchFace> blocksWriteBatch = m_blocksDB->createWriteBatch();
     bytes code = block.encode();
     blocksWriteBatch->insert(dev::toSlice(block.getHash()), db::Slice((char*)code.data(),code.size()));
-
     m_blocksDB->commit(std::move(blocksWriteBatch));
 }
 
