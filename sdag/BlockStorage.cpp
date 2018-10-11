@@ -34,6 +34,7 @@ db::Slice dev::toSlice(uint64_t _n, unsigned _sub)
     static boost::thread_specific_ptr<FixedHash<33>> t_h;
     if (!t_h.get())
         t_h.reset(new FixedHash<33>);
+    
     bytesRef ref(t_h->data() + 24, 8);
     toBigEndian(_n, ref);
     (*t_h)[32] = (uint8_t)_sub;
