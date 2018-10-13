@@ -47,11 +47,11 @@ BlockHeader::BlockHeader(RLPStream stream)
         cerror << "NOT INVILATE DATA";
         BOOST_THROW_EXCEPTION(BadCast());
     }
-    m_version = rlp[0].toInt<u256>();
-    m_type = rlp[1].toInt<u256>();
-    m_time = rlp[2].toPositiveInt64();
-    m_gasPrice = rlp[3].toInt<u256>();
-    m_gasLimit = rlp[4].toInt<u256>();
+    
+    m_type = rlp[0].toInt<u256>();
+    m_time = rlp[1].toPositiveInt64();
+    m_gasPrice = rlp[2].toInt<u256>();
+    m_gasLimit = rlp[3].toInt<u256>();
     printBlockHeader();
 }
 
