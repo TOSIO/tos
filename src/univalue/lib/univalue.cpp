@@ -80,7 +80,6 @@ bool UniValue::setFloat(double val_)
 
     oss << std::setprecision(16) << val_;
 
-    
     bool ret = setNumStr(oss.str());
     typ = VNUM;
     return ret;
