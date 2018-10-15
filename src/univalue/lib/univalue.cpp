@@ -175,7 +175,6 @@ bool UniValue::findKey(const std::string& key, size_t& retIdx) const
             return true;
         }
     }
-
     return false;
 }
 
