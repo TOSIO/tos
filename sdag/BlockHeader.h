@@ -28,7 +28,7 @@ class BlockHeader
     int64_t getTime(){ return m_time; }
     
   private:
-    u256 m_type; //
+    u256 m_type; 
     int64_t m_time; //current time
     u256 m_gasPrice;
     u256 m_gasLimit;
