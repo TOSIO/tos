@@ -13,3 +13,4 @@
 void memory_cleanse(void *ptr, size_t len);
 
 #endif // TOSCHAIN_SUPPORT_CLEANSE_H
+
