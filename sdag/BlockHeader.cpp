@@ -70,7 +70,6 @@ BlockHeader::BlockHeader(RLP rlp)
 
 }
 
-
 void BlockHeader::encode(RLPStream &stream)
 {
     stream.appendList(4);
