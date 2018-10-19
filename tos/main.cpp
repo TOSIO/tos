@@ -109,6 +109,7 @@ int main(int argc, char const *argv[])
 
     addNetworkingOption("connect,C", po::value<std::vector<std::string> >(), //"<host>(:<port>)"
         "Connect to the given remote host (default: none)");
+    
 
     addNetworkingOption("seeds,S", po::value<std::vector<std::string> >(), //"<host>(:<port>)"
         "Connect to the given DNS seed (default: none)");
