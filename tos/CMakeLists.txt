@@ -20,7 +20,7 @@ project(tos)
 # ENDIF()
 
 # include_directories(${Boost_INCLUDE_DIRS})
-# LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 include_directories("../toscore")
 include_directories("../sdag")
 include_directories("../baseservice/transport")
