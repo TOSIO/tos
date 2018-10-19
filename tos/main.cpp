@@ -67,6 +67,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
     return os;
 }
  */
+
 int main(int argc, char const *argv[])
 {
     //init log
