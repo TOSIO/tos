@@ -18,8 +18,7 @@ Block::Block(bytes byts)
 
 Block::Block(bytesConstRef byts)
 {
-
-	// encode(byts);
+	encode(byts);
 }
 
 void Block::streamRLP(RLPStream &_s, IncludeSignature _sig)
