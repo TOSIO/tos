@@ -27,7 +27,6 @@ BlockHeader::BlockHeader(u256 const &gasPrice, u256 const &gasLimit){
     printBlockHeader();
 }
 
-
 BlockHeader::BlockHeader(u256 const &type, u256 const &gasPrice, u256 const &gasLimit)
 {
     m_version = 1;
