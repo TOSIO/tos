@@ -12,7 +12,6 @@ Block::Block()
 
 Block::Block(bytes byts)
 {
-
 	decode(byts);
 }
 
