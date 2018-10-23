@@ -7,7 +7,8 @@ namespace dev
 {
 namespace sdag
 { 
-
+  
 int64_t get_timestamp();
+  
 } // namespace sdag
 } // namespace dev
