@@ -3,7 +3,6 @@
 #include <toscore/crypto/FixedHash.h>
 using namespace dev; 
 
-
 using sdag_diff_t = u128;
 
 inline sdag_diff_t calculateWork(h256 hash)
