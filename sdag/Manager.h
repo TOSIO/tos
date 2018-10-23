@@ -11,6 +11,7 @@ namespace dev
 {
 namespace sdag
 {
+  
 class Manager
 {
   public:
