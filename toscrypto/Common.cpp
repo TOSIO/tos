@@ -87,6 +87,7 @@ Address dev::toAddress(Public const& _public)
 	return right160(sha3(_public.ref()));
 }
 
+
 Address dev::toAddress(Secret const& _secret)
 {
 	return toAddress(toPublic(_secret));
