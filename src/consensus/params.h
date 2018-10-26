@@ -77,6 +77,7 @@ struct Params {
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 };
+    
 } // namespace Consensus
 
 #endif // TOSCHAIN_CONSENSUS_PARAMS_H
