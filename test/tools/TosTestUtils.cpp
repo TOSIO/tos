@@ -23,6 +23,7 @@ boost::filesystem::path dev::test::getTestPath()
         testPath = "../../test/jsontests";
     }
     else
+        
         testPath = ptestPath;
 
     return boost::filesystem::path(testPath);
