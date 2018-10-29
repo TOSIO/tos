@@ -73,7 +73,6 @@ void Block::sign(Secret const &_priv)
 	SignatureStruct sigStruct = *(SignatureStruct const *)&sig;
 	if (sigStruct.isValid())
 		m_vrs = sigStruct;
-
 	cnote << m_vrs->v << "   " << (u256)m_vrs->r << "  " << (u256)m_vrs->s;
 }
 
