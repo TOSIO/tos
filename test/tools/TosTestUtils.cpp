@@ -8,7 +8,6 @@ using namespace dev;
 using namespace dev::test;
 namespace fs = boost::filesystem;
 
-
 boost::filesystem::path dev::test::getTestPath()
 {
     if (!Options::get().testpath.empty())
