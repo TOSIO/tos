@@ -72,7 +72,6 @@ int main(int argc, char const *argv[])
 {
     //init log
     setupLog();
-
     setupSdag();
 
     cnote << "************start toschain*********";
