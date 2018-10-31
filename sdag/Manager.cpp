@@ -11,7 +11,6 @@ void Manager::addBlock(BlockRef block)
     
 }
 
-
 BlockRef Manager::creatTransaction() 
 {
 }
