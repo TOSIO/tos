@@ -46,7 +46,6 @@ BlockStorage::BlockStorage(const std::string& path)
     m_blocksDB.reset(new db::DBImpl(path));
 }
 
-
 void BlockStorage::write(Block& block)
 {
     std::unique_ptr<db::WriteBatchFace> blocksWriteBatch = m_blocksDB->createWriteBatch();
