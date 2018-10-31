@@ -23,6 +23,7 @@ db::Slice dev::toSlice(h256 const& _h, unsigned _sub)
 #endif //ALL_COMPILERS_ARE_CPP11_COMPLIANT
 }
 
+
 db::Slice dev::toSlice(uint64_t _n, unsigned _sub)
 {
 #if ALL_COMPILERS_ARE_CPP11_COMPLIANT
