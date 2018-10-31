@@ -6,7 +6,6 @@
 using namespace dev;
 using namespace dev::sdag;
 
-
 db::Slice dev::toSlice(h256 const& _h, unsigned _sub)
 {
 #if ALL_COMPILERS_ARE_CPP11_COMPLIANT
