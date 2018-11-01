@@ -52,7 +52,6 @@ protected:
             filterRegExp().indexIn(model->data(label).toString()) < 0) {
             return false;
         }
-
         return true;
     }
 };
@@ -100,6 +99,7 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode _mode,
         }
         break;
     }
+        
     switch(tab)
     {
     case SendingTab:
