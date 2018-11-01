@@ -52,6 +52,7 @@ protected:
             filterRegExp().indexIn(model->data(label).toString()) < 0) {
             return false;
         }
+        
         return true;
     }
 };
