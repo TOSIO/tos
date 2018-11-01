@@ -3,6 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
+
 Name: libunivalue
 Description: libunivalue, C++ universal value object and JSON library
 Version: @VERSION@
