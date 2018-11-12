@@ -6,7 +6,7 @@
 
 namespace
 {
-
+//
 typedef std::vector<uint8_t> data;
 
 /** The Bech32 character set for encoding. */
