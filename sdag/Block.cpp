@@ -106,7 +106,6 @@ h256 Block ::getHash()
 {
 	if (!m_hash)
 	{
-
 		if (m_rlpData.empty())
 		{
 			encode();
