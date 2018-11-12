@@ -27,7 +27,6 @@ void Block::streamRLP(RLPStream &_s, IncludeSignature _sig)
 
 RLPStream Block::getStreamWithoutRSV()
 {
-	
 	m_unSignStream.clear();
 	RLPStream headerStream;
 	((BlockHeader)m_blockHeader).encode(headerStream);
