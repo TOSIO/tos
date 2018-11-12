@@ -81,7 +81,7 @@ h256 Block::sha3(IncludeSignature _sig)
 {
 	// if (_sig == WithSignature && m_hash)
 	// 	return m_hash;
-	cnote << "block  ^^^^^  " << m_unSignStream.out();
+	cnote << "block  " << m_unSignStream.out();
 	auto ret = dev::sha3(m_unSignStream.out());
 	// if (_sig == WithSignature)
 	// 	m_hash = ret;
