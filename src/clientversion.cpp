@@ -7,7 +7,6 @@
 
 #include <tinyformat.h>
 
-
 /**
  * Name of client reported in the 'version' message. Report the same name
  * for both toschaind and toschain-qt, to make it harder for attackers to
