@@ -100,4 +100,5 @@ public:
     bool Read(banmap_t& banSet);
 };
 
+
 #endif // TOS_ADDRDB_H
