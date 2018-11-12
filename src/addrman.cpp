@@ -325,6 +325,7 @@ void CAddrMan::Attempt_(const CService& addr, bool fCountFailure, int64_t nTime)
     // check whether we are talking about the exact same CService (including same port)
     if (info != addr)
         return;
+    
 
     // update info
     info.nLastTry = nTime;
