@@ -27,6 +27,7 @@ void Block::streamRLP(RLPStream &_s, IncludeSignature _sig)
 
 RLPStream Block::getStreamWithoutRSV()
 {
+	
 	m_unSignStream.clear();
 	RLPStream headerStream;
 	((BlockHeader)m_blockHeader).encode(headerStream);
@@ -160,13 +161,12 @@ void Block ::decodeBlockWithoutRSV(RLP rlp)
 
 void Block ::decode(bytes byts)
 {
-
 	RLP rlp(byts);
 	if (!rlp.isList())
 	{
 		cerror << "NOT INVILATE DATA";
 		return;
-	}m_vrs
+	}
 	decodeBlockWithoutRSV(rlp[0]);
 
 	int const v = rlp[1].toInt<int>();
