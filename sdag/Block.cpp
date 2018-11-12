@@ -199,7 +199,6 @@ Address const &Block::sender()
 			if (!m_vrs){
 				cnote << "BOOST_THROW_EXCEPTION block IsUnsigned";
 			}
-				//  BOOST_THROW_EXCEPTION(TransactionIsUnsigned());
 
 			auto p = recover(*m_vrs, sha3(WithSignature));
 			if (!p){
